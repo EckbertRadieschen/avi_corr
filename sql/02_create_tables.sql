@@ -172,7 +172,7 @@ CREATE TABLE analysis_route_years (
 
 
 -- ==================================================================
---  Alle Paare aus Route und Jahr, für die Beobachtungen vorliegen
+--  Monatliche ERA5-Umwelt-Daten für alle Stops
 -- ==================================================================
 
 -- DROP TABLE IF EXISTS era5_monthly_data ;
@@ -195,4 +195,30 @@ CREATE TABLE era5_monthly_data (
     CONSTRAINT fk_era5_stops
         FOREIGN KEY (stop_id)
         REFERENCES analysis_stops (stop_id)
+);
+
+
+-- ==================================================================
+--  Jährliche NLCD-Landcover-Daten für alle Stops
+-- ==================================================================
+
+-- DROP TABLE IF EXISTS nlcd_year_data ;
+
+CREATE TABLE nlcd_year_data (
+    stop_id INT,
+    `year` SMALLINT,
+
+    water DECIMAL(5, 4) NOT NULL,
+    snow_ice DECIMAL(5, 4) NOT NULL,
+    developed DECIMAL(5, 4) NOT NULL,
+    barren DECIMAL(5, 4) NOT NULL,
+    forest DECIMAL(5, 4) NOT NULL,
+    shrubland DECIMAL(5, 4) NOT NULL,
+    grassland DECIMAL(5, 4) NOT NULL,
+    pasture DECIMAL(5, 4) NOT NULL,
+    cropland DECIMAL(5, 4) NOT NULL,
+    wetland DECIMAL(5, 4) NOT NULL,
+    
+    PRIMARY KEY (stop_id, `year`),
+    INDEX idx_analysis_nlcd_year (`year`)
 );

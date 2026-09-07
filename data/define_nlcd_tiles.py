@@ -5,13 +5,14 @@ from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 import mysql.connector
+from sqlalchemy import create_engine
 
 
 # ============================================================
 # KONFIGURATION
 # ============================================================
 
-TILE_GRID = Path("data/CONUS_C2_ARD_grid.shp")
+TILE_GRID = Path("data/CONUS_C2_ARD_grid/CONUS_C2_ARD_grid.shp")
 
 BUFFER_RADIUS_M = 1500
 
@@ -29,8 +30,9 @@ DB_CONFIG = {
     "database": MYSQL_DATABASE
 }
 
-OUTPUT_TILES = "required_nlcd_tiles.csv"
-OUTPUT_TILE_COUNTS = "required_nlcd_tiles_with_counts.csv"
+MYSQL_ENGINE = create_engine(f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DATABASE}")
+
+OUTPUT_TILES = "data/stop_nlcd_tiles_assignments.csv"
 
 
 # ============================================================
@@ -49,7 +51,7 @@ def load_stops():
         FROM analysis_stops;
     """
 
-    stops = pd.read_sql(query, connection)
+    stops = pd.read_sql(query, MYSQL_ENGINE)
     connection.close()
 
     return stops
@@ -83,12 +85,12 @@ def assign_tiles(stops, tiles):
         predicate="intersects"
     )
 
-    valid_tiles = result["h"].notna()
+    valid_tiles_filter = result["h"].notna()
 
-    h_value = result.loc[valid_tiles, "h"].astype(int).astype(str).str.zfill(2)
-    v_value = result.loc[valid_tiles, "v"].astype(int).astype(str).str.zfill(2)
+    h_value = result.loc[valid_tiles_filter, "h"].astype(int).astype(str).str.zfill(2)
+    v_value = result.loc[valid_tiles_filter, "v"].astype(int).astype(str).str.zfill(2)
 
-    result.loc[valid_tiles, "tile_id"] = "H" + h_value + "V" + v_value
+    result.loc[valid_tiles_filter, "tile_id"] = "H" + h_value + "V" + v_value
 
     return result
 
@@ -99,10 +101,10 @@ def assign_tiles(stops, tiles):
 
 def analyse_tiles(result):
     stop_count = result["stop_id"].nunique()
-    print(f"\nUrsprüngliche Stopps: {stop_count:,}")
+    print(f"\nAnzahl Stopps insgesamt: {stop_count:,}")
 
     missing = result["h"].isna().sum()
-    print(f"Zeilen ohne Tile-Zuordnung: {missing:,}")
+    print(f"Stops ohne zugeordnetes Tile: {missing:,}")
 
     required_tiles = (
         result[["tile_id"]]
@@ -114,7 +116,11 @@ def analyse_tiles(result):
 
     print(f"\nBenötigte Tiles für {BUFFER_RADIUS_M:,}-m-Buffer: {len(required_tiles):,}")
 
-    return required_tiles
+    tile_assignments = result[["stop_id", "h", "v", "tile_id"]]
+    tile_assignments.to_csv(OUTPUT_TILES, index=False)
+
+    print("\nDateien gespeichert:")
+    print(OUTPUT_TILES)
 
 
 # ============================================================
@@ -122,20 +128,16 @@ def analyse_tiles(result):
 # ============================================================
 
 def main():
+    print("=" * 60)
+    print("Zuordnung Stops -> NLCD Tiles")
+    print("=" * 60)
+
     stops = load_stops()
     stops = create_stop_geodataframe(stops)
     tiles = gpd.read_file(TILE_GRID)
     result = assign_tiles(stops, tiles)
-    required_tiles = analyse_tiles(result)
-
-    required_tiles.to_csv(OUTPUT_TILES, index=False)
-
-    print("\nBenötigte Tiles:")
-    print(required_tiles.to_string(index=False))
-
-    print("\nDateien gespeichert:")
-    print(OUTPUT_TILES)
-    print(OUTPUT_TILE_COUNTS)
+    analyse_tiles(result)
+    
 
 
 if __name__ == "__main__":

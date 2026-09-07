@@ -206,3 +206,10 @@ JOIN bbs_states AS st
 	ON r.state_num = st.state_num 
 ORDER BY st.state_name;
 
+
+SELECT
+	COUNT(*) 
+FROM era5_monthly_data;
+
+DESCRIBE era5_monthly_data;
+
