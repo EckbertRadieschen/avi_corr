@@ -187,3 +187,22 @@ SELECT
 FROM stops_nearest_autogen_point
 GROUP BY rteno
 ORDER BY distance_range;
+    
+
+SELECT *
+FROM analysis_stops
+LIMIT 10;
+
+SELECT 
+	MIN(year) AS min_year,
+    MAX(year) AS max_year
+FROM analysis_route_years;
+
+
+SELECT DISTINCT
+	st.state_name
+FROM analysis_routes as r
+JOIN bbs_states AS st
+	ON r.state_num = st.state_num 
+ORDER BY st.state_name;
+

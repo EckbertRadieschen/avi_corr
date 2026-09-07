@@ -157,6 +157,8 @@ INSERT INTO bbs_states
 
 TRUNCATE analysis_routes;
 
+SELECT COUNT(*) FROM analysis_routes;
+
 INSERT INTO analysis_routes
 SELECT
     bo.state_num * 1000 + CAST(bo.route AS UNSIGNED),
@@ -180,10 +182,12 @@ GROUP BY
     
 
 -- ===============================================================================
--- analysis_routes
+-- analysis_observations
 -- ===============================================================================
 
 TRUNCATE analysis_observations;
+
+SELECT COUNT(*) FROM analysis_observations;
 
 INSERT INTO analysis_observations
 SELECT
@@ -207,6 +211,8 @@ JOIN analysis_routes AS r
 
 TRUNCATE analysis_stops;
 
+SELECT COUNT(*) FROM analysis_stops;
+
 INSERT INTO analysis_stops
 	WITH stop_distances AS (
 		SELECT
@@ -223,9 +229,23 @@ INSERT INTO analysis_stops
 			AND ap.autogen_num = st.nearest_autogen_num
 	)
 	SELECT
+		rteno * 1000 + stop_number AS stop_id,
 		rteno,
-		stop_number,
 		latitude,
 		longitude,
 		(max_distance - distance_from_nearest_autogen_m) / (max_distance - min_distance)
 	FROM stop_distances;
+    
+
+-- ===============================================================================
+-- analysis_route_years
+-- ===============================================================================
+
+SELECT COUNT(*) FROM analysis_route_years;
+
+INSERT INTO analysis_route_years 
+	SELECT DISTINCT
+		route_id,
+		`year`
+	FROM analysis_observations;
+    

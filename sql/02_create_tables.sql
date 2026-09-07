@@ -144,15 +144,14 @@ CREATE TABLE IF NOT EXISTS analysis_observations (
 --  Analyse-relevante Routen-Stops mit Koordinaten
 -- ============================================================
 
--- DROP TABLE IF EXISTS analysis_stops ;
+-- DROP TABLE IF EXISTS analysis_stops;
 
 CREATE TABLE IF NOT EXISTS analysis_stops (
+	stop_id INT PRIMARY KEY,
 	route_id INT,
-    stop_number TINYINT,
     latitude DECIMAL(11, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
-    position_accuracy DECIMAL(5, 4) NOT NULL,
-    PRIMARY KEY (route_id, stop_number)
+    position_accuracy DECIMAL(5, 4) NOT NULL
 );
 
 
@@ -169,4 +168,31 @@ CREATE TABLE analysis_route_years (
     CONSTRAINT fk_route_year
         FOREIGN KEY (route_id)
         REFERENCES analysis_routes (route_id)
+);
+
+
+-- ==================================================================
+--  Alle Paare aus Route und Jahr, für die Beobachtungen vorliegen
+-- ==================================================================
+
+-- DROP TABLE IF EXISTS era5_monthly_data ;
+
+CREATE TABLE era5_monthly_data (
+	stop_id INT,
+    `year` SMALLINT,
+    `month` TINYINT,
+    
+    temperature DECIMAL(8, 4),
+    dewpoint_temperature DECIMAL(8, 4),
+    precipitation DECIMAL(13, 8),
+    snowfall DECIMAL(13, 8),
+    wind_u DECIMAL(9, 4),
+    wind_v DECIMAL(9, 4),
+    soil_moisture DECIMAL(9, 4),
+    solar_radiation DECIMAL(14, 1),
+    
+    PRIMARY KEY (stop_id, `year`, `month`),
+    CONSTRAINT fk_era5_stops
+        FOREIGN KEY (stop_id)
+        REFERENCES analysis_stops (stop_id)
 );
