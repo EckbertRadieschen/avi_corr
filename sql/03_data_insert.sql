@@ -155,7 +155,7 @@ INSERT INTO bbs_states
 -- analysis_routes
 -- ===============================================================================
 
-TRUNCATE analysis_routes;
+-- TRUNCATE analysis_routes;
 
 SELECT COUNT(*) FROM analysis_routes;
 
@@ -166,9 +166,9 @@ SELECT
     bo.route,
     MIN(bo.year),
     MAX(bo.year),
-    MAX(bo.year) - MIN(bo.year) + 1,
-    COUNT(DISTINCT bo.year),
-    COUNT(DISTINCT bo.year) / (MAX(bo.year) - MIN(bo.year) + 1) * 100
+    MAX(bo.year) - MIN(bo.year) + 1 AS usage_years,
+    COUNT(DISTINCT bo.year) AS observation_years,
+    COUNT(DISTINCT bo.year) / (MAX(bo.year) - MIN(bo.year) + 1) * 100 AS usage_rate
 FROM bird_observations AS bo
 WHERE EXISTS (
     SELECT 1
@@ -185,7 +185,7 @@ GROUP BY
 -- analysis_observations
 -- ===============================================================================
 
-TRUNCATE analysis_observations;
+-- TRUNCATE analysis_observations;
 
 SELECT COUNT(*) FROM analysis_observations;
 
@@ -209,7 +209,7 @@ JOIN analysis_routes AS r
 -- analysis_stops
 -- ===============================================================================
 
-TRUNCATE analysis_stops;
+-- TRUNCATE analysis_stops;
 
 SELECT COUNT(*) FROM analysis_stops;
 
@@ -248,4 +248,124 @@ INSERT INTO analysis_route_years
 		route_id,
 		`year`
 	FROM analysis_observations;
-    
+
+
+-- ===============================================================================
+-- era5_route_monthly
+-- ===============================================================================
+
+-- TRUNCATE era5_route_monthly;
+
+INSERT INTO era5_route_monthly
+	WITH monthly_data_prepared AS (
+		SELECT
+			md.*,
+			CASE
+				WHEN md.`month` IN (1, 3, 5, 7, 8, 10, 12) THEN 31
+				WHEN md.`month` = 2 THEN
+					CASE
+						WHEN MOD(md.`year`, 4) = 0
+							 AND (
+								 MOD(md.`year`, 100) <> 0
+								 OR MOD(md.`year`, 400) = 0
+							 )
+						THEN 29
+						ELSE 28
+					END
+				ELSE 30
+			END AS days_in_month
+		FROM era5_monthly_data AS md
+	)
+	SELECT
+		st.route_id,
+		md.`year`,
+		md.`month`,
+		ROUND(AVG(md.temperature), 4),
+		ROUND(AVG(md.precipitation * md.days_in_month * 1000), 8) AS monthly_prec,
+		ROUND(AVG(md.snowfall * md.days_in_month * 1000), 8) AS monthly_snow,
+		ROUND(AVG(SQRT(POWER(md.wind_u, 2) + POWER(md.wind_v, 2))), 4) AS wind_magnitude,
+		ROUND(AVG(
+        6.112 * EXP(17.67 * (md.temperature - 273.15) / ((md.temperature - 273.15) + 243.5))
+        -
+        6.112 * EXP(17.67 * (md.dewpoint_temperature - 273.15) / ((md.dewpoint_temperature - 273.15) + 243.5))
+		), 4) AS vpd,
+		ROUND(AVG(md.soil_moisture), 4),
+		ROUND(AVG(md.solar_radiation * md.days_in_month), 1) AS monthly_sol_rad
+	FROM monthly_data_prepared AS md
+	JOIN analysis_stops AS st
+		ON md.stop_id = st.stop_id
+	GROUP BY st.route_id, md.`year`, md.`month`;
+
+-- ===============================================================================
+-- era5_route_analysis
+-- ===============================================================================
+
+-- TRUNCATE era5_route_analysis;
+
+/*
+Achtung: Hier wird's heiß. 18 Millionen Einträge in era5_monthly_data 
+machen es unumgänglich alle Features 
+*/
+
+INSERT INTO era5_route_analysis 
+	SELECT
+        route_id,
+        `year`,
+
+        ROUND(AVG(temperature), 3) AS temperature_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5 THEN temperature END), 3) AS temperature_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6 THEN temperature END), 3) AS temperature_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9 THEN temperature END), 3) AS temperature_mean_growing,
+        ROUND(MIN(temperature), 3) AS temperature_min_year,
+        ROUND(MAX(temperature), 3) AS temperature_max_year,
+        ROUND(STDDEV_SAMP(temperature), 3) AS temperature_std_year,
+        
+        ROUND(SUM(precipitation), 6) AS precipitation_sum_year,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 3 AND 5 THEN precipitation ELSE 0 END), 6) AS precipitation_sum_spring,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 4 AND 6 THEN precipitation ELSE 0 END), 6) AS precipitation_sum_breeding,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 4 AND 9 THEN precipitation ELSE 0 END), 6) AS precipitation_sum_growing,
+        ROUND(MAX(precipitation), 6) AS precipitation_max_month,
+
+        ROUND(SUM(snowfall), 6) AS snowfall_sum_year,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 3 AND 5 THEN snowfall ELSE 0 END), 6) AS snowfall_sum_spring,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 4 AND 6 THEN snowfall ELSE 0 END), 6) AS snowfall_sum_breeding,
+        ROUND(SUM(CASE WHEN `month` BETWEEN 4 AND 9 THEN snowfall ELSE 0 END), 6) AS snowfall_sum_growing,
+        ROUND(MAX(snowfall), 6) AS snowfall_max_month,
+
+        ROUND(AVG(wind_magnitude), 3) AS wind_magnitude_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5 THEN wind_magnitude END), 3) AS wind_magnitude_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6 THEN wind_magnitude END), 3) AS wind_magnitude_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9 THEN wind_magnitude END), 3) AS wind_magnitude_mean_growing,
+        ROUND(MAX(wind_magnitude), 3) AS wind_magnitude_max_month,
+
+        ROUND(AVG(vpd), 4) AS vpd_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5 THEN vpd END), 4) AS vpd_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6 THEN vpd END), 4) AS vpd_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9 THEN vpd END), 4) AS vpd_mean_growing,
+        ROUND(MAX(vpd), 4) AS vpd_max_month,
+        ROUND(STDDEV_SAMP(vpd), 4) AS vpd_std_year,
+
+        ROUND(AVG(soil_moisture), 5) AS soil_moisture_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5 THEN soil_moisture END), 5) AS soil_moisture_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6 THEN soil_moisture END), 5) AS soil_moisture_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9 THEN soil_moisture END), 5) AS soil_moisture_mean_growing,
+        ROUND(MIN(soil_moisture), 5) AS soil_moisture_min_year,
+        ROUND(STDDEV_SAMP(soil_moisture), 5) AS soil_moisture_std_year,
+
+        ROUND(AVG(solar_radiation), 3) AS solar_radiation_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5 THEN solar_radiation END), 3) AS solar_radiation_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6 THEN solar_radiation END), 3) AS solar_radiation_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9 THEN solar_radiation END), 3) AS solar_radiation_mean_growing,
+
+        ROUND(AVG(solar_radiation * soil_moisture), 6) AS vegetation_coeff_mean_year,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 3 AND 5
+                 THEN solar_radiation * soil_moisture END), 6) AS vegetation_coeff_mean_spring,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 6
+                 THEN solar_radiation * soil_moisture END), 6) AS vegetation_coeff_mean_breeding,
+        ROUND(AVG(CASE WHEN `month` BETWEEN 4 AND 9
+                 THEN solar_radiation * soil_moisture END), 6) AS vegetation_coeff_mean_growing
+    FROM era5_route_monthly
+    GROUP BY route_id, `year`;
+
+
+	

@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS analysis_stops (
 
 -- DROP TABLE IF EXISTS analysis_route_years;
 
-CREATE TABLE analysis_route_years (
+CREATE TABLE IF NOT EXISTS analysis_route_years (
     route_id INT NOT NULL,
     `year` SMALLINT NOT NULL,
     PRIMARY KEY (route_id, year),
@@ -175,7 +175,7 @@ CREATE TABLE analysis_route_years (
 --  Monatliche ERA5-Umwelt-Daten für alle Stops
 -- ==================================================================
 
-CREATE TABLE era5_monthly_data (
+CREATE TABLE IF NOT EXISTS era5_monthly_data (
 	stop_id INT,
     `year` SMALLINT,
     `month` TINYINT,
@@ -197,24 +197,88 @@ CREATE TABLE era5_monthly_data (
 
 
 -- ======================================================================
---  Jährliche ERA5-Land-Durchschnittswerte für alle Analyse-Routen
+--  Monatliche ERA5-Land-Werte für alle Analyse-Routen
+-- ======================================================================
+
+DROP TABLE IF EXISTS era5_route_monthly;
+
+CREATE TABLE IF NOT EXISTS era5_route_monthly (
+    route_id INT,
+    `year` SMALLINT,
+    `month` TINYINT,
+
+    temperature DECIMAL(8, 4),
+    precipitation DECIMAL(13, 8),
+    snowfall DECIMAL(13, 8),
+    wind_magnitude DECIMAL(8, 4),
+    vpd DECIMAL(8, 5),
+    soil_moisture DECIMAL(9, 4),
+    solar_radiation DECIMAL(14, 1),
+    
+    PRIMARY KEY (route_id, `year`, `month`)
+);
+
+
+-- ======================================================================
+--  Jährliche ERA5-Land-Werte für alle Analyse-Routen
 -- ======================================================================
 
 -- DROP TABLE IF EXISTS era5_route_analysis;
 
-CREATE TABLE era5_route_analysis (
-	route_id INT,
+CREATE TABLE IF NOT EXISTS era5_route_analysis (
+    route_id INT,
     `year` SMALLINT,
-    
-    temperature DECIMAL(8, 4),
-    dewpoint_temperature DECIMAL(8, 4),
-    precipitation DECIMAL(13, 8),
-    snowfall DECIMAL(13, 8),
-    wind_u DECIMAL(9, 4),
-    wind_v DECIMAL(9, 4),
-    soil_moisture DECIMAL(9, 4),
-    solar_radiation DECIMAL(14, 1),
-    
+
+    temperature_mean_year DECIMAL(7,3),
+    temperature_mean_spring DECIMAL(7,3),
+    temperature_mean_breeding DECIMAL(7,3),
+    temperature_mean_growing DECIMAL(7,3),
+    temperature_min_year DECIMAL(7,3),
+    temperature_max_year DECIMAL(7,3),
+    temperature_std_year DECIMAL(7,3),
+
+    precipitation_sum_year DECIMAL(12,6),
+    precipitation_sum_spring DECIMAL(12,6),
+    precipitation_sum_breeding DECIMAL(12,6),
+    precipitation_sum_growing DECIMAL(12,6),
+    precipitation_max_month DECIMAL(12,6),
+
+    snowfall_sum_year DECIMAL(12,6),
+    snowfall_sum_spring DECIMAL(12,6),
+    snowfall_sum_breeding DECIMAL(12,6),
+    snowfall_sum_growing DECIMAL(12,6),
+    snowfall_max_month DECIMAL(12,6),
+
+    wind_magnitude_mean_year DECIMAL(7,3),
+    wind_magnitude_mean_spring DECIMAL(7,3),
+    wind_magnitude_mean_breeding DECIMAL(7,3),
+    wind_magnitude_mean_growing DECIMAL(7,3),
+    wind_magnitude_max_month DECIMAL(7,3),
+
+    vpd_mean_year DECIMAL(7,4),
+    vpd_mean_spring DECIMAL(7,4),
+    vpd_mean_breeding DECIMAL(7,4),
+    vpd_mean_growing DECIMAL(7,4),
+    vpd_max_month DECIMAL(7,4),
+    vpd_std_year DECIMAL(7,4),
+
+    soil_moisture_mean_year DECIMAL(10,5),
+    soil_moisture_mean_spring DECIMAL(10,5),
+    soil_moisture_mean_breeding DECIMAL(10,5),
+    soil_moisture_mean_growing DECIMAL(10,5),
+    soil_moisture_min_year DECIMAL(10,5),
+    soil_moisture_std_year DECIMAL(10,5),
+
+    solar_radiation_mean_year DECIMAL(12,3),
+    solar_radiation_mean_spring DECIMAL(12,3),
+    solar_radiation_mean_breeding DECIMAL(12,3),
+    solar_radiation_mean_growing DECIMAL(12,3),
+
+    vegetation_coeff_mean_year DECIMAL(15,6),
+    vegetation_coeff_mean_spring DECIMAL(15,6),
+    vegetation_coeff_mean_breeding DECIMAL(15,6),
+    vegetation_coeff_mean_growing DECIMAL(15,6),
+
     PRIMARY KEY (route_id, `year`)
 );
 

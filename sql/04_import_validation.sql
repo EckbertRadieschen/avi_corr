@@ -133,7 +133,7 @@ FROM bird_observations;
 
 SELECT 
 	COUNT(*) AS observations
-FROM analysis_observations;stops_nearest_autogen_point
+FROM analysis_observations;
 
 -- =======================================
 -- Anzahl Routen
