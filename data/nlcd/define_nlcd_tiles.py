@@ -116,7 +116,7 @@ def analyse_tiles(result):
 
     print(f"\nBenötigte Tiles für {BUFFER_RADIUS_M:,}-m-Buffer: {len(required_tiles):,}")
 
-    tile_assignments = result[["stop_id", "h", "v", "tile_id"]]
+    tile_assignments = result[["stop_id", "latitude", "longitude", "h", "v", "tile_id"]]
     tile_assignments.to_csv(OUTPUT_TILES, index=False)
 
     print("\nDateien gespeichert:")

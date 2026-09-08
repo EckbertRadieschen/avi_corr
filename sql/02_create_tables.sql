@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS analysis_stops (
 --  Alle Paare aus Route und Jahr, für die Beobachtungen vorliegen
 -- ==================================================================
 
--- DROP TABLE IF EXISTS analysis_route_years ;
+-- DROP TABLE IF EXISTS analysis_route_years;
 
 CREATE TABLE analysis_route_years (
     route_id INT NOT NULL,
@@ -174,8 +174,6 @@ CREATE TABLE analysis_route_years (
 -- ==================================================================
 --  Monatliche ERA5-Umwelt-Daten für alle Stops
 -- ==================================================================
-
--- DROP TABLE IF EXISTS era5_monthly_data ;
 
 CREATE TABLE era5_monthly_data (
 	stop_id INT,
@@ -198,11 +196,33 @@ CREATE TABLE era5_monthly_data (
 );
 
 
+-- ======================================================================
+--  Jährliche ERA5-Land-Durchschnittswerte für alle Analyse-Routen
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS era5_route_analysis;
+
+CREATE TABLE era5_route_analysis (
+	route_id INT,
+    `year` SMALLINT,
+    
+    temperature DECIMAL(8, 4),
+    dewpoint_temperature DECIMAL(8, 4),
+    precipitation DECIMAL(13, 8),
+    snowfall DECIMAL(13, 8),
+    wind_u DECIMAL(9, 4),
+    wind_v DECIMAL(9, 4),
+    soil_moisture DECIMAL(9, 4),
+    solar_radiation DECIMAL(14, 1),
+    
+    PRIMARY KEY (route_id, `year`)
+);
+
 -- ==================================================================
 --  Jährliche NLCD-Landcover-Daten für alle Stops
 -- ==================================================================
 
--- DROP TABLE IF EXISTS nlcd_year_data ;
+-- DROP TABLE IF EXISTS nlcd_year_data;
 
 CREATE TABLE nlcd_year_data (
     stop_id INT,
@@ -222,3 +242,29 @@ CREATE TABLE nlcd_year_data (
     PRIMARY KEY (stop_id, `year`),
     INDEX idx_analysis_nlcd_year (`year`)
 );
+
+
+-- ======================================================================
+--  Jährliche NLCD-Landcover-Durchschnittswerte für alle Analyse-Routen
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS nlcd_route_analysis;
+
+CREATE TABLE nlcd_route_analysis (
+	route_id INT,
+    `year` SMALLINT,
+    
+    water DECIMAL(5, 4) NOT NULL,
+    developed DECIMAL(5, 4) NOT NULL,
+    barren DECIMAL(5, 4) NOT NULL,
+    forest DECIMAL(5, 4) NOT NULL,
+    shrubland DECIMAL(5, 4) NOT NULL,
+    grassland DECIMAL(5, 4) NOT NULL,
+    pasture DECIMAL(5, 4) NOT NULL,
+    cropland DECIMAL(5, 4) NOT NULL,
+    wetland DECIMAL(5, 4) NOT NULL,
+    
+    PRIMARY KEY (route_id, `year`),
+    INDEX idx_nlcd_route_year (`year`)
+);
+    
