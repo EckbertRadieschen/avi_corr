@@ -195,27 +195,33 @@ CREATE TABLE IF NOT EXISTS era5_monthly_data (
         REFERENCES analysis_stops (stop_id)
 );
 
+ALTER TABLE era5_monthly_data
+ADD COLUMN wind_magnitude DECIMAL(9, 4);
+
 
 -- ======================================================================
 --  Monatliche ERA5-Land-Werte für alle Analyse-Routen
 -- ======================================================================
 
-DROP TABLE IF EXISTS era5_route_monthly;
+-- DROP TABLE IF EXISTS era5_route_monthly;
 
-CREATE TABLE IF NOT EXISTS era5_route_monthly (
+CREATE TABLE era5_route_monthly (
     route_id INT,
     `year` SMALLINT,
     `month` TINYINT,
 
     temperature DECIMAL(8, 4),
-    precipitation DECIMAL(13, 8),
-    snowfall DECIMAL(13, 8),
+    dewpoint_temperature DECIMAL(8, 4),
+    daily_precipitation DECIMAL(13, 8),
+	daily_snowfall DECIMAL(13, 8),
     wind_magnitude DECIMAL(8, 4),
-    vpd DECIMAL(8, 5),
     soil_moisture DECIMAL(9, 4),
-    solar_radiation DECIMAL(14, 1),
-    
-    PRIMARY KEY (route_id, `year`, `month`)
+    solar_flux_density DECIMAL(8, 4),
+
+    PRIMARY KEY (route_id, year, month),
+
+    INDEX idx_year_month (year, month),
+    INDEX idx_route_year (route_id, year)
 );
 
 

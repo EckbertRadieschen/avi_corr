@@ -211,8 +211,42 @@ SELECT
 	COUNT(*) 
 FROM era5_monthly_data;
 
-DESCRIBE era5_monthly_data;
+
+SELECT
+    COUNT(*) AS rows_total,
+    MIN(vegetation_coefficient) AS vc_min,
+    MAX(vegetation_coefficient) AS vc_max,
+    AVG(vegetation_coefficient) AS vc_mean
+FROM era5_route_monthly;
+
+SELECT *
+FROM era5_route_monthly
+ORDER BY route_id, year, month
+LIMIT 20;
+
+SELECT
+    month,
+    COUNT(*) AS n,
+    ROUND(AVG(vegetation_coefficient), 4) AS vc_mean,
+    ROUND(MIN(vegetation_coefficient), 4) AS vc_min,
+    ROUND(MAX(vegetation_coefficient), 4) AS vc_max,
+    ROUND(STDDEV(vegetation_coefficient), 4) AS vc_sd,
+    ROUND(AVG(soil_moisture_factor), 4) AS sm_factor_mean,
+    ROUND(AVG(solar_radiation_factor), 4) AS sr_factor_mean
+FROM era5_route_monthly
+GROUP BY month
+ORDER BY month;
 
 
-	
-	
+SELECT
+    year,
+    ROUND(AVG(vegetation_coefficient), 4) AS vc_mean,
+    ROUND(AVG(soil_moisture_factor), 4) AS sm_factor_mean,
+    ROUND(AVG(solar_radiation_factor), 4) AS sr_factor_mean
+FROM era5_route_monthly
+GROUP BY year
+ORDER BY year;
+
+
+
+

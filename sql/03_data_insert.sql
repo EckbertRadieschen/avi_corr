@@ -256,45 +256,36 @@ INSERT INTO analysis_route_years
 
 -- TRUNCATE era5_route_monthly;
 
-INSERT INTO era5_route_monthly
-	WITH monthly_data_prepared AS (
-		SELECT
-			md.*,
-			CASE
-				WHEN md.`month` IN (1, 3, 5, 7, 8, 10, 12) THEN 31
-				WHEN md.`month` = 2 THEN
-					CASE
-						WHEN MOD(md.`year`, 4) = 0
-							 AND (
-								 MOD(md.`year`, 100) <> 0
-								 OR MOD(md.`year`, 400) = 0
-							 )
-						THEN 29
-						ELSE 28
-					END
-				ELSE 30
-			END AS days_in_month
-		FROM era5_monthly_data AS md
-	)
+INSERT INTO era5_route_monthly (
+	route_id,
+    `year`,
+    `month`,
+    temperature,
+    dewpoint_temperature,
+    daily_precipitation,
+    daily_snowfall,
+    wind_magnitude,
+    soil_moisture,
+    solar_flux_density
+)
 	SELECT
 		st.route_id,
 		md.`year`,
 		md.`month`,
-		ROUND(AVG(md.temperature), 4),
-		ROUND(AVG(md.precipitation * md.days_in_month * 1000), 8) AS monthly_prec,
-		ROUND(AVG(md.snowfall * md.days_in_month * 1000), 8) AS monthly_snow,
-		ROUND(AVG(SQRT(POWER(md.wind_u, 2) + POWER(md.wind_v, 2))), 4) AS wind_magnitude,
-		ROUND(AVG(
-        6.112 * EXP(17.67 * (md.temperature - 273.15) / ((md.temperature - 273.15) + 243.5))
-        -
-        6.112 * EXP(17.67 * (md.dewpoint_temperature - 273.15) / ((md.dewpoint_temperature - 273.15) + 243.5))
-		), 4) AS vpd,
+		ROUND(AVG(md.temperature) - 273.15 , 4),
+        ROUND(AVG(md.dewpoint_temperature) - 273.15, 4),
+		ROUND(AVG(md.precipitation) * 1000, 8),
+		ROUND(AVG(md.snowfall) * 1000, 8),
+		ROUND(AVG(md.wind_magnitude) * 3.6, 4), 
 		ROUND(AVG(md.soil_moisture), 4),
-		ROUND(AVG(md.solar_radiation * md.days_in_month), 1) AS monthly_sol_rad
-	FROM monthly_data_prepared AS md
+		ROUND(AVG(md.solar_radiation) / 86400, 4)
+	FROM era5_monthly_data AS md
 	JOIN analysis_stops AS st
 		ON md.stop_id = st.stop_id
 	GROUP BY st.route_id, md.`year`, md.`month`;
+    
+
+
 
 -- ===============================================================================
 -- era5_route_analysis

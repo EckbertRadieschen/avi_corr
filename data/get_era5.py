@@ -55,50 +55,50 @@ VARIABLES = {
     "temperature": {
         "request_key": "2m_temperature",
         "dataset_key": "t2m",
-        "output_column": "temperature",
+        "output_column": "temperature"
     },
 
     "dewpoint_temperature": {
         "request_key": "2m_dewpoint_temperature",
         "dataset_key": "d2m",
-        "output_column": "dewpoint_temperature",
+        "output_column": "dewpoint_temperature"
     },
 
     "precipitation": {
         "request_key": "total_precipitation",
         "dataset_key": "tp",
-        "output_column": "precipitation",
+        "output_column": "precipitation"
     },
 
     "snowfall": {
         "request_key": "snowfall",
         "dataset_key": "sf",
-        "output_column": "snowfall",
+        "output_column": "snowfall"
     },
 
     "wind_u": {
         "request_key": "10m_u_component_of_wind",
         "dataset_key": "u10",
-        "output_column": "wind_u",
+        "output_column": "wind_u"
     },
 
     "wind_v": {
         "request_key": "10m_v_component_of_wind",
         "dataset_key": "v10",
-        "output_column": "wind_v",
+        "output_column": "wind_v"
     },
 
     "soil_moisture": {
         "request_key": "volumetric_soil_water_layer_1",
         "dataset_key": "swvl1",
-        "output_column": "soil_moisture",
+        "output_column": "soil_moisture"
     },
 
     "solar_radiation": {
         "request_key": "surface_net_solar_radiation",
         "dataset_key": "ssr",
-        "output_column": "solar_radiation",
-    },
+        "output_column": "solar_radiation"
+    }
 }
 
 

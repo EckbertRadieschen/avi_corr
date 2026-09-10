@@ -99,32 +99,123 @@ FROM era5_monthly_data;
 -- dort gefundene Qualitätsprobleme haben ihre Ursache zwingend in era5_monthly_data
 
 
+-- Generelle Plausibilität 
 SELECT 
 	MIN(temperature) AS min_temperature,
     AVG(temperature) AS avg_temperature,
     MAX(temperature) AS max_temperature,
     
-    MIN(precipitation) AS min_precipitation,
-    AVG(precipitation) AS avg_precipitation,
-    MAX(precipitation) AS max_precipitation,
+    MIN(dewpoint_temperature) AS min_dewpoint_temperature,
+    AVG(dewpoint_temperature) AS avg_dewpoint_temperature,
+    MAX(dewpoint_temperature) AS max_dewpoint_temperature,
     
-    MIN(snowfall) AS min_snowfall,
-    AVG(snowfall) AS avg_snowfall,
-    MAX(snowfall) AS max_snowfall,
+    MIN(daily_precipitation) AS min_daily_precipitation,
+    AVG(daily_precipitation) AS avg_daily_precipitation,
+    MAX(daily_precipitation) AS max_daily_precipitation,
     
-    MIN(wind_speed) AS min_wind_speed,
-    AVG(wind_speed) AS avg_wind_speed,
-    MAX(wind_speed) AS max_wind_speed,
+    MIN(daily_snowfall) AS min_daily_snowfall,
+    AVG(daily_snowfall) AS avg_daily_snowfall,
+    MAX(daily_snowfall) AS max_daily_snowfall,
     
-    MIN(vpd) AS min_vpd,
-    AVG(vpd) AS avg_vpd,
-    MAX(vpd) AS max_vpd,
-    
+    MIN(wind_magnitude) AS min_wind_magnitude,
+    AVG(wind_magnitude) AS avg_wind_magnitude,
+    MAX(wind_magnitude) AS max_wind_magnitude,
+
     MIN(soil_moisture) AS min_soil_moisture,
     AVG(soil_moisture) AS avg_soil_moisture,
     MAX(soil_moisture) AS max_soil_moisture,
     
-    MIN(solar_radiation) AS min_solar_radiation,
-    AVG(solar_radiation) AS avg_solar_radiation,
-    MAX(solar_radiation) AS max_solar_radiation
+    MIN(solar_flux_density) AS min_solar_flux_density,
+    AVG(solar_flux_density) AS avg_solar_flux_density,
+    MAX(solar_flux_density) AS max_solar_flux_density
 FROM era5_route_monthly;
+
+-- Alle Werte liegen in einem plausiblen Bereich
+-- Keine absurden Ausreißer oder unrealistische Werte
+
+
+-- Routenebene
+SELECT 
+	route_id,
+    AVG(temperature) AS avg_temperature,
+    AVG(dewpoint_temperature) AS avg_dewpoint_temperature,
+    AVG(daily_precipitation) AS avg_daily_precipitation_mm,
+    AVG(daily_snowfall) AS avg_daily_snowfall_mm,
+    AVG(wind_magnitude) AS wind_magnitude,
+    AVG(soil_moisture) AS avg_soil_moisture,
+    AVG(solar_flux_density) AS avg_solar_flux_density
+FROM era5_route_monthly
+GROUP BY route_id;
+
+/* Schwankungen
+Temperature: 				0.9-18.5 °C
+Dewpoint-Temperature: 		-6.5-12.4 °C
+Precipitation:				0.99-3.62 mm/day
+Snowfall:					0.01-1.48 mm/day 
+Wind-Magnitude:				1.7-10.3 m/s
+Soil-Moisture:				0.11-0.44 m³/m³
+Solar-Flux-Density:			115-173 W/m²
+
+Wie erwartet gibt es in allen Bereichen extreme Routen,
+aber alle Durchschnittswerte bewegen sich in einem realistischen Bereich
+Ausreißer in Temperatur und Taupunkt-Temperatur nach unten in Route 92041
+*/
+
+SELECT
+    `month`,
+    AVG(temperature) AS avg_temperature,
+    AVG(dewpoint_temperature) AS avg_dewpoint
+FROM era5_route_monthly
+WHERE route_id = 92041
+GROUP BY `month`
+ORDER BY `month`;
+
+-- Route liegt in Wyoming ziemlich hochgelegen. 
+-- Ist oben als Ausreißer nach unten aufgefallen,
+-- erscheint aber insgesamt plausibel
+
+
+-- Routenebene
+SELECT 
+	`year`,
+    AVG(temperature) AS avg_temperature,
+    AVG(dewpoint_temperature) AS avg_dewpoint_temperature,
+    AVG(daily_precipitation) AS avg_daily_precipitation_mm,
+    AVG(daily_snowfall) AS avg_daily_snowfall_mm,
+    AVG(wind_magnitude) AS avg_wind_magnitude,
+    AVG(soil_moisture) AS avg_soil_moisture,
+    AVG(solar_flux_density) AS avg_solar_flux_density
+FROM era5_route_monthly
+GROUP BY `year`;
+
+
+/* Schwankungen
+Temperature: 				8.7-12.3 °C
+Dewpoint-Temperature: 		1.8-5.0 °C
+Precipitation:				1.67-2.89 mm/day
+Snowfall:					0.17-0.42 mm/day 
+Wind-Magnitude:				3.3-4.6 m/s
+Soil-Moisture:				0.27-0.34 m³/m³
+Solar-Flux-Density:			122-155 W/m²
+
+- 2022/23 liefern unrealistisch niedrige Werte in solar_flux_density, sowie daily_precipitation
+- Entscheidung: Ausschluss der beiden Jahre aus der Analyse. 
+- Alle weiteren Jahre verhalten sich unauffällig.
+- In den Schwankungen oben sind die Ausreißer ausgenommen.
+*/
+
+SELECT 
+	`month`,
+    AVG(temperature) AS avg_temperature,
+    AVG(dewpoint_temperature) AS avg_dewpoint_temperature,
+    AVG(daily_precipitation) AS avg_daily_precipitation_mm,
+    AVG(daily_snowfall) AS avg_daily_snowfall_mm,
+    AVG(wind_magnitude) AS avg_wind_magnitude,
+    AVG(soil_moisture) AS avg_soil_moisture,
+    AVG(solar_flux_density) AS avg_solar_flux_density
+FROM era5_route_monthly
+WHERE `year` NOT IN (2022, 2023)
+GROUP BY `month`;
+
+-- Jahresverlauf wie erwartet, ohne große Auffälligkeiten
+-- Auffällig ist das raue Klima im Projektgebiet
