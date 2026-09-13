@@ -276,10 +276,7 @@ def process_tile(s3, tile_id, tile_crs, stop_df, landcover_counts):
                     raise ValueError(f"CRS stimmt für {local_path.name} nicht mit dem Tile-Grid überein") 
                 
                 for stop_id in stop_ids:
-                    values = read_buffer_pixels(
-                        dataset,
-                        stop_buffers[stop_id]
-                    )
+                    values = read_buffer_pixels(dataset, stop_buffers[stop_id])
 
                     if values.size == 0: 
                         class_counts = {} 
@@ -289,7 +286,6 @@ def process_tile(s3, tile_id, tile_crs, stop_df, landcover_counts):
                         class_counts = dict(zip(classes, counts))
 
                     year_results[stop_id] = class_counts
-
                     target = landcover_counts[stop_id][year]
                     
                     for nlcd_class, count in class_counts.items(): 

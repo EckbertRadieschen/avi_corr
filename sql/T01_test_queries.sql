@@ -248,5 +248,75 @@ GROUP BY year
 ORDER BY year;
 
 
+WITH ranked AS (
+    SELECT
+        relative_humidity,
+        ROW_NUMBER() OVER (ORDER BY relative_humidity) AS rn,
+        COUNT(*) OVER () AS n
+    FROM era5_route_monthly
+    WHERE `year` NOT IN (2022, 2023)
+      AND relative_humidity IS NOT NULL
+),
+quantiles AS (
+    SELECT
+        MAX(CASE WHEN rn = CEIL(n * 0.05) THEN relative_humidity END) AS q05,
+        MAX(CASE WHEN rn = CEIL(n * 0.50) THEN relative_humidity END) AS median,
+        MAX(CASE WHEN rn = CEIL(n * 0.95) THEN relative_humidity END) AS q95
+    FROM ranked
+)
+SELECT
+    ROUND(q05, 4) AS q05,
+    ROUND(median, 4) AS median,
+    ROUND(q95, 4) AS q95,
+    ROUND((median - q05) / (q95 - q05), 4) AS median_norm
+FROM quantiles;
+
+SELECT
+	MIN(latitude) AS min_latitude,
+    MAX(latitude) AS max_latitude,
+    MIN(longitude) AS min_longitude,
+    MAX(longitude) AS max_longitude
+FROM analysis_stops;
+
+SELECT
+	COUNT(DISTINCT species_id)
+FROM analysis_observations;
+
+SELECT 
+	COUNT(*)
+FROM ebird_species_info;
+
+SELECT
+	DISTINCT species_id
+FROM analysis_observations;
+
+-- 417 AOU in analysis_observations
+
+SELECT DISTINCT
+	sl.common_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON ao.species_id = sl.aou
+WHERE sl.common_name LIKE '%unid.%';
+
+
+SELECT DISTINCT
+	sl.common_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON ao.species_id = sl.aou
+WHERE 
+	(NOT sl.common_name LIKE '%unid.%')
+    AND (sl.common_name LIKE '%(%')
+ORDER BY sl.common_name;
+
+SELECT DISTINCT
+	sl.common_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON ao.species_id = sl.aou
+ORDER BY sl.common_name;
+
+
 
 

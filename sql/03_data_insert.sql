@@ -359,4 +359,107 @@ INSERT INTO era5_route_analysis
     GROUP BY route_id, `year`;
 
 
-	
+-- ===============================================================================
+-- species_ebird_info
+-- ===============================================================================
+
+-- TRUNCATE ebird_species_info;
+
+LOAD DATA LOCAL INFILE 'C:/Users/MarcelKramer/Desktop/Unterrichtsmaterialien/Abschlussprojekt/avi_corr/data/raw/ebirdst_runs.csv'
+INTO TABLE ebird_species_info
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS
+(
+    species_code,
+    scientific_name,
+    common_name,
+    @is_resident,
+    @breeding_quality,
+    @breeding_start,
+    @breeding_end,
+    @nonbreeding_quality,
+    @nonbreeding_start,
+    @nonbreeding_end,
+    @postbreeding_migration_quality,
+    @postbreeding_migration_start,
+    @postbreeding_migration_end,
+    @prebreeding_migration_quality,
+    @prebreeding_migration_start,
+    @prebreeding_migration_end,
+    @resident_quality,
+    @resident_start,
+    @resident_end,
+    @status_version_year,
+    @has_trends,
+    @trends_season,
+    @trends_region,
+    @trends_start_year,
+    @trends_end_year,
+    @trends_start_date,
+    @trends_end_date,
+    @rsquared,
+    @beta0,
+    @trends_version_year
+)
+SET
+	is_resident = NULLIF(@is_resident, ''),
+    breeding_quality = NULLIF(@breeding_quality, ''),
+    breeding_start = NULLIF(@breeding_start, ''),
+    breeding_end = NULLIF(@breeding_end, ''),
+    nonbreeding_quality = NULLIF(@nonbreeding_quality, ''),
+    nonbreeding_start = NULLIF(@nonbreeding_start, ''),
+    nonbreeding_end = NULLIF(@nonbreeding_end, ''),
+    postbreeding_migration_quality = NULLIF(@postbreeding_migration_quality, ''),
+    postbreeding_migration_start = NULLIF(@postbreeding_migration_start, ''),
+    postbreeding_migration_end = NULLIF(@postbreeding_migration_end, ''),
+    prebreeding_migration_quality = NULLIF(@prebreeding_migration_quality, ''),
+    prebreeding_migration_start = NULLIF(@prebreeding_migration_start, ''),
+    prebreeding_migration_end = NULLIF(@prebreeding_migration_end, ''),
+    resident_quality = NULLIF(@resident_quality, ''),
+    resident_start = NULLIF(@resident_start, ''),
+    resident_end = NULLIF(@resident_end, ''),
+    status_version_year = NULLIF(@status_version_year, ''),
+    has_trends = NULLIF(@has_trends, ''),
+    trends_season = NULLIF(@trends_season, ''),
+    trends_region = NULLIF(@trends_region, ''),
+    trends_start_year = NULLIF(@trends_start_year, ''),
+    trends_end_year = NULLIF(@trends_end_year, ''),
+    trends_start_date = NULLIF(@trends_start_date, ''),
+    trends_end_date = NULLIF(@trends_end_date, ''),
+    rsquared = NULLIF(@rsquared, ''),
+    beta0 = NULLIF(@beta0, ''),
+    trends_version_year = NULLIF(TRIM(@trends_version_year), '');
+    
+
+-- ===============================================================================
+-- bbs_species_list
+-- ===============================================================================
+
+-- TRUNCATE bbs_species_list;
+
+LOAD DATA LOCAL INFILE 'C:/Users/MarcelKramer/Desktop/Unterrichtsmaterialien/Abschlussprojekt/avi_corr/data/raw/bbs_species_list.csv'
+INTO TABLE bbs_species_list
+CHARACTER SET latin1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS
+(
+	@Seq,
+    @AOU,
+    @English_Common_Name,
+    @French_Common_Name,
+    @`Order`,
+    @Family,
+    @Genus,
+    @Species
+)
+SET
+	aou = @AOU,
+    common_name = NULLIF(@English_Common_Name, ''),
+    `order` = NULLIF(@`Order`, ''),
+    family = NULLIF(@Family, ''),
+    genus = NULLIF(@Genus, ''),
+    species = NULLIF(@Species, '');

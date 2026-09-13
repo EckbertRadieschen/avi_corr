@@ -98,6 +98,9 @@ FROM era5_monthly_data;
 -- Restliche Qualitäts-Analyse auf era5_route_monthly
 -- dort gefundene Qualitätsprobleme haben ihre Ursache zwingend in era5_monthly_data
 
+-- =============================================
+-- ERA5_ROUTE_MONTHLY
+-- =============================================
 
 -- Generelle Plausibilität 
 SELECT 
@@ -219,3 +222,351 @@ GROUP BY `month`;
 
 -- Jahresverlauf wie erwartet, ohne große Auffälligkeiten
 -- Auffällig ist das raue Klima im Projektgebiet
+
+
+-- Räumliche Plausibilität
+
+
+WITH 
+	route_lat_min_max AS (
+		SELECT 
+			ar.route_id,
+            MIN(r.latitude) OVER() AS min_latitude,
+            MAX(r.latitude) OVER() AS max_latitude 
+		FROM routes r
+        JOIN analysis_routes AS ar
+			ON r.state_num * 1000 + r.route = ar.route_id
+	),
+    route_lat AS (
+		SELECT
+			r.state_num * 1000 + r.route AS route_id,
+            CASE 
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 1/5
+					THEN '1_south'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 2/5
+					THEN '2_south_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 3/5
+					THEN '3_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 4/5
+					THEN '4_north_central'
+				ELSE 
+					'5_north'
+			END AS latitude_bin
+        FROM routes AS r
+        JOIN route_lat_min_max AS mm
+			ON r.state_num * 1000 + r.route = mm.route_id
+    )
+SELECT
+    l.latitude_bin,
+    e.`month`,
+    COUNT(*) AS route_count,
+    ROUND(AVG(e.temperature), 2)         	AS mean_temperature,
+    ROUND(AVG(e.relative_humidity), 2)   	AS mean_relative_humidity,
+    ROUND(AVG(e.daily_precipitation), 3)  AS mean_daily_precipitation,
+    ROUND(AVG(e.daily_snowfall), 3)       AS mean_daily_snowfall,
+    ROUND(AVG(e.soil_moisture), 4)       	AS mean_soil_moisture,
+    ROUND(AVG(e.solar_flux_density), 2)   AS mean_solar_flux_density,
+    ROUND(AVG(e.wind_magnitude), 2)      	AS mean_wind_magnitude
+FROM era5_route_monthly AS e
+JOIN route_lat AS l
+	ON e.route_id = l.route_id
+WHERE e.`year` NOT IN (2022, 2023) AND e.`month` IN (1, 7)
+GROUP BY l.latitude_bin, e.`month`
+ORDER BY e.`month`, l.latitude_bin;
+
+-- ========================================
+-- Modellkontrolle Vegetationskoeffizient
+
+SELECT
+    COUNT(*) AS n,
+    ROUND(MIN(vegetation_coefficient), 6) AS min_vc,
+    ROUND(MAX(vegetation_coefficient), 6) AS max_vc,
+    ROUND(AVG(vegetation_coefficient), 6) AS mean_vc,
+    ROUND(STDDEV_SAMP(vegetation_coefficient), 6) AS std_vc
+FROM era5_route_monthly
+WHERE vegetation_coefficient IS NOT NULL;
+
+SELECT
+    CASE
+        WHEN vegetation_coefficient = 0 THEN '0'
+        WHEN vegetation_coefficient < 0.1 THEN '0.00–0.09'
+        WHEN vegetation_coefficient < 0.2 THEN '0.10–0.19'
+        WHEN vegetation_coefficient < 0.3 THEN '0.20–0.29'
+        WHEN vegetation_coefficient < 0.4 THEN '0.30–0.39'
+        WHEN vegetation_coefficient < 0.5 THEN '0.40–0.49'
+        WHEN vegetation_coefficient < 0.6 THEN '0.50–0.59'
+        WHEN vegetation_coefficient < 0.7 THEN '0.60–0.69'
+        WHEN vegetation_coefficient < 0.8 THEN '0.70–0.79'
+        WHEN vegetation_coefficient < 0.9 THEN '0.80–0.89'
+        ELSE '0.90–1.00'
+    END AS vc_class,
+    COUNT(*) AS n,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS anteil_prozent
+FROM era5_route_monthly
+WHERE vegetation_coefficient IS NOT NULL
+GROUP BY vc_class
+ORDER BY vc_class;
+
+
+-- =============================================
+-- NACC_SPECIES_LIST
+-- =============================================
+
+SELECT 
+	COUNT(`rank`) / COUNT(*) AS rank_perc,
+    COUNT(common_name) / COUNT(*) AS name_perc,
+    COUNT(`order`) / COUNT(*) AS order_perc,
+    COUNT(family) / COUNT(*) AS family_perc,
+    COUNT(sub_family) / COUNT(*) AS sub_family_perc,
+    COUNT(genus) / COUNT(*) AS genus_perc,
+    COUNT(species) / COUNT(*) AS species_perc
+FROM nacc_species_list;
+
+-- 46% NULL-Values in sub_family, sonst alle vollständig
+-- Sub-Family wird generell nicht benötigt
+
+
+-- =============================================
+-- BBS_SPECIES_LIST
+-- =============================================
+
+/*
+BBS listet beobachtete Vögel AOU-konform
+seit 1998 vergibt die AOU keine neuen Nummern mehr, 
+sodass BBS zwecks Konsistenz die Nummerierung eigenständig weiterführt
+*/
+
+SELECT DISTINCT
+	species
+FROM bbs_species_list
+ORDER BY species;
+
+/* Es wird nach mehreren Kritierien unterschieden
+- Vollständig bestimmbare Art
+- Hybride
+- Unidentiziert, aber ungefähr einzuordnen
+*/
+
+SELECT DISTINCT
+	genus
+FROM bbs_species_list
+ORDER BY genus;
+
+-- Auch einzelne Geni sind nicht eindeutig zugeordnet
+
+SELECT 
+	common_name,
+	species_name
+FROM bbs_species_list
+ORDER BY species_name;
+
+-- Kleinere Änderungen nötig, die nicht der gängigen Nomenklatur entsprechen
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE bbs_species_list
+SET species_name = 'Bubulcus ibis'
+WHERE common_name = 'Western Cattle-Egret';
+
+UPDATE bbs_species_list
+SET species_name = 'Setophaga coronata auduboni'
+WHERE common_name = '(Audubon''s Warbler) Yellow-rumped Warbler';
+
+UPDATE bbs_species_list
+SET species_name = 'Porphyrio martinica'
+WHERE common_name = 'Purple Gallinule';
+
+SET SQL_SAFE_UPDATES = 1;
+
+-- ======================================================================
+-- Reduziert auf die Analyse-relevanten Arten:
+
+SELECT DISTINCT
+	sl.common_name,
+	sl.species_name,
+    sl.scientific_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON sl.aou = ao.species_id
+WHERE sl.scientific_name IS NOT NULL
+ORDER BY sl.scientific_name, sl.species_name;
+
+SELECT
+    COUNT(DISTINCT sl.scientific_name)
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON sl.aou = ao.species_id;
+
+-- 384 Einträge mit einem wissenschaftlichen Namen
+-- Es existieren 374 eindeutige wissenschaftliche Namen
+-- Diese bilden die Grundlage für die finale Auswertung
+
+
+
+/*
+Überprüfung Vorhandensein aller BBS-Arten in ebird_species_info
+Später Import der einheitlichen Species_ID
+*/
+
+SELECT DISTINCT
+	eb.species_code,
+    sl.scientific_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON sl.aou = ao.species_id
+LEFT JOIN ebird_species_info AS eb
+	ON sl.scientific_name = eb.scientific_name
+ORDER BY eb.species_code, sl.scientific_name;
+
+/*
+Fehlende Verknüpfung für:
+
+Accipiter atricapillus
+Accipiter cooperii
+Bubulcus ibis
+Carduelis carduelis
+Larus argentatus
+Porphyrio martinicus
+*/
+
+-- =====================================================
+-- ebird_species_info
+-- =====================================================
+
+SELECT 
+	* 
+    FROM bbs_species_list
+    WHERE 
+		scientific_name IN (
+			'Accipiter atricapillus',
+			'Accipiter cooperii',
+			'Bubulcus ibis',
+			'Carduelis carduelis',
+			'Larus argentatus',
+			'Troglodytes aedon',
+            'Porphyrio martinicus'
+		);
+
+SELECT 
+	* 
+    FROM ebird_species_info
+    WHERE 
+		common_name LIKE '%Herring Gull%' 
+        OR common_name LIKE "%Cooper's Hawk%"
+        OR common_name LIKE '%Western Cattle-Egret%'
+        OR common_name LIKE '%American Goshawk%'
+        OR common_name LIKE '%Goldfinch%'
+        OR common_name LIKE '%House Wren%'
+        OR common_name LIKE '%Purple Gallinule%';
+
+/*
+Gefunden als:
+'Herring Gull' = 'American Herring Gull' = Larus smithsonianus  
+-> Änderung in BBS auf Larus smithsonianus
+'Western Cattle-Egret' = Ardea ibis (categr1)
+-> Änderung in BBS auf Bubulcus ibis
+'Cooper's Hawk' = Astur cooperii (coohaw)
+'American Goshawk' = Astur atricapillus (norgos)
+-> Übernahme des aktualisierten Genus Astur in BBS
+'Purple Gallinule' = Porphyrio martinica (purgal2)
+-> Änderung in BBS auf Porphyrio martinica
+'European Goldfinch' = Carduelis carduelis/caniceps 
+-> 
+	'y01288'/'y01288a', 'Carduelis carduelis'/'Carduelis caniceps', 'European Goldfinch'/'Gray-crowned Goldfinch', 
+    '0', '2', '2023-04-05', '2023-07-26', '2', '2023-08-02', '2023-03-29', '0', 
+    NULL, NULL, 
+    '0', 
+    NULL, NULL, NULL, NULL, NULL, 
+    '2023', '0', 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+
+'Northern House Wren' = Troglodytes aedon/musculus
+->
+    'y01309'/'y01309a', 'Troglodytes aedon'/'Troglodytes musculus', 'Northern House Wren'/'Southern House Wren', 
+    '0', '3', '2023-05-31', '2023-08-02', '3', '2023-11-29', '2023-02-22', 
+    '3', '2023-08-09', '2023-11-22', '3', '2023-03-01', '2023-05-24', 
+    NULL, NULL, NULL, 
+    '2023', '0', 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+
+Anlegen einer separaten Zeile für jede der beiden Arten in eBird
+*/
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE bbs_species_list
+SET scientific_name = 'Larus smithsonianus'
+WHERE common_name = 'Herring Gull';
+
+UPDATE bbs_species_list
+SET scientific_name = 'Bubulcus ibis'
+WHERE common_name = 'Western Cattle-Egret'; 
+
+UPDATE ebird_species_info
+SET scientific_name = 'Bubulcus ibis'
+WHERE species_code = 'categr1'; 
+
+UPDATE bbs_species_list
+SET scientific_name = 'Astur atricapillus'
+WHERE common_name = "Cooper's Hawk"; 
+
+UPDATE bbs_species_list
+SET scientific_name = 'Astur cooperii'
+WHERE common_name = 'American Goshawk'; 
+
+UPDATE bbs_species_list
+SET scientific_name = 'Porphyrio martinica'
+WHERE common_name = 'Purple Gallinule'; 
+
+-- ========================================
+UPDATE ebird_species_info
+SET scientific_name = 'Carduelis carduelis'
+WHERE species_code = 'y01288'; 
+
+UPDATE ebird_species_info
+SET common_name = 'European Goldfinch'
+WHERE species_code = 'y01288'; 
+
+-- ==========================================
+UPDATE ebird_species_info
+SET scientific_name = 'Troglodytes aedon'
+WHERE species_code = 'y01309'; 
+
+UPDATE ebird_species_info
+SET common_name = 'Northern House Wren'
+WHERE species_code = 'y01309'; 
+
+SET SQL_SAFE_UPDATES = 1;
+
+INSERT INTO ebird_species_info
+VALUES (
+	'y01288a', 'Carduelis caniceps', 'Gray-crowned Goldfinch', 
+    '0', '2', '2023-04-05', '2023-07-26', '2', '2023-08-02', '2023-03-29', '0', 
+    NULL, NULL, 
+    '0', 
+    NULL, NULL, NULL, NULL, NULL, 
+    '2023', '0', 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+);
+
+INSERT INTO ebird_species_info
+VALUES (
+	'y01309a', 'Troglodytes musculus', 'Southern House Wren', 
+    '0', '3', '2023-05-31', '2023-08-02', '3', '2023-11-29', '2023-02-22', 
+    '3', '2023-08-09', '2023-11-22', '3', '2023-03-01', '2023-05-24', 
+    NULL, NULL, NULL, 
+    '2023', '0', 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+);
+
+-- Finaler Check
+
+SELECT DISTINCT
+	eb.species_code,
+    sl.scientific_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON sl.aou = ao.species_id
+LEFT JOIN ebird_species_info AS eb
+	ON sl.scientific_name = eb.scientific_name
+ORDER BY eb.species_code, sl.scientific_name;

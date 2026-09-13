@@ -238,7 +238,6 @@ CREATE TABLE IF NOT EXISTS era5_route_analysis (
     temperature_mean_year DECIMAL(7,3),
     temperature_mean_spring DECIMAL(7,3),
     temperature_mean_breeding DECIMAL(7,3),
-    temperature_mean_growing DECIMAL(7,3),
     temperature_min_year DECIMAL(7,3),
     temperature_max_year DECIMAL(7,3),
     temperature_std_year DECIMAL(7,3),
@@ -246,33 +245,30 @@ CREATE TABLE IF NOT EXISTS era5_route_analysis (
     precipitation_sum_year DECIMAL(12,6),
     precipitation_sum_spring DECIMAL(12,6),
     precipitation_sum_breeding DECIMAL(12,6),
-    precipitation_sum_growing DECIMAL(12,6),
     precipitation_max_month DECIMAL(12,6),
 
     snowfall_sum_year DECIMAL(12,6),
     snowfall_sum_spring DECIMAL(12,6),
     snowfall_sum_breeding DECIMAL(12,6),
-    snowfall_sum_growing DECIMAL(12,6),
     snowfall_max_month DECIMAL(12,6),
 
     wind_magnitude_mean_year DECIMAL(7,3),
     wind_magnitude_mean_spring DECIMAL(7,3),
     wind_magnitude_mean_breeding DECIMAL(7,3),
-    wind_magnitude_mean_growing DECIMAL(7,3),
-    wind_magnitude_max_month DECIMAL(7,3),
+    wind_magnitude_max_year DECIMAL(7,3),
 
-    vpd_mean_year DECIMAL(7,4),
-    vpd_mean_spring DECIMAL(7,4),
-    vpd_mean_breeding DECIMAL(7,4),
-    vpd_mean_growing DECIMAL(7,4),
-    vpd_max_month DECIMAL(7,4),
-    vpd_std_year DECIMAL(7,4),
+    relative_humidity_mean_year DECIMAL(7,4),
+    relative_humidity_mean_spring DECIMAL(7,4),
+    relative_humidity_mean_breeding DECIMAL(7,4),
+    relative_humidity_max_year DECIMAL(7,4),
+    relative_humidity_min_year DECIMAL(7,4),
+    relative_humidity_std_year DECIMAL(7,4),
 
     soil_moisture_mean_year DECIMAL(10,5),
     soil_moisture_mean_spring DECIMAL(10,5),
     soil_moisture_mean_breeding DECIMAL(10,5),
-    soil_moisture_mean_growing DECIMAL(10,5),
     soil_moisture_min_year DECIMAL(10,5),
+    soil_moisture_max_year DECIMAL(10,5),
     soil_moisture_std_year DECIMAL(10,5),
 
     solar_radiation_mean_year DECIMAL(12,3),
@@ -338,3 +334,63 @@ CREATE TABLE nlcd_route_analysis (
     INDEX idx_nlcd_route_year (`year`)
 );
     
+
+-- ======================================================================
+--  E_Bird Metadaten
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS ebird_species_info;
+
+CREATE TABLE IF NOT EXISTS ebird_species_info (
+    species_code VARCHAR(20) PRIMARY KEY,
+    scientific_name VARCHAR(150),
+    common_name VARCHAR(150),
+    is_resident BOOLEAN,
+    breeding_quality DOUBLE,
+    breeding_start DATE,
+    breeding_end DATE,
+    nonbreeding_quality DOUBLE,
+    nonbreeding_start DATE,
+    nonbreeding_end DATE,
+    postbreeding_migration_quality DOUBLE,
+    postbreeding_migration_start DATE,
+    postbreeding_migration_end DATE,
+    prebreeding_migration_quality DOUBLE,
+    prebreeding_migration_start DATE,
+    prebreeding_migration_end DATE,
+    resident_quality DOUBLE,
+    resident_start DATE,
+    resident_end DATE,
+    status_version_year SMALLINT,
+    has_trends BOOLEAN,
+    trends_season VARCHAR(30),
+    trends_region VARCHAR(100),
+    trends_start_year SMALLINT,
+    trends_end_year SMALLINT,
+    trends_start_date DATE,
+    trends_end_date DATE,
+    rsquared DOUBLE,
+    beta0 DOUBLE,
+    trends_version_year SMALLINT
+);
+
+-- ======================================================================
+--  BBS_SPECIES_LIST
+-- ======================================================================
+
+DROP TABLE IF EXISTS bbs_species_list;
+
+CREATE TABLE IF NOT EXISTS bbs_species_list(
+	aou CHAR(5) PRIMARY KEY,
+    common_name VARCHAR(100),
+    `order` VARCHAR(50),
+    family VARCHAR(50),
+    genus VARCHAR(50),
+    species TEXT,
+    species_name TEXT,
+    scientific_name VARCHAR(100)
+);
+
+-- ======================================================================
+--  BBS_SPECIES_LIST
+-- ======================================================================

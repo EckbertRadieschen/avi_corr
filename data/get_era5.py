@@ -268,7 +268,7 @@ def get_combined_area(sectors, sector_ids):
         max(sector["lat_max"] for sector in selected_sectors),
         min(sector["lon_min"] for sector in selected_sectors),
         min(sector["lat_min"] for sector in selected_sectors),
-        max(sector["lon_max"] for sector in selected_sectors),
+        max(sector["lon_max"] for sector in selected_sectors)
     ]
 
 
@@ -305,7 +305,6 @@ def extract_sector_data(nc_file, sector_stops) -> pd.DataFrame:
         era5_lat = sector_stops["latitude"].round(1)
         era5_lon = sector_stops["longitude"].round(1)
         stop_ids = sector_stops["stop_id"].values
-
         stop_lats = xr.DataArray(
             era5_lat.values,
             dims="stop",
@@ -519,9 +518,7 @@ def get_era5_data(bunch=False):
             raise ValueError("Keiner der konfigurierten Sektoren enthält Stops")
 
         sector_ids = sectors_to_process
-
         combined_stops = stops_df[stops_df["sector_id"].isin(sector_ids)].copy()
-
         process_combined_sectors(client, sector_ids, combined_stops, sectors)   
 
     else:
@@ -541,10 +538,8 @@ def get_era5_data(bunch=False):
 
             try:
                 sector_stops = sector_groups.get_group(sector_id)
-
                 sector_filter = sectors_df["sector_id"] == sector_id
                 sector = sectors_df[sector_filter].iloc[0]
-                
                 process_sector(client, sector_id, sector_stops, sector)
                 successful_sectors.append(sector_id)
 
