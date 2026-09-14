@@ -241,16 +241,20 @@ WITH
 		SELECT
 			r.state_num * 1000 + r.route AS route_id,
             CASE 
-				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 1/5
-					THEN '1_south'
-				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 2/5
-					THEN '2_south_central'
-				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 3/5
-					THEN '3_central'
-				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 4/5
-					THEN '4_north_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 1/7
+					THEN '1_far_south'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 2/7
+					THEN '2_south'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 3/7
+					THEN '3_south_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 4/7
+					THEN '4_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 5/7
+					THEN '5_north_central'
+				WHEN r.latitude < mm.min_latitude + (mm.max_latitude - mm.min_latitude) * 6/7
+					THEN '6_north'
 				ELSE 
-					'5_north'
+					'7_far_north'
 			END AS latitude_bin
         FROM routes AS r
         JOIN route_lat_min_max AS mm
@@ -337,6 +341,26 @@ sodass BBS zwecks Konsistenz die Nummerierung eigenständig weiterführt
 */
 
 SELECT DISTINCT
+	sl.common_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON ao.species_id = sl.aou
+WHERE 
+	(NOT sl.common_name LIKE '%unid.%')
+    AND (sl.common_name LIKE '%(%')
+ORDER BY sl.common_name;
+
+SELECT DISTINCT
+	sl.common_name
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON ao.species_id = sl.aou
+ORDER BY sl.common_name;
+
+-- Einige unidentifizierte Arten oder Hybride oder Zusatzinformationen (13)
+
+
+SELECT DISTINCT
 	species
 FROM bbs_species_list
 ORDER BY species;
@@ -361,22 +385,8 @@ FROM bbs_species_list
 ORDER BY species_name;
 
 -- Kleinere Änderungen nötig, die nicht der gängigen Nomenklatur entsprechen
+-- Diese werden später in Abstimmung mit den eBird-Daten vorgenommen
 
-SET SQL_SAFE_UPDATES = 0;
-
-UPDATE bbs_species_list
-SET species_name = 'Bubulcus ibis'
-WHERE common_name = 'Western Cattle-Egret';
-
-UPDATE bbs_species_list
-SET species_name = 'Setophaga coronata auduboni'
-WHERE common_name = '(Audubon''s Warbler) Yellow-rumped Warbler';
-
-UPDATE bbs_species_list
-SET species_name = 'Porphyrio martinica'
-WHERE common_name = 'Purple Gallinule';
-
-SET SQL_SAFE_UPDATES = 1;
 
 -- ======================================================================
 -- Reduziert auf die Analyse-relevanten Arten:
@@ -570,3 +580,68 @@ JOIN analysis_observations AS ao
 LEFT JOIN ebird_species_info AS eb
 	ON sl.scientific_name = eb.scientific_name
 ORDER BY eb.species_code, sl.scientific_name;
+
+
+SELECT
+	COUNT(DISTINCT sl.aou) AS species_with_breeding_start
+FROM bbs_species_list AS sl
+JOIN analysis_observations AS ao
+	ON sl.aou = ao.species_id
+JOIN ebird_species_info AS eb
+	ON sl.aou = eb.aou
+WHERE (eb.breeding_start IS NOT NULL) AND (eb.breeding_end IS NOT NULL);
+
+-- Für 309 Analyse-relevante Vogelarten sind Informationen in breeding_start und breeding_end verfügbar
+-- Die restlichen 67 Arten gehen nicht in die Brutzeitraum-Analysen ein 
+-- Diese erhalten später einen Marker, der diese fehlende Information kennzeichnet
+
+
+SELECT 
+	species_code
+FROM ebird_species_info AS eb
+WHERE LENGTH(species_code) > 8;
+
+SET SQL_SAFE_UPDATES = 0;
+
+DELETE FROM ebird_species_info
+WHERE LENGTH(species_code) > 8;
+
+SET SQL_SAFE_UPDATES = 1;
+
+-- Daten enthielten einen Beispieldatensatz
+-- Dadurch liefen zwei wissenschaftliche Namen unter verschiedenem species_code.
+-- Der Beispieldatensatz wurde entfernt
+
+
+-- =====================================================
+-- latitude_day_length
+-- =====================================================
+
+SELECT * FROM latitude_day_length;
+
+SELECT
+    zone,
+    latitude AS latitude,
+    `date`,
+    ROUND(day_length, 2) AS day_length
+FROM latitude_day_length
+WHERE `date` IN (
+    '2023-01-01',
+    '2023-03-21',
+    '2023-06-21',
+    '2023-09-23',
+    '2023-12-21'
+)
+ORDER BY latitude, `date`;
+
+SELECT
+    zone,
+    ROUND(latitude, 5) AS latitude,
+    ROUND(MIN(relative_day_length), 5) AS min_relative,
+    ROUND(MAX(relative_day_length), 5) AS max_relative,
+    COUNT(*) AS days
+FROM latitude_day_length
+GROUP BY zone, latitude
+ORDER BY latitude;
+
+

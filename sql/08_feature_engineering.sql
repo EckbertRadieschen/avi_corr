@@ -165,3 +165,47 @@ JOIN analysis_observations AS ao
 LEFT JOIN ebird_species_info AS eb
 	ON sl.scientific_name = eb.scientific_name
 ORDER BY eb.aou, sl.scientific_name;
+
+
+-- ====================================================================
+-- analysis_routes
+-- ====================================================================
+
+-- Erweiterung der Tabelle um die Spalte latitude_zone
+-- Diese gibt an, in welcher der 7 definierten Breitenzonen des Projektbereiches
+-- sich die Route befindet
+
+ALTER TABLE analysis_routes
+ADD COLUMN latitude_zone TINYINT;
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE analysis_routes AS ar
+JOIN routes AS r
+    ON r.state_num * 1000 + r.route = ar.route_id
+CROSS JOIN (
+    SELECT
+        MIN(latitude) AS min_latitude,
+        MAX(latitude) AS max_latitude
+    FROM routes AS r
+    JOIN analysis_routes AS ar
+        ON r.state_num * 1000 + r.route = ar.route_id
+) AS x
+SET ar.latitude_zone =
+    CASE
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 1 / 7
+            THEN 1
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 2 / 7
+            THEN 2
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 3 / 7
+            THEN 3
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 4 / 7
+            THEN 4
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 5 / 7
+            THEN 5
+        WHEN r.latitude < x.min_latitude + (x.max_latitude - x.min_latitude) * 6 / 7
+            THEN 6
+        ELSE 7
+    END;
+    
+SET SQL_SAFE_UPDATES = 1;

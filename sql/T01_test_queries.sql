@@ -292,31 +292,23 @@ FROM analysis_observations;
 
 -- 417 AOU in analysis_observations
 
-SELECT DISTINCT
-	sl.common_name
-FROM bbs_species_list AS sl
-JOIN analysis_observations AS ao
-	ON ao.species_id = sl.aou
-WHERE sl.common_name LIKE '%unid.%';
 
+SELECT
+    species_id,
+    ebird_species_code,
+    scientific_name,
+    common_name
+FROM analysis_species_list
+WHERE ebird_species_code IS NOT NULL
+ORDER BY ebird_species_code;
 
-SELECT DISTINCT
-	sl.common_name
-FROM bbs_species_list AS sl
-JOIN analysis_observations AS ao
-	ON ao.species_id = sl.aou
-WHERE 
-	(NOT sl.common_name LIKE '%unid.%')
-    AND (sl.common_name LIKE '%(%')
-ORDER BY sl.common_name;
+SELECT
+    COUNT(*) AS total_species,
+    COUNT(ebird_species_code) AS species_with_ebird_code,
+    COUNT(*) - COUNT(ebird_species_code) AS species_without_ebird_code
+FROM analysis_species_list;
 
-SELECT DISTINCT
-	sl.common_name
-FROM bbs_species_list AS sl
-JOIN analysis_observations AS ao
-	ON ao.species_id = sl.aou
-ORDER BY sl.common_name;
-
+SELECT * FROM ebird_breeding_ranges;
 
 
 

@@ -378,7 +378,7 @@ CREATE TABLE IF NOT EXISTS ebird_species_info (
 --  BBS_SPECIES_LIST
 -- ======================================================================
 
-DROP TABLE IF EXISTS bbs_species_list;
+-- DROP TABLE IF EXISTS bbs_species_list;
 
 CREATE TABLE IF NOT EXISTS bbs_species_list(
 	aou CHAR(5) PRIMARY KEY,
@@ -392,5 +392,33 @@ CREATE TABLE IF NOT EXISTS bbs_species_list(
 );
 
 -- ======================================================================
---  BBS_SPECIES_LIST
+--  ANALYSIS_SPECIES_LIST
 -- ======================================================================
+
+-- DROP TABLE IF EXISTS analysis_species_list;
+
+CREATE TABLE IF NOT EXISTS analysis_species_list(
+	species_id CHAR(5) PRIMARY KEY,
+    ebird_species_code VARCHAR(10),
+    scientific_name VARCHAR(100),
+    common_name VARCHAR(100),
+    `order` VARCHAR(50),
+    family VARCHAR(50),
+    genus VARCHAR(50)
+);
+
+
+-- ======================================================================
+--  ANALYSIS_SPECIES_LIST
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS ebird_breeding_ranges;
+
+CREATE TABLE ebird_breeding_ranges (
+    species_code VARCHAR(10) PRIMARY KEY,
+    min_latitude DECIMAL(8,5),
+    max_latitude DECIMAL(8,5),
+    breeding_start DATE,
+    breeding_end DATE
+);
+

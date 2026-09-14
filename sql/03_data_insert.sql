@@ -463,3 +463,25 @@ SET
     family = NULLIF(@Family, ''),
     genus = NULLIF(@Genus, ''),
     species = NULLIF(@Species, '');
+    
+    
+-- ===============================================================================
+-- analysis_species_list
+-- ===============================================================================
+
+-- TRUNCATE analysis_species_list;
+
+INSERT INTO analysis_species_list 
+	SELECT DISTINCT
+		sl.aou,
+        eb.species_code,
+        sl.scientific_name,
+        sl.common_name,
+        sl.`order`,
+        sl.family,
+        sl.genus
+    FROM bbs_species_list AS sl
+    JOIN analysis_observations AS ao
+		ON sl.aou = ao.species_id
+	LEFT JOIN ebird_species_info AS eb
+		ON sl.aou = eb.aou;
