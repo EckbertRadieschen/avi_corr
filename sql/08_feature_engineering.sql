@@ -104,6 +104,31 @@ UPDATE era5_route_monthly AS e
 SET SQL_SAFE_UPDATES = 1;
 
 
+-- total_precipitation
+-- total_snowfall
+
+ALTER TABLE era5_route_monthly
+ADD COLUMN total_precipitation DECIMAL(11, 4);
+
+ALTER TABLE era5_route_monthly
+ADD COLUMN total_snowfall DECIMAL(11, 4);
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE era5_route_monthly
+SET total_precipitation = 
+	ROUND(daily_precipitation * DAY(LAST_DAY(CONCAT(`year`, '-', `month`, '-01'))), 4);
+
+UPDATE era5_route_monthly
+SET total_snowfall = 
+	ROUND(daily_snowfall * DAY(LAST_DAY(CONCAT(`year`, '-', `month`, '-01'))), 4);
+    
+SET SQL_SAFE_UPDATES = 1;
+
+
+
+
+
 -- ===============================================================
 -- BBS_SPECIES_LIST
 -- ===============================================================

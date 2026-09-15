@@ -513,3 +513,35 @@ CREATE TABLE IF NOT EXISTS species_latitude_breeding (
     breeding_end DATE,
     PRIMARY KEY (species_id, zone)
 );
+
+
+-- ======================================================================
+--  ANALYSIS_ROUTE_SPECIES_RELEVANT
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS analysis_route_species_relevant;
+
+CREATE TABLE IF NOT EXISTS analysis_route_species_relevant (
+	route_id INT,
+    species_id CHAR(5),
+    total_bird_count INT,
+    years_observed SMALLINT,
+    first_year SMALLINT,
+    last_year SMALLINT,
+    
+    PRIMARY KEY (route_id, species_id)
+);
+
+-- ======================================================================
+--  ANALYSIS_RELEVANT_OBSERVATIONS
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS analysis_relevant_observations;
+
+CREATE TABLE IF NOT EXISTS analysis_relevant_observations (
+	route_id INT,
+    species_id CHAR(5),
+    `year` SMALLINT,
+    species_total INT DEFAULT 0,
+    PRIMARY KEY (route_id, species_id, `year`)
+);

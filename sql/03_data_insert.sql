@@ -847,4 +847,59 @@ INSERT INTO era5_route_analysis
 	JOIN fall_agg AS f
 		ON y.route_id = f.route_id AND y.`year` = f.`year`
 	JOIN winter_agg AS w
-		ON y.route_id = w.route_id AND y.`year` = w.`year`
+		ON y.route_id = w.route_id AND y.`year` = w.`year`;
+
+-- ===============================================================================
+-- analysis_route_species_relevant
+-- ===============================================================================
+    
+-- TRUNCATE analysis_route_species_relevant;
+        
+INSERT INTO analysis_route_species_relevant
+	SELECT
+    route_id,
+    species_id,
+    SUM(species_total) AS total_count,
+    COUNT(`year`) AS years_observed,
+    MIN(`year`) AS first_year,
+    MAX(`year`) AS last_year
+FROM analysis_observations
+GROUP BY
+    route_id,
+    species_id
+HAVING total_count > 20 AND years_observed > 3
+ORDER BY
+    species_id,
+    route_id;
+    
+    
+-- ===============================================================================
+-- analysis_relevant_observations
+-- ===============================================================================
+    
+-- TRUNCATE analysis_relevant_observations;
+
+INSERT INTO analysis_relevant_observations
+	WITH routes_years_species AS (
+		SELECT
+			ry.route_id,
+			ry.`year`,
+			rsr.species_id
+		FROM analysis_route_years AS ry
+		JOIN analysis_route_species_relevant AS rsr
+			ON ry.route_id = rsr.route_id
+	)
+	SELECT
+		rys.route_id,
+		rys.`year`,
+		rys.species_id,
+		CEIL(AVG(o.species_total)) AS species_total
+	FROM analysis_observations AS o
+	RIGHT JOIN routes_years_species AS rys
+		ON 
+			o.route_id = rys.route_id
+			AND o.`year` = rys.`year`
+			AND o.species_id = rys.species_id
+	GROUP BY rys.route_id, rys.species_id, rys.`year`
+	ORDER BY rys.route_id, rys.species_id, rys.`year`;
+    
