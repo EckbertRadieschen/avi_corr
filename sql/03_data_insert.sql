@@ -856,21 +856,35 @@ INSERT INTO era5_route_analysis
 -- TRUNCATE analysis_route_species_relevant;
         
 INSERT INTO analysis_route_species_relevant
+WITH pre_filtered AS(
 	SELECT
-    route_id,
-    species_id,
-    SUM(species_total) AS total_count,
-    COUNT(`year`) AS years_observed,
-    MIN(`year`) AS first_year,
-    MAX(`year`) AS last_year
-FROM analysis_observations
-GROUP BY
-    route_id,
-    species_id
-HAVING total_count > 20 AND years_observed > 3
-ORDER BY
-    species_id,
-    route_id;
+		route_id,
+		species_id,
+		SUM(species_total) AS total_count,
+		COUNT(`year`) AS years_observed,
+		MIN(`year`) AS first_year,
+		MAX(`year`) AS last_year
+	FROM analysis_observations
+	GROUP BY
+		route_id,
+		species_id
+	HAVING
+		total_count > 20
+		AND years_observed > 3
+)
+SELECT
+	*
+FROM pre_filtered
+WHERE species_id IN (
+	SELECT species_id
+	FROM (
+		SELECT
+			species_id,
+			COUNT(DISTINCT route_id) AS route_count
+		FROM pre_filtered
+		GROUP BY species_id
+		HAVING route_count >= 5
+	) AS species_with_3_routes);
     
     
 -- ===============================================================================
@@ -883,16 +897,16 @@ INSERT INTO analysis_relevant_observations
 	WITH routes_years_species AS (
 		SELECT
 			ry.route_id,
-			ry.`year`,
-			rsr.species_id
+			rsr.species_id,
+            ry.`year`
 		FROM analysis_route_years AS ry
 		JOIN analysis_route_species_relevant AS rsr
 			ON ry.route_id = rsr.route_id
 	)
 	SELECT
 		rys.route_id,
-		rys.`year`,
 		rys.species_id,
+        rys.`year`,
 		CEIL(AVG(o.species_total)) AS species_total
 	FROM analysis_observations AS o
 	RIGHT JOIN routes_years_species AS rys
@@ -902,4 +916,17 @@ INSERT INTO analysis_relevant_observations
 			AND o.species_id = rys.species_id
 	GROUP BY rys.route_id, rys.species_id, rys.`year`
 	ORDER BY rys.route_id, rys.species_id, rys.`year`;
+    
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE analysis_relevant_observations
+SET species_total = 0
+WHERE species_total IS NULL;
+
+SET SQL_SAFE_UPDATES = 1;
+
+SELECT DISTINCT
+	common_name 
+FROM analysis_species_list
+WHERE species_id = '06750';
     

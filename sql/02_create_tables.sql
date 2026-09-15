@@ -542,6 +542,6 @@ CREATE TABLE IF NOT EXISTS analysis_relevant_observations (
 	route_id INT,
     species_id CHAR(5),
     `year` SMALLINT,
-    species_total INT DEFAULT 0,
+    species_total INT,
     PRIMARY KEY (route_id, species_id, `year`)
 );
