@@ -308,7 +308,96 @@ SELECT
     COUNT(*) - COUNT(ebird_species_code) AS species_without_ebird_code
 FROM analysis_species_list;
 
-SELECT * FROM ebird_breeding_ranges;
+SELECT
+    MIN(br.min_latitude) AS min_latitude,
+    MAX(br.max_latitude) AS max_latitude
+FROM ebird_breeding_ranges AS br
+JOIN ebird_species_info AS i
+	ON br.species_code = i.species_code
+JOIN bbs_species_list AS sl
+	ON i.aou = sl.aou;
+    
+SELECT
+    sl.common_name,
+    br.min_latitude
+FROM ebird_breeding_ranges AS br
+JOIN ebird_species_info AS i
+	ON br.species_code = i.species_code
+JOIN bbs_species_list AS sl
+	ON i.aou = sl.aou
+WHERE br.min_latitude < 0;
 
 
+SELECT
+    route_id,
+    species_id,
+    SUM(species_total) AS total_count,
+    COUNT(DISTINCT year) AS years_observed,
+    COUNT(*) AS observation_rows,
+    MIN(year) AS first_year,
+    MAX(year) AS last_year
+FROM analysis_observations
+GROUP BY
+    route_id,
+    species_id
+HAVING total_count > 20 AND years_observed > 3
+ORDER BY
+    species_id,
+    route_id;
+    
 
+SELECT
+    years_observed,
+    COUNT(*) AS route_species_combinations
+FROM (
+    SELECT
+        route_id,
+        species_id,
+        SUM(species_total) AS total_count,
+        COUNT(DISTINCT year) AS years_observed
+    FROM analysis_observations
+    GROUP BY
+        route_id,
+        species_id
+    HAVING
+        total_count > 20
+        AND years_observed > 3
+) AS x
+GROUP BY
+    years_observed
+ORDER BY
+    years_observed;
+    
+
+SELECT
+    x.route_id,
+    x.species_id,
+    x.total_count,
+    x.years_observed,
+    r.years_surveyed,
+    ROUND(
+        x.years_observed / r.years_surveyed,
+        3
+    ) AS observation_rate
+FROM (
+    SELECT
+        route_id,
+        species_id,
+        SUM(species_total) AS total_count,
+        COUNT(DISTINCT year) AS years_observed
+    FROM analysis_observations
+    GROUP BY
+        route_id,
+        species_id
+    HAVING
+        total_count > 20
+        AND years_observed > 3
+) AS x
+JOIN (
+    SELECT
+        route_id,
+        COUNT(DISTINCT year) AS years_surveyed
+    FROM analysis_observations
+    GROUP BY route_id
+) AS r
+    ON x.route_id = r.route_id;

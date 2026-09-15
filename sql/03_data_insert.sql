@@ -485,3 +485,366 @@ INSERT INTO analysis_species_list
 		ON sl.aou = ao.species_id
 	LEFT JOIN ebird_species_info AS eb
 		ON sl.aou = eb.aou;
+
+
+-- ===============================================================================
+-- calendar_2023
+-- ===============================================================================
+        
+DELIMITER //
+
+CREATE PROCEDURE fill_calendar_2023()
+BEGIN
+    DECLARE d DATE DEFAULT '2023-01-01';
+    WHILE d <= '2023-12-31' DO
+        INSERT INTO calendar_2023 (`date`)
+        VALUES (d);
+        SET d = d + INTERVAL 1 DAY;
+    END WHILE;
+END //
+DELIMITER ;
+
+CALL fill_calendar_2023();
+DROP PROCEDURE fill_calendar_2023;
+
+
+-- ===============================================================================
+-- latitude_day_length
+-- ===============================================================================
+
+-- TRUNCATE TABLE latitude_day_length;
+
+INSERT INTO latitude_day_length (
+    latitude,
+    `date`
+)
+WITH RECURSIVE latitudes AS (
+    SELECT -55.8 AS latitude
+
+    UNION ALL
+
+    SELECT latitude + 0.1
+    FROM latitudes
+    WHERE latitude < 30.0
+)
+SELECT
+    ROUND(l.latitude, 1),
+    c.`date`
+FROM latitudes AS l
+CROSS JOIN calendar_2023 AS c;
+
+INSERT INTO latitude_day_length (
+    latitude,
+    `date`
+)
+WITH RECURSIVE latitudes AS (
+    SELECT 30.1 AS latitude
+
+    UNION ALL
+
+    SELECT latitude + 0.1
+    FROM latitudes
+    WHERE latitude < 80.1
+)
+SELECT
+    ROUND(l.latitude, 1),
+    c.`date`
+FROM latitudes AS l
+CROSS JOIN calendar_2023 AS c;
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE latitude_day_length
+SET day_length =
+    (
+        ACOS((SIN(RADIANS(-0.833)) - SIN(RADIANS(latitude))
+                * SIN(RADIANS(23.44 * SIN(RADIANS(360 * (DAYOFYEAR(`date`) + 284) / 365))))
+            )
+            /
+            (COS(RADIANS(latitude)) * COS(RADIANS(23.44 * SIN(RADIANS(360 * (DAYOFYEAR(`date`) + 284) / 365)))))
+        ) * 24 / PI()
+    );
+    
+UPDATE latitude_day_length AS l
+JOIN (
+    SELECT
+        latitude,
+        MIN(day_length) AS min_day_length,
+        MAX(day_length) AS max_day_length
+    FROM latitude_day_length
+    GROUP BY latitude
+) AS x
+    ON l.latitude = x.latitude
+SET l.relative_day_length = (l.day_length - x.min_day_length) / (x.max_day_length - x.min_day_length);
+    
+SET SQL_SAFE_UPDATES = 1;
+
+
+-- ===============================================================================
+-- era5_route_analysis
+-- ===============================================================================
+    
+-- TRUNCATE era5_route_analysis;
+    
+INSERT INTO era5_route_analysis
+	WITH spring_agg AS (
+		SELECT
+			route_id,
+            `year`,
+        
+			ROUND(AVG(temperature), 3) AS mean_temp,
+            ROUND(MIN(temperature), 3) AS min_temp,
+            ROUND(MAX(temperature), 3) AS max_temp,
+            ROUND(STDDEV(temperature), 3) AS std_temp,
+            
+            ROUND(SUM(total_precipitation), 6) AS total_prec,
+            ROUND(SUM(total_snowfall), 6) AS total_snow,
+	
+            ROUND(AVG(wind_magnitude), 3) AS mean_wind,
+            ROUND(AVG(solar_flux_density), 3) AS mean_sol,
+            ROUND(AVG(vegetation_coefficient), 6) AS mean_veg,
+            
+            ROUND(AVG(soil_moisture), 5) AS mean_soil,
+            ROUND(MIN(soil_moisture), 5) AS min_soil,
+            ROUND(MAX(soil_moisture), 5) AS max_soil,
+            ROUND(STDDEV(soil_moisture), 5) AS std_soil,
+            
+            ROUND(AVG(relative_humidity), 4) AS mean_hum,
+            ROUND(MIN(relative_humidity), 4) AS min_hum,
+            ROUND(MAX(relative_humidity), 4) AS max_hum,
+            ROUND(STDDEV(relative_humidity), 4) AS std_hum
+		FROM era5_route_monthly
+        WHERE `month` IN (3, 4, 5)
+        GROUP BY route_id, `year`
+    ),
+    summer_agg AS (
+		SELECT
+			route_id,
+            `year`,
+        
+			ROUND(AVG(temperature), 3) AS mean_temp,
+            ROUND(MIN(temperature), 3) AS min_temp,
+            ROUND(MAX(temperature), 3) AS max_temp,
+            ROUND(STDDEV(temperature), 3) AS std_temp,
+            
+            ROUND(SUM(total_precipitation), 6) AS total_prec,
+            ROUND(SUM(total_snowfall), 6) AS total_snow,
+	
+            ROUND(AVG(wind_magnitude), 3) AS mean_wind,
+            ROUND(AVG(solar_flux_density), 3) AS mean_sol,
+            ROUND(AVG(vegetation_coefficient), 6) AS mean_veg,
+            
+            ROUND(AVG(soil_moisture), 5) AS mean_soil,
+            ROUND(MIN(soil_moisture), 5) AS min_soil,
+            ROUND(MAX(soil_moisture), 5) AS max_soil,
+            ROUND(STDDEV(soil_moisture), 5) AS std_soil,
+            
+            ROUND(AVG(relative_humidity), 4) AS mean_hum,
+            ROUND(MIN(relative_humidity), 4) AS min_hum,
+            ROUND(MAX(relative_humidity), 4) AS max_hum,
+            ROUND(STDDEV(relative_humidity), 4) AS std_hum
+		FROM era5_route_monthly
+        WHERE `month` IN (6, 7, 8)
+        GROUP BY route_id, `year`
+    ),
+	fall_agg AS (
+		SELECT
+			route_id,
+            `year`,
+        
+			ROUND(AVG(temperature), 3) AS mean_temp,
+            ROUND(MIN(temperature), 3) AS min_temp,
+            ROUND(MAX(temperature), 3) AS max_temp,
+            ROUND(STDDEV(temperature), 3) AS std_temp,
+            
+            ROUND(SUM(total_precipitation), 6) AS total_prec,
+            ROUND(SUM(total_snowfall), 6) AS total_snow,
+	
+            ROUND(AVG(wind_magnitude), 3) AS mean_wind,
+            ROUND(AVG(solar_flux_density), 3) AS mean_sol,
+            ROUND(AVG(vegetation_coefficient), 6) AS mean_veg,
+            
+            ROUND(AVG(soil_moisture), 5) AS mean_soil,
+            ROUND(MIN(soil_moisture), 5) AS min_soil,
+            ROUND(MAX(soil_moisture), 5) AS max_soil,
+            ROUND(STDDEV(soil_moisture), 5) AS std_soil,
+            
+            ROUND(AVG(relative_humidity), 4) AS mean_hum,
+            ROUND(MIN(relative_humidity), 4) AS min_hum,
+            ROUND(MAX(relative_humidity), 4) AS max_hum,
+            ROUND(STDDEV(relative_humidity), 4) AS std_hum
+		FROM era5_route_monthly
+        WHERE `month` IN (9, 10, 11)
+        GROUP BY route_id, `year`
+    ),
+    winter_agg AS (
+		SELECT
+			route_id,
+            `year`,
+        
+			ROUND(AVG(temperature), 3) AS mean_temp,
+            ROUND(MIN(temperature), 3) AS min_temp,
+            ROUND(MAX(temperature), 3) AS max_temp,
+            ROUND(STDDEV(temperature), 3) AS std_temp,
+            
+            ROUND(SUM(total_precipitation), 6) AS total_prec,
+            ROUND(SUM(total_snowfall), 6) AS total_snow,
+	
+            ROUND(AVG(wind_magnitude), 3) AS mean_wind,
+            ROUND(AVG(solar_flux_density), 3) AS mean_sol,
+            ROUND(AVG(vegetation_coefficient), 6) AS mean_veg,
+            
+            ROUND(AVG(soil_moisture), 5) AS mean_soil,
+            ROUND(MIN(soil_moisture), 5) AS min_soil,
+            ROUND(MAX(soil_moisture), 5) AS max_soil,
+            ROUND(STDDEV(soil_moisture), 5) AS std_soil,
+            
+            ROUND(AVG(relative_humidity), 4) AS mean_hum,
+            ROUND(MIN(relative_humidity), 4) AS min_hum,
+            ROUND(MAX(relative_humidity), 4) AS max_hum,
+            ROUND(STDDEV(relative_humidity), 4) AS std_hum
+		FROM era5_route_monthly
+        WHERE `month` IN (1, 2, 12)
+        GROUP BY route_id, `year`
+    ),
+    year_agg AS (
+		SELECT
+			route_id,
+            `year`,
+        
+			ROUND(AVG(temperature), 3) AS mean_temp,
+            ROUND(MIN(temperature), 3) AS min_temp,
+            ROUND(MAX(temperature), 3) AS max_temp,
+            ROUND(STDDEV(temperature), 3) AS std_temp,
+            
+            ROUND(SUM(total_precipitation), 6) AS total_prec,
+            ROUND(MAX(total_precipitation), 6) AS max_month_prec,
+            ROUND(SUM(total_snowfall), 6) AS total_snow,
+			ROUND(MAX(total_snowfall), 6) AS max_month_snow,
+            
+            ROUND(AVG(wind_magnitude), 3) AS mean_wind,
+            ROUND(MAX(wind_magnitude), 3) AS max_month_wind,
+            ROUND(AVG(solar_flux_density), 3) AS mean_sol,
+            ROUND(AVG(vegetation_coefficient), 6) AS mean_veg,
+            
+            ROUND(AVG(soil_moisture), 5) AS mean_soil,
+            ROUND(MIN(soil_moisture), 5) AS min_soil,
+            ROUND(MAX(soil_moisture), 5) AS max_soil,
+            ROUND(STDDEV(soil_moisture), 5) AS std_soil,
+            
+            ROUND(AVG(relative_humidity), 4) AS mean_hum,
+            ROUND(MIN(relative_humidity), 4) AS min_hum,
+            ROUND(MAX(relative_humidity), 4) AS max_hum,
+            ROUND(STDDEV(relative_humidity), 4) AS std_hum
+		FROM era5_route_monthly
+        GROUP BY route_id, `year`
+    )
+    SELECT
+		y.route_id,
+        y.`year`,
+        
+		y.mean_temp,
+        sp.mean_temp,
+        su.mean_temp,
+        f.mean_temp,
+        w.mean_temp,
+        y.min_temp,
+        y.max_temp,
+        sp.min_temp,
+        sp.max_temp,
+        su.min_temp,
+        su.max_temp,
+        f.min_temp,
+        f.max_temp,
+        w.min_temp,
+        w.max_temp,
+        y.std_temp,
+        sp.std_temp,
+        su.std_temp,
+        f.std_temp,
+        w.std_temp,
+        
+        y.total_prec,
+        sp.total_prec,
+        su.total_prec,
+        f.total_prec,
+        w.total_prec,
+        y.max_month_prec,
+        
+        y.total_snow,
+        sp.total_snow,
+        su.total_snow,
+        f.total_snow,
+        w.total_snow,
+        y.max_month_snow,
+        
+        y.mean_wind,
+        sp.mean_wind,
+        su.mean_wind,
+        f.mean_wind,
+        w.mean_wind,
+        y.max_month_wind,
+        
+        y.mean_hum,
+        sp.mean_hum,
+        su.mean_hum,
+        f.mean_hum,
+        w.mean_hum,
+        y.min_hum,
+        y.max_hum,
+        sp.min_hum,
+        sp.max_hum,
+        su.min_hum,
+        su.max_hum,
+        f.min_hum,
+        f.max_hum,
+        w.min_hum,
+        w.max_hum,
+        y.std_hum,
+        sp.std_hum,
+        su.std_hum,
+        f.std_hum,
+        w.std_hum,
+        
+        y.mean_soil,
+        sp.mean_soil,
+        su.mean_soil,
+        f.mean_soil,
+        w.mean_soil,
+        y.min_soil,
+        y.max_soil,
+        sp.min_soil,
+        sp.max_soil,
+        su.min_soil,
+        su.max_soil,
+        f.min_soil,
+        f.max_soil,
+        w.min_soil,
+        w.max_soil,
+        y.std_soil,
+        sp.std_soil,
+        su.std_soil,
+        f.std_soil,
+        w.std_soil,
+        
+        y.mean_sol,
+        sp.mean_sol,
+        su.mean_sol,
+        f.mean_sol,
+        w.mean_sol,
+        
+        y.mean_veg,
+        sp.mean_veg,
+        su.mean_veg,
+        f.mean_veg,
+        w.mean_veg
+    FROM year_agg AS y
+    JOIN spring_agg AS sp
+		ON y.route_id = sp.route_id AND y.`year` = sp.`year`
+	JOIN summer_agg AS su
+		ON y.route_id = su.route_id AND y.`year` = su.`year`
+	JOIN fall_agg AS f
+		ON y.route_id = f.route_id AND y.`year` = f.`year`
+	JOIN winter_agg AS w
+		ON y.route_id = w.route_id AND y.`year` = w.`year`

@@ -620,19 +620,38 @@ SET SQL_SAFE_UPDATES = 1;
 SELECT * FROM latitude_day_length;
 
 SELECT
-    zone,
-    latitude AS latitude,
+    latitude,
     `date`,
-    ROUND(day_length, 2) AS day_length
+    day_length
 FROM latitude_day_length
-WHERE `date` IN (
-    '2023-01-01',
-    '2023-03-21',
-    '2023-06-21',
-    '2023-09-23',
-    '2023-12-21'
-)
+WHERE latitude IN (-55.7, -30.0, 0.0, 30.0, 55.0, 80.0)
+  AND `date` IN (
+      '2023-03-21',
+      '2023-06-21',
+      '2023-12-21'
+  )
 ORDER BY latitude, `date`;
+
+-- Nullwerte für einige Tage
+
+
+SELECT
+    COUNT(*) AS null_count,
+    COUNT(DISTINCT latitude) AS affected_latitudes
+FROM latitude_day_length
+WHERE day_length IS NULL;
+
+SELECT
+    latitude,
+    MIN(`date`) AS first_null_date,
+    MAX(`date`) AS last_null_date,
+    COUNT(*) AS null_days
+FROM latitude_day_length
+WHERE day_length IS NULL
+GROUP BY latitude
+ORDER BY latitude;
+
+
 
 SELECT
     zone,

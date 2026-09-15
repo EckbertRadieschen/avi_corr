@@ -197,6 +197,7 @@ CREATE TABLE IF NOT EXISTS era5_monthly_data (
 
 ALTER TABLE era5_monthly_data
 ADD COLUMN wind_magnitude DECIMAL(9, 4);
+ 
 
 
 -- ======================================================================
@@ -235,51 +236,101 @@ CREATE TABLE IF NOT EXISTS era5_route_analysis (
     route_id INT,
     `year` SMALLINT,
 
-    temperature_mean_year DECIMAL(7,3),
-    temperature_mean_spring DECIMAL(7,3),
-    temperature_mean_breeding DECIMAL(7,3),
-    temperature_min_year DECIMAL(7,3),
-    temperature_max_year DECIMAL(7,3),
-    temperature_std_year DECIMAL(7,3),
+    temperature_mean_year DECIMAL(6, 3),
+    temperature_mean_spring DECIMAL(6, 3),
+    temperature_mean_summer DECIMAL(6, 3),
+    temperature_mean_fall DECIMAL(6, 3),
+    temperature_mean_winter DECIMAL(6, 3),
+    temperature_min_year DECIMAL(6, 3),
+    temperature_max_year DECIMAL(6, 3),
+    temperature_min_spring DECIMAL(6, 3),
+    temperature_max_spring DECIMAL(6, 3),
+    temperature_min_summer DECIMAL(6, 3),
+    temperature_max_summer DECIMAL(6, 3),
+    temperature_min_fall DECIMAL(6, 3),
+    temperature_max_fall DECIMAL(6, 3),
+    temperature_min_winter DECIMAL(6, 3),
+    temperature_max_winter DECIMAL(6, 3),
+    temperature_std_year DECIMAL(6, 3),
+    temperature_std_spring DECIMAL(6, 3),
+    temperature_std_summer DECIMAL(6, 3),
+    temperature_std_fall DECIMAL(6, 3),
+    temperature_std_winter DECIMAL(6, 3),
 
-    precipitation_sum_year DECIMAL(12,6),
-    precipitation_sum_spring DECIMAL(12,6),
-    precipitation_sum_breeding DECIMAL(12,6),
-    precipitation_max_month DECIMAL(12,6),
+    precipitation_sum_year DECIMAL(12, 6),
+    precipitation_sum_spring DECIMAL(12, 6),
+    precipitation_sum_summer DECIMAL(12, 6),
+    precipitation_sum_fall DECIMAL(12, 6),
+    precipitation_sum_winter DECIMAL(12, 6),
+    precipitation_max_month DECIMAL(12, 6),
 
-    snowfall_sum_year DECIMAL(12,6),
-    snowfall_sum_spring DECIMAL(12,6),
-    snowfall_sum_breeding DECIMAL(12,6),
-    snowfall_max_month DECIMAL(12,6),
+    snowfall_sum_year DECIMAL(12, 6),
+    snowfall_sum_spring DECIMAL(12, 6),
+    snowfall_sum_summer DECIMAL(12, 6),
+    snowfall_sum_fall DECIMAL(12, 6),
+    snowfall_sum_winter DECIMAL(12, 6),
+    snowfall_max_month DECIMAL(12, 6),
 
-    wind_magnitude_mean_year DECIMAL(7,3),
-    wind_magnitude_mean_spring DECIMAL(7,3),
-    wind_magnitude_mean_breeding DECIMAL(7,3),
-    wind_magnitude_max_year DECIMAL(7,3),
+    wind_magnitude_mean_year DECIMAL(7, 3),
+    wind_magnitude_mean_spring DECIMAL(7, 3),
+    wind_magnitude_mean_summer DECIMAL(7, 3),
+    wind_magnitude_mean_fall DECIMAL(7, 3),
+    wind_magnitude_mean_winter DECIMAL(7, 3),
+    wind_magnitude_max_year DECIMAL(7, 3),
 
-    relative_humidity_mean_year DECIMAL(7,4),
-    relative_humidity_mean_spring DECIMAL(7,4),
-    relative_humidity_mean_breeding DECIMAL(7,4),
-    relative_humidity_max_year DECIMAL(7,4),
-    relative_humidity_min_year DECIMAL(7,4),
-    relative_humidity_std_year DECIMAL(7,4),
+    relative_humidity_mean_year DECIMAL(7, 4),
+    relative_humidity_mean_spring DECIMAL(7, 4),
+    relative_humidity_mean_summer DECIMAL(7, 4),
+    relative_humidity_mean_fall DECIMAL(7, 4),
+    relative_humidity_mean_winter DECIMAL(7, 4),
+    relative_humidity_min_year DECIMAL(7, 4),
+    relative_humidity_max_year DECIMAL(7, 4),
+    relative_humidity_min_spring DECIMAL(7, 4),
+    relative_humidity_max_spring DECIMAL(7, 4),
+    relative_humidity_min_summer DECIMAL(7, 4),
+    relative_humidity_max_summer DECIMAL(7, 4),
+    relative_humidity_min_fall DECIMAL(7, 4),
+    relative_humidity_max_fall DECIMAL(7, 4),
+    relative_humidity_min_winter DECIMAL(7, 4),
+    relative_humidity_max_winter DECIMAL(7, 4),
+    relative_humidity_std_year DECIMAL(7, 4),
+    relative_humidity_std_spring DECIMAL(7, 4),
+    relative_humidity_std_summer DECIMAL(7, 4),
+    relative_humidity_std_fall DECIMAL(7, 4),
+    relative_humidity_std_winter DECIMAL(7, 4),
+    
+	soil_moisture_mean_year DECIMAL(10, 5),
+    soil_moisture_mean_spring DECIMAL(10, 5),
+    soil_moisture_mean_summer DECIMAL(10, 5),
+    soil_moisture_mean_fall DECIMAL(10, 5),
+    soil_moisture_mean_winter DECIMAL(10, 5),
+    soil_moisture_min_year DECIMAL(10, 5),
+    soil_moisture_max_year DECIMAL(10, 5),
+    soil_moisture_min_spring DECIMAL(10, 5),
+    soil_moisture_max_spring DECIMAL(10, 5),
+    soil_moisture_min_summer DECIMAL(10, 5),
+    soil_moisture_max_summer DECIMAL(10, 5),
+    soil_moisture_min_fall DECIMAL(10, 5),
+    soil_moisture_max_fall DECIMAL(10, 5),
+    soil_moisture_min_winter DECIMAL(10, 5),
+    soil_moisture_max_winter DECIMAL(10, 5),
+    soil_moisture_std_year DECIMAL(10, 5),
+    soil_moisture_std_spring DECIMAL(10, 5),
+    soil_moisture_std_summer DECIMAL(10, 5),
+    soil_moisture_std_fall DECIMAL(10, 5),
+    soil_moisture_std_winter DECIMAL(10, 5),
 
-    soil_moisture_mean_year DECIMAL(10,5),
-    soil_moisture_mean_spring DECIMAL(10,5),
-    soil_moisture_mean_breeding DECIMAL(10,5),
-    soil_moisture_min_year DECIMAL(10,5),
-    soil_moisture_max_year DECIMAL(10,5),
-    soil_moisture_std_year DECIMAL(10,5),
+    solar_flux_density_mean_year DECIMAL(12, 3),
+    solar_flux_density_mean_spring DECIMAL(12, 3),
+    solar_flux_density_mean_summer DECIMAL(12, 3),
+    solar_flux_density_mean_fall DECIMAL(12, 3),
+    solar_flux_density_mean_winter DECIMAL(12, 3),
 
-    solar_radiation_mean_year DECIMAL(12,3),
-    solar_radiation_mean_spring DECIMAL(12,3),
-    solar_radiation_mean_breeding DECIMAL(12,3),
-    solar_radiation_mean_growing DECIMAL(12,3),
-
-    vegetation_coeff_mean_year DECIMAL(15,6),
-    vegetation_coeff_mean_spring DECIMAL(15,6),
-    vegetation_coeff_mean_breeding DECIMAL(15,6),
-    vegetation_coeff_mean_growing DECIMAL(15,6),
+    vegetation_coeff_mean_year DECIMAL(15, 6),
+    vegetation_coeff_mean_spring DECIMAL(15, 6),
+    vegetation_coeff_mean_summer DECIMAL(15, 6),
+    vegetation_coeff_mean_fall DECIMAL(15, 6),
+    vegetation_coeff_mean_winter DECIMAL(15, 6),
 
     PRIMARY KEY (route_id, `year`)
 );
@@ -422,3 +473,43 @@ CREATE TABLE ebird_breeding_ranges (
     breeding_end DATE
 );
 
+
+-- ======================================================================
+--  CALENDAR_2023
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS latitude_day_length;
+
+CREATE TABLE IF NOT EXISTS calendar_2023 (
+    `date` DATE PRIMARY KEY
+);
+
+-- ======================================================================
+--  LATITUDE_DAY_LENGTH
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS latitude_day_length;
+
+CREATE TABLE latitude_day_length (
+    latitude DECIMAL(4,1) NOT NULL,
+    `date` DATE NOT NULL,
+    day_length DECIMAL(8,5),
+    relative_day_length DECIMAL(8,5),
+
+    PRIMARY KEY (latitude, `date`)
+);
+
+
+-- ======================================================================
+--  SPECIES_LATITUDE_BREEDING
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS species_latitude_breeding;
+
+CREATE TABLE IF NOT EXISTS species_latitude_breeding (
+    species_id CHAR(5),
+    zone TINYINT,
+    breeding_start DATE,
+    breeding_end DATE,
+    PRIMARY KEY (species_id, zone)
+);
