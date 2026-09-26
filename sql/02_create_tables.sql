@@ -443,6 +443,27 @@ CREATE TABLE IF NOT EXISTS bbs_species_list(
 );
 
 -- ======================================================================
+--  BBS_REAL_SPECIES_LIST
+-- ======================================================================
+
+/*
+Enthält nur diejenigen BBS-Arten, die über einen wissenschaftlichen Namen verfügen
+(Also ohne Hybride, unidentifizierte Vögel usw.)
+Außerdem werden die Common Names ohne alternative Namensbezeichnungen geführt
+*/
+
+-- DROP TABLE IF EXISTS bbs_real_species_list;
+
+CREATE TABLE IF NOT EXISTS bbs_real_species_list(
+	species_id CHAR(5) PRIMARY KEY,
+    scientific_name VARCHAR(100),
+    common_name VARCHAR(100),
+    `order` VARCHAR(50),
+    family VARCHAR(50),
+    genus VARCHAR(50)
+);
+
+-- ======================================================================
 --  ANALYSIS_SPECIES_LIST
 -- ======================================================================
 
@@ -460,7 +481,7 @@ CREATE TABLE IF NOT EXISTS analysis_species_list(
 
 
 -- ======================================================================
---  ANALYSIS_SPECIES_LIST
+--  EBIRD_BREEDING_RANGES
 -- ======================================================================
 
 -- DROP TABLE IF EXISTS ebird_breeding_ranges;
@@ -525,7 +546,7 @@ CREATE TABLE IF NOT EXISTS analysis_route_species_relevant (
 	route_id INT,
     species_id CHAR(5),
     total_bird_count INT,
-    years_observed SMALLINT,
+    observation_count SMALLINT,
     first_year SMALLINT,
     last_year SMALLINT,
     

@@ -126,9 +126,6 @@ SET total_snowfall =
 SET SQL_SAFE_UPDATES = 1;
 
 
-
-
-
 -- ===============================================================
 -- BBS_SPECIES_LIST
 -- ===============================================================
@@ -234,3 +231,112 @@ SET ar.latitude_zone =
     END;
     
 SET SQL_SAFE_UPDATES = 1;
+
+
+-- ====================================================================
+-- analysis_species_list
+-- ====================================================================
+
+/*
+Für die Korrelationsanalyse werden zwei generelle Ansätze unterschieden
+Dafür benötigt die Tabelle zwei Werte, die festhalten, wie viele Routen
+mindestens 10 bzw. 20 Beobachtungen liefern.
+*/
+
+ALTER TABLE analysis_species_list
+ADD COLUMN routes_over_10_obs INT;
+
+ALTER TABLE analysis_species_list
+ADD COLUMN routes_over_20_obs INT;
+
+SET SQL_SAFE_UPDATES = 0;
+
+WITH
+relevant_observations AS (
+	SELECT 
+		species_id,
+		route_id,
+		COUNT(`year`) AS observation_count
+	FROM analysis_relevant_observations
+	GROUP BY species_id, route_id
+	HAVING observation_count >= 10
+),
+route_counts AS (
+	SELECT
+		species_id,
+        COUNT(route_id) AS route_count
+	FROM relevant_observations
+    GROUP BY species_id
+)
+UPDATE analysis_species_list AS sl
+LEFT JOIN route_counts AS rc
+	ON sl.species_id = rc.species_id
+SET routes_over_10_obs = COALESCE(rc.route_count, 0);
+
+
+WITH
+relevant_observations AS (
+	SELECT 
+		species_id,
+		route_id,
+		COUNT(`year`) AS observation_count
+	FROM analysis_relevant_observations
+	GROUP BY species_id, route_id
+	HAVING observation_count >= 20
+),
+route_counts AS (
+	SELECT
+		species_id,
+        COUNT(route_id) AS route_count
+	FROM relevant_observations
+    GROUP BY species_id
+)
+UPDATE analysis_species_list AS sl
+LEFT JOIN route_counts AS rc
+	ON sl.species_id = rc.species_id
+SET routes_over_20_obs = COALESCE(rc.route_count, 0);
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+-- ====================================================================
+-- analysis_relevant_observations
+-- ====================================================================
+
+/*
+Für die Korrelationsanalyse erhält die Tabelle zwei bool'sche Marker
+Marker 1: Eintrag bezieht sich auf eine Vogelart, die auf mindestens 20 Routen beobachtet wurde
+Marker 2: Eintrag bezieht sich auf eine Route, die bzgl der Vogelart über ausreichend Beobachtungsjahre verfügt. Besonders:
+	Für Marker 1 = True:  Route verfügt über mindestens 10 Beobachtungen
+    Für Marker 1 = False: Route verfügt über mindestens 20 Beobachtungen
+*/
+
+ALTER TABLE analysis_relevant_observations
+ADD COLUMN sufficient_routes BOOL;
+
+ALTER TABLE analysis_relevant_observations
+ADD COLUMN sufficient_observations BOOL;
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE analysis_relevant_observations AS o
+JOIN analysis_species_list AS sl
+	ON o.species_id = sl.species_id
+SET sufficient_routes = CASE WHEN sl.routes_over_10_obs >= 20 THEN 1 ELSE 0 END;
+
+UPDATE analysis_relevant_observations AS o
+JOIN analysis_route_species_relevant AS rsr
+	ON o.species_id = rsr.species_id AND o.route_id = rsr.route_id
+SET sufficient_observations = CASE
+		WHEN o.sufficient_routes = 1 THEN 
+			CASE WHEN rsr.observation_count >= 10 THEN 1 ELSE 0 END
+		ELSE CASE WHEN rsr.observation_count >= 20 THEN 1 ELSE 0 END
+	END;
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+SELECT 
+	COUNT(DISTINCT species_id)
+FROM analysis_relevant_observations
+WHERE sufficient_routes = 0 AND sufficient_observations = 1;

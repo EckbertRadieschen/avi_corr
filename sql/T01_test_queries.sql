@@ -516,3 +516,87 @@ LEFT JOIN era5_route_analysis e
 LEFT JOIN nlcd_route_analysis n
 	ON o.route_id = n.route_id AND o.`year` = n.`year`
 WHERE o.species_id = '00010';
+
+
+SELECT
+	*
+FROM analysis_species_list
+WHERE common_name LIKE '%%unid.%%';
+
+
+
+WITH relevant_birds AS (
+SELECT 
+	species_id,
+    COUNT(route_id) AS route_count
+FROM analysis_route_species_relevant
+GROUP BY species_id
+HAVING route_count >= 20
+),
+relevant_observations AS (
+SELECT 
+	o.species_id,
+    o.route_id,
+    COUNT(`year`) AS observation_count
+FROM analysis_relevant_observations AS o
+JOIN relevant_birds AS b
+	ON o.species_id = b.species_id
+GROUP BY o.species_id, o.route_id
+HAVING observation_count >= 10
+)
+SELECT 
+	rsr.species_id,
+    COUNT(rsr.route_id) AS route_count
+FROM analysis_route_species_relevant AS rsr
+JOIN relevant_observations AS ro
+	ON rsr.species_id = ro.species_id AND rsr.route_id = ro.route_id
+GROUP BY rsr.species_id
+ORDER BY route_count DESC;	
+	
+    
+SELECT 
+	species_id,
+    routes_over_10_obs AS `over_10`,
+    routes_over_20_obs AS `over_20`
+FROM analysis_species_list
+ORDER BY `over_10` DESC;
+
+
+SELECT 
+	COUNT(route_id) AS count
+FROM analysis_relevant_observations
+WHERE species_total = 0;
+
+SELECT  
+	o.species_id,
+	nlcd.water
+FROM analysis_relevant_observations AS o
+JOIN nlcd_route_analysis AS nlcd
+	ON o.route_id = nlcd.route_id AND o.`year` = nlcd.`year`
+WHERE o.species_id = '07350'
+ORDER BY water;
+
+
+SELECT 
+	CASE
+		WHEN e.solar_flux_density_mean_year < 120 THEN 1
+		WHEN e.solar_flux_density_mean_year < 130 THEN 2
+        WHEN e.solar_flux_density_mean_year < 140 THEN 3
+        WHEN e.solar_flux_density_mean_year < 150 THEN 4
+        WHEN e.solar_flux_density_mean_year < 160 THEN 5
+        WHEN e.solar_flux_density_mean_year < 170 THEN 6
+		ELSE 7
+	END AS solar_class,
+    CONCAT(
+		ROUND((COUNT(*) / SUM(COUNT(*)) OVER()) * 100, 1),
+        '%'
+	) AS property        
+FROM analysis_relevant_observations AS o
+JOIN era5_route_analysis AS e
+	ON o.route_id = e.route_id
+WHERE o.species_id = 04770
+GROUP BY solar_class
+ORDER BY solar_class;
+
+
+

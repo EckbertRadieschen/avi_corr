@@ -464,6 +464,79 @@ SET
     genus = NULLIF(@Genus, ''),
     species = NULLIF(@Species, '');
     
+-- ===============================================================================
+-- bbs_real_species_list
+-- ===============================================================================
+
+-- TRUNCATE bbs_real_species_list;
+
+INSERT INTO bbs_real_species_list 
+	SELECT DISTINCT
+		sl.aou,
+        sl.scientific_name,
+        CASE 
+			WHEN LEFT(TRIM(sl.common_name), 1) = '(' 
+				THEN TRIM(SUBSTRING_INDEX(sl.common_name, ')', -1))
+			ELSE TRIM(SUBSTRING_INDEX(sl.common_name, '(', 1))
+		END AS common_name,
+        sl.`order`,
+        sl.family,
+        sl.genus
+    FROM bbs_species_list AS sl
+	JOIN ebird_species_info AS eb
+		ON sl.aou = eb.aou;
+        
+-- ===============================================================================
+-- analysis_route_species_relevant
+-- ===============================================================================
+    
+-- TRUNCATE analysis_route_species_relevant;
+        
+INSERT INTO analysis_route_species_relevant
+	SELECT
+		o.route_id,
+		o.species_id,
+		SUM(o.species_total) AS total_count,
+		COUNT(o.`year`) AS years_observed,
+		MIN(o.`year`) AS first_year,
+		MAX(o.`year`) AS last_year
+	FROM analysis_observations AS o
+    JOIN bbs_real_species_list AS s
+		ON o.species_id = s.species_id
+	GROUP BY
+		o.route_id,
+		o.species_id
+	HAVING years_observed >= 10;
+    
+    
+-- ===============================================================================
+-- analysis_relevant_observations
+-- ===============================================================================
+    
+-- TRUNCATE analysis_relevant_observations;
+
+
+INSERT INTO analysis_relevant_observations
+	WITH relevant_species AS (
+		SELECT 
+			species_id,
+            COUNT(route_id) AS route_count
+		FROM analysis_route_species_relevant
+        GROUP BY species_id
+        HAVING route_count >= 5
+	)
+	SELECT
+		o.route_id,
+		o.species_id,
+		o.`year`,
+		CEIL(AVG(o.species_total)) AS species_total
+	FROM analysis_observations AS o
+	JOIN analysis_route_species_relevant AS rsr
+		ON o.route_id = rsr.route_id AND o.species_id = rsr.species_id
+	JOIN relevant_species AS rs
+		ON o.species_id = rs.species_id
+	GROUP BY o.route_id, o.species_id, o.`year`;
+
     
 -- ===============================================================================
 -- analysis_species_list
@@ -473,18 +546,19 @@ SET
 
 INSERT INTO analysis_species_list 
 	SELECT DISTINCT
-		sl.aou,
+		sl.species_id,
         eb.species_code,
         sl.scientific_name,
         sl.common_name,
         sl.`order`,
         sl.family,
         sl.genus
-    FROM bbs_species_list AS sl
-    JOIN analysis_observations AS ao
-		ON sl.aou = ao.species_id
-	LEFT JOIN ebird_species_info AS eb
-		ON sl.aou = eb.aou;
+    FROM bbs_real_species_list AS sl
+    JOIN analysis_relevant_observations AS ao
+		ON sl.species_id = ao.species_id
+	JOIN ebird_species_info AS eb
+		ON sl.species_id = eb.aou;
+
 
 
 -- ===============================================================================
@@ -849,84 +923,6 @@ INSERT INTO era5_route_analysis
 	JOIN winter_agg AS w
 		ON y.route_id = w.route_id AND y.`year` = w.`year`;
 
--- ===============================================================================
--- analysis_route_species_relevant
--- ===============================================================================
-    
--- TRUNCATE analysis_route_species_relevant;
-        
-INSERT INTO analysis_route_species_relevant
-WITH pre_filtered AS(
-	SELECT
-		route_id,
-		species_id,
-		SUM(species_total) AS total_count,
-		COUNT(`year`) AS years_observed,
-		MIN(`year`) AS first_year,
-		MAX(`year`) AS last_year
-	FROM analysis_observations
-	GROUP BY
-		route_id,
-		species_id
-	HAVING
-		total_count > 20
-		AND years_observed > 3
-)
-SELECT
-	*
-FROM pre_filtered
-WHERE species_id IN (
-	SELECT species_id
-	FROM (
-		SELECT
-			species_id,
-			COUNT(DISTINCT route_id) AS route_count
-		FROM pre_filtered
-		GROUP BY species_id
-		HAVING route_count >= 5
-	) AS species_with_3_routes);
-    
-    
--- ===============================================================================
--- analysis_relevant_observations
--- ===============================================================================
-    
--- TRUNCATE analysis_relevant_observations;
 
-INSERT INTO analysis_relevant_observations
-	WITH routes_years_species AS (
-		SELECT
-			ry.route_id,
-			rsr.species_id,
-            ry.`year`
-		FROM analysis_route_years AS ry
-		JOIN analysis_route_species_relevant AS rsr
-			ON ry.route_id = rsr.route_id
-	)
-	SELECT
-		rys.route_id,
-		rys.species_id,
-        rys.`year`,
-		CEIL(AVG(o.species_total)) AS species_total
-	FROM analysis_observations AS o
-	RIGHT JOIN routes_years_species AS rys
-		ON 
-			o.route_id = rys.route_id
-			AND o.`year` = rys.`year`
-			AND o.species_id = rys.species_id
-	GROUP BY rys.route_id, rys.species_id, rys.`year`
-	ORDER BY rys.route_id, rys.species_id, rys.`year`;
-    
-SET SQL_SAFE_UPDATES = 0;
 
-UPDATE analysis_relevant_observations
-SET species_total = 0
-WHERE species_total IS NULL;
-
-SET SQL_SAFE_UPDATES = 1;
-
-SELECT DISTINCT
-	common_name 
-FROM analysis_species_list
-WHERE species_id = '06750';
     
