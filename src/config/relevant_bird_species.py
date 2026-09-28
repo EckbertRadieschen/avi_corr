@@ -1,8 +1,10 @@
 from zipfile import ZipFile
 import pandas as pd
+import json
 
 
 ZIP_PATH = "data/processed/species_csv_files.zip"
+SPECIES_CONFIG_PATH = "src/config/species_config.json"
 
 species_list = [
     '00040', '00060', '00070', '00530', '00540', 
@@ -100,6 +102,24 @@ def extract_species_list ():
     print("=" * 60)
     print(species_id)
 
+def add_bird_observation_count_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_id, species_dict in species_config.items():
+        filename = f"{species_id}.csv"
+
+        with ZipFile(ZIP_PATH, "r") as zip:
+            with zip.open(filename) as file:
+                species_df = pd.read_csv(file, encoding="utf-8")
+
+        species_dict["meta_data"] = {
+            "total_observations": species_df.shape[0]
+        }
+            
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    extract_species_list()
+    # extract_species_list()
+    add_bird_observation_count_to_config()

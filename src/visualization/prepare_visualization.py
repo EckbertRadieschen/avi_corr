@@ -177,6 +177,46 @@ def get_model (x_column: pd.Series, y_column: pd.Series, r2_threshold=0.7, aic_t
     else:
         return None, None, None
 
+def get_model_curves(model, model_type, min_value, max_value):
+    x_curve = np.linspace(
+        min_value,
+        max_value,
+        200
+    )
+
+    if model_type == "linear":
+        X_curve = sm.add_constant(x_curve)
+        y_curve = model.predict(X_curve)
+
+    elif model_type == "quadratic":
+        X_curve = pd.DataFrame({
+            "x": x_curve,
+            "x2": x_curve ** 2
+        })
+        X_curve = sm.add_constant(X_curve)
+        y_curve = model.predict(X_curve)
+
+
+    elif model_type == "cubic":
+        X_curve = pd.DataFrame({
+            "x": x_curve,
+            "x2": x_curve ** 2,
+            "x3": x_curve ** 3
+        })
+        X_curve = sm.add_constant(X_curve)
+        y_curve = model.predict(X_curve)
+
+    elif model_type == "spline":
+        X_curve = dmatrix(
+            "bs(x, df=6, degree=3, include_intercept=False)",
+            {"x": x_curve},
+            return_type="dataframe"
+        )
+        y_curve = model.predict(X_curve)
+
+    return x_curve, y_curve
+
+
 def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
     
     x_col = df[col]
@@ -192,42 +232,9 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
         
         selected_model, selected_model_type, optimum = get_model(binned_df["bin_value"], binned_df["proportion"])
 
-        x_curve = np.linspace(
-            min_bin_value,
-            max_bin_value,
-            200
-        )
-
-        if selected_model_type == "linear":
-            X_curve = sm.add_constant(x_curve)
-            y_curve = selected_model.predict(X_curve)
-
-        elif selected_model_type == "quadratic":
-            X_curve = pd.DataFrame({
-                "x": x_curve,
-                "x2": x_curve ** 2
-            })
-            X_curve = sm.add_constant(X_curve)
-            y_curve = selected_model.predict(X_curve)
-
-
-        elif selected_model_type == "cubic":
-            X_curve = pd.DataFrame({
-                "x": x_curve,
-                "x2": x_curve ** 2,
-                "x3": x_curve ** 3
-            })
-            X_curve = sm.add_constant(X_curve)
-            y_curve = selected_model.predict(X_curve)
-
-        elif selected_model_type == "spline":
-            X_curve = dmatrix(
-                "bs(x, df=6, degree=3, include_intercept=False)",
-                {"x": x_curve},
-                return_type="dataframe"
-            )
-            y_curve = selected_model.predict(X_curve)
-
+        if selected_model:
+            x_curve, y_curve = get_model_curves(selected_model, selected_model_type, min_bin_value, max_bin_value)
+        
         # ===================================================================
         # Visualisierung
 

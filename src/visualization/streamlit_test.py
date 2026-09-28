@@ -8,11 +8,15 @@ import numpy as np
 import streamlit as st
 from sqlalchemy.engine import URL
 from sqlalchemy import create_engine
-import plotly.express as px
 import json
 
 from analysis.variable_preparations import remove_variable_null_values
 from visualization.prepare_visualization import create_categorybased_visual
+from visualization.create_climate_bars import climate_bar
+from visualization.css import climate_bar_css
+
+from visualization.streamlit_functions import explorer_button, lexicon_button
+from visualization.climate_bar_visualization import visualize_species_bars
 
 load_dotenv()
 
@@ -36,6 +40,9 @@ ENGINE = create_engine(
 
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
+
+CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
+LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
 
 INDICATORS = {
     "climate": {
@@ -95,16 +102,33 @@ if "species_config" not in st.session_state:
 
 species_config = st.session_state["species_config"]
 
+if "climate_config" not in st.session_state:
+    with open(CLIMATE_CONFIG_PATH, "r") as file:
+        st.session_state["climate_config"] = json.load(file)
+
+climate_config = st.session_state["climate_config"]
+
+if "landcover_config" not in st.session_state:
+    with open(LANDCOVER_CONFIG_PATH, "r") as file:
+        st.session_state["landcover_config"] = json.load(file)
+
+landcover_config = st.session_state["landcover_config"]
+
 if "species_list" not in st.session_state:
     species_list = []
 
     for species_id, species_dict in species_config.items():
         audubon_info = species_dict["audubon_info"]
+        meta_data = species_dict["meta_data"]
         common_name = audubon_info["common_name"]
-        species_list.append((species_id, common_name))
+
+        if meta_data["total_observations"] >= 250:
+            species_list.append((species_id, common_name))
 
     # st.session_state["species_list"] = species_list
     st.session_state["species_list"] = sorted(species_list, key=lambda x: x[1])
+
+    print(len(species_list))
 
 species_list = st.session_state["species_list"]
 
@@ -126,14 +150,12 @@ with st.sidebar:
     nav_button_cols = st.columns(2)
 
     with nav_button_cols[0]:
-        if st.button("Explorer", disabled = st.session_state["page"] == "explorer", use_container_width=True):
-            st.session_state["page"] = "explorer"
-            st.rerun()
+        st.button("Explorer", disabled = st.session_state["page"] == "explorer", use_container_width=True, on_click=explorer_button)
+            
 
     with nav_button_cols[1]:
-        if st.button("Lexicon", disabled = st.session_state["page"] == "lexicon", use_container_width=True):
-            st.session_state["page"] = "lexicon"
-            st.rerun()
+        st.button("Lexicon", disabled = st.session_state["page"] == "lexicon", use_container_width=True, on_click=lexicon_button)
+            
 
     st.text_input("Species Search", key="species_search_input")
 
@@ -170,6 +192,11 @@ selected_variable_indicator = (
     if selected_indicator_method is not None 
     else selected_variable
 )
+
+
+# =======================================================================================================
+# Main Content
+# =======================================================================================================
 
 species_dict = species_config[selected_species]
 audubon_info = species_dict["audubon_info"]
@@ -209,8 +236,16 @@ if st.session_state["page"] == "lexicon":
     weight_dict = measurements["weight"]
     bird_weight = f"{weight_dict['lower']}-{weight_dict['upper']} {weight_dict['unit']}"    
 
-
     col1, _ , col2 = st.columns([2, 0.5, 1.5])
+
+    with col1:
+        climate_bar_css()
+
+        climate_preferences = species_dict["climate_preferences"]
+        visualize_species_bars(climate_config["variables"], climate_preferences)
+
+        
+        
 
     with col2:
         st.image(picture_url)
@@ -246,4 +281,8 @@ elif st.session_state["page"] == "explorer":
     st.write(f"Total Observations: {total_observation_count}")
     st.write(f"Anzahl Routen: {route_count}")
 
+
+
+# =================================================================
+# CSS
 
