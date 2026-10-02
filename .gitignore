@@ -25,3 +25,5 @@ Thumbs.db
 # Große Dateien
 data/processed/species_csv_files.zip
 data/processed/full_bbs_landcover.csv
+src/config/grid_config.json
+src/config/display_grid_config.json

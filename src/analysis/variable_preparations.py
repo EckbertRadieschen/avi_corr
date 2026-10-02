@@ -237,8 +237,6 @@ def get_species_landcover_preferences():
 
         filename = f"{species_id}.csv"
 
-        common_name = species_dict["audubon_info"]["common_name"]
-
         preferences = species_dict["landcover_preferences"] = {}
 
         with ZipFile(SPECIES_ZIP_PATH, "r") as zip:

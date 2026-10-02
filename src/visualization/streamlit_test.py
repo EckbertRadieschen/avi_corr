@@ -13,10 +13,14 @@ import json
 from analysis.variable_preparations import remove_variable_null_values
 from visualization.prepare_visualization import create_categorybased_visual
 from visualization.create_climate_bars import climate_bar
-from visualization.css import climate_bar_css
+from visualization.css import climate_bar_css, treemap_css, water_need_css, urbanization_css
+from visualization.markdown import apply_markdown   
 
 from visualization.streamlit_functions import explorer_button, lexicon_button
 from visualization.climate_bar_visualization import visualize_species_bars
+from visualization.preferred_habitat_visual import get_preferred_habitat, water_visual, urbanization_visual
+from visualization.create_concentration_map import plot_species_usa_map
+
 
 load_dotenv()
 
@@ -40,6 +44,9 @@ ENGINE = create_engine(
 
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
+ROUTE_CONFIG_PATH = "src/config/route_config.json"
+GRID_CONFIG_PATH = "src/config/grid_config.json"
+DISPLAY_GRID_CONFIG_PATH = "src/config/display_grid_config.json"
 
 CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
 LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
@@ -93,6 +100,19 @@ def print_value_list (column: pd.Series):
 # App
 # ============================================================================================================
 
+
+# =================================================================
+# CSS
+
+apply_markdown()
+climate_bar_css()
+treemap_css()
+water_need_css()
+urbanization_css()
+
+
+st.set_page_config(layout="wide")
+
 if "page" not in st.session_state:
     st.session_state["page"] = "explorer"
 
@@ -101,6 +121,18 @@ if "species_config" not in st.session_state:
         st.session_state["species_config"] = json.load(file)
 
 species_config = st.session_state["species_config"]
+
+if "route_config" not in st.session_state:
+    with open(ROUTE_CONFIG_PATH, "r") as file:
+        st.session_state["route_config"] = json.load(file)
+
+route_config = st.session_state["route_config"]
+
+if "grid_config" not in st.session_state:
+    with open(DISPLAY_GRID_CONFIG_PATH, "r") as file:
+        st.session_state["grid_config"] = json.load(file)
+
+grid_config = st.session_state["grid_config"]
 
 if "climate_config" not in st.session_state:
     with open(CLIMATE_CONFIG_PATH, "r") as file:
@@ -128,8 +160,6 @@ if "species_list" not in st.session_state:
     # st.session_state["species_list"] = species_list
     st.session_state["species_list"] = sorted(species_list, key=lambda x: x[1])
 
-    print(len(species_list))
-
 species_list = st.session_state["species_list"]
 
 species_search = st.session_state.get("species_search_input", "")
@@ -147,14 +177,24 @@ filtered_species_list = [
 
 with st.sidebar:
 
-    nav_button_cols = st.columns(2)
+    with st.container(key="sidebar_navigation"):
+        nav_button_cols = st.columns(2)
 
-    with nav_button_cols[0]:
-        st.button("Explorer", disabled = st.session_state["page"] == "explorer", use_container_width=True, on_click=explorer_button)
-            
-
-    with nav_button_cols[1]:
-        st.button("Lexicon", disabled = st.session_state["page"] == "lexicon", use_container_width=True, on_click=lexicon_button)
+        with nav_button_cols[0]:
+            st.button(
+                "Explorer", 
+                disabled = st.session_state["page"] == "explorer", 
+                use_container_width=True, 
+                on_click=explorer_button
+            )
+                
+        with nav_button_cols[1]:
+            st.button(
+                "Lexicon", 
+                disabled = st.session_state["page"] == "lexicon", 
+                use_container_width=True, 
+                on_click=lexicon_button
+            )
             
 
     st.text_input("Species Search", key="species_search_input")
@@ -236,23 +276,51 @@ if st.session_state["page"] == "lexicon":
     weight_dict = measurements["weight"]
     bird_weight = f"{weight_dict['lower']}-{weight_dict['upper']} {weight_dict['unit']}"    
 
-    col1, _ , col2 = st.columns([2, 0.5, 1.5])
+
+    col1, _ , col2 = st.columns([1.5, 0.25, 2])
 
     with col1:
-        climate_bar_css()
+        with st.container(key="map_container"):
+            fig_map = plot_species_usa_map(grid_config, selected_species)
+            st.plotly_chart(
+                fig_map, 
+                width="stretch", 
+                config={
+                    "displayModeBar": False,
+                    "scrollZoom": True,
+                    "doubleClick": False,
+                    "showTips": False
+                })
 
-        climate_preferences = species_dict["climate_preferences"]
-        visualize_species_bars(climate_config["variables"], climate_preferences)
-
+        with st.container(key="bars_container"):
+            climate_preferences = species_dict["climate_preferences"]
+            visualize_species_bars(climate_config["variables"], climate_preferences)
         
-        
-
     with col2:
-        st.image(picture_url)
-        st.write(f"Length:   {bird_length}")
-        st.write(f"Wingspan: {bird_span}")
-        st.write(f"Weight:   {bird_weight}")
-        st.write(f"Habitat: {habitat}")
+        with st.container(key="infobox_container"):
+            st.image(picture_url)
+            st.write(f"Length:   {bird_length}")
+            st.write(f"Wingspan: {bird_span}")
+            st.write(f"Weight:   {bird_weight}")
+
+
+        with st.container(key="habitat_container", width=600, height=300):
+            habitat_col1, _, habitat_col2= st.columns([6, 1, 2.5])
+
+            with habitat_col1:
+                landcover_preferences = species_dict["landcover_preferences"]
+                get_preferred_habitat(landcover_preferences, landcover_config)
+
+            with habitat_col2:
+                water_need = landcover_preferences["water"]["water_need"]
+                urbanization_type = landcover_preferences["developed"]["urbanization_type"]
+                urbanization_range = landcover_preferences["developed"]["urbanization_range"]
+
+                water_visual(water_need)
+                urbanization_visual(urbanization_type, urbanization_range)
+
+
+            
 
 elif st.session_state["page"] == "explorer":
     figure = create_categorybased_visual(selected_category, analysis_df, selected_variable_indicator)
@@ -281,8 +349,4 @@ elif st.session_state["page"] == "explorer":
     st.write(f"Total Observations: {total_observation_count}")
     st.write(f"Anzahl Routen: {route_count}")
 
-
-
-# =================================================================
-# CSS
 

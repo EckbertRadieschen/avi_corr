@@ -1,10 +1,39 @@
-from zipfile import ZipFile
+import os
+from dotenv import load_dotenv
+
 import pandas as pd
+from zipfile import ZipFile
 import json
+from sqlalchemy.engine import URL
+from sqlalchemy import create_engine
+
+
+load_dotenv()
+
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
+
+
+DATABASE_URL = URL.create(
+    drivername="mysql+pymysql",
+    username=MYSQL_USER,
+    password=MYSQL_PASSWORD,
+    host=MYSQL_HOST,
+    database=MYSQL_DATABASE
+)
+
+ENGINE = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True
+)
 
 
 ZIP_PATH = "data/processed/species_csv_files.zip"
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
+ROUTE_CONFIG_PATH = "src/config/route_config.json"
+LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
 
 species_list = [
     '00040', '00060', '00070', '00530', '00540', 
@@ -56,6 +85,17 @@ species_list = [
     '07480', '07490', '07510', '07540', '07550', 
     '07560', '07580', '07590', '07610', '07630', 
     '07660', '07680', '22860']
+
+full_observation_query = """
+    SELECT
+        state_num * 1000 + CAST(route AS UNSIGNED) AS route_id,
+        aou AS species_id,
+        `year`,
+        species_total
+    FROM bird_observations
+    WHERE rpid = 101
+    ORDER BY route_id, `year`, species_id;
+"""
 
 def extract_species_list ():
     xs_count = 0
@@ -120,6 +160,105 @@ def add_bird_observation_count_to_config():
     with open(SPECIES_CONFIG_PATH, "w") as file:
         json.dump(species_config, file, ensure_ascii=False, indent=4)
 
+
+def add_high_count_cap_to_config():
+    print("Import data from database...")
+    observation_df = pd.read_sql(full_observation_query, ENGINE)
+
+    print("Calculate route-internal Q80...")
+    route_quantiles = (
+        observation_df
+        .groupby(["species_id", "route_id"])["species_total"]
+        .quantile(0.8)
+    )
+
+    print("Calculate species-level Highcount Caps...")
+    species_caps = route_quantiles.groupby(level="species_id").quantile(0.8)
+
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_id, config in species_config.items():
+        config["meta_data"]["high_count_cap"] = round(species_caps.loc[species_id])
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_route_list_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    with open(ROUTE_CONFIG_PATH, "r") as file:
+        route_config = json.load(file)
+
+    for species_id, species_dict in species_config.items():
+        print(f"Working on species {species_id}")
+        
+        route_list = []
+
+        for route_id, route_dict in route_config.items():
+            if route_dict["country"] == "Canada" or route_dict["state"] == "Alaska":
+                continue
+
+            high_count_dict = route_dict["high_count_ratios"]
+
+            if species_id in high_count_dict:
+                route_list.append(route_id)
+
+        species_dict["meta_data"]["route_list"] = route_list
+
+        with open(SPECIES_CONFIG_PATH, "w") as file:
+            json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+def add_urbanization_type_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        developed_dict = landcover_preferences["developed"]
+        developed_range_type = developed_dict["range_type"]
+        developed_optimum = developed_dict["preference_mean"]
+
+        developed_dict["urbanization_type"] = (
+            "high" if developed_optimum > 0.15 
+            else "low" if developed_optimum > 0.05
+            else "mid"
+        )
+
+        developed_dict["urbanization_range"] = "adaptive" if developed_range_type == "wide" else "rigid"
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_water_need_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    with open(LANDCOVER_CONFIG_PATH, "r") as file:
+        landcover_config = json.load(file)
+
+    water_min = landcover_config["water"]["binning_info"]["bins"][0]
+    water_max = landcover_config["water"]["binning_info"]["bins"][-1]
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        water_dict = landcover_preferences["water"]
+        water_optimum = water_dict["preference_mean"]
+        water_optimum_normed = (water_optimum - water_min) / (water_max - water_min)
+
+        water_dict["water_need"] = water_optimum_normed
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
 if __name__ == "__main__":
     # extract_species_list()
-    add_bird_observation_count_to_config()
+    # add_bird_observation_count_to_config()
+    # add_high_count_cap_to_config()
+    # add_route_list_to_config()
+    # add_urbanization_type_to_config()
+    add_water_need_to_config()

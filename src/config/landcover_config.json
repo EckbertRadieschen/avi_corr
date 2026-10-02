@@ -1,5 +1,6 @@
 {
     "water": {
+        "background_color": "#84a8c2",
         "binning_info": {
             "bins": [
                 0,
@@ -31,6 +32,7 @@
         }
     },
     "developed": {
+        "background_color": "#e3b8e0",
         "binning_info": {
             "bins": [
                 0.3,
@@ -64,6 +66,7 @@
         }
     },
     "barren": {
+        "background_color": "#d4d2d2",
         "binning_info": {
             "bins": [
                 0,
@@ -95,6 +98,7 @@
         }
     },
     "forest": {
+        "background_color": "#71a167",
         "binning_info": {
             "bins": [
                 0,
@@ -126,6 +130,7 @@
         }
     },
     "shrubland": {
+        "background_color": "#81cc62",
         "binning_info": {
             "bins": [
                 0,
@@ -157,6 +162,7 @@
         }
     },
     "grassland": {
+        "background_color": "#abf28a",
         "binning_info": {
             "bins": [
                 0,
@@ -188,6 +194,7 @@
         }
     },
     "pasture": {
+        "background_color": "#c9ad85",
         "binning_info": {
             "bins": [
                 0,
@@ -219,6 +226,7 @@
         }
     },
     "cropland": {
+        "background_color": "#ebe294",
         "binning_info": {
             "bins": [
                 0,
@@ -250,6 +258,7 @@
         }
     },
     "wetland": {
+        "background_color": "#c7fce6",
         "binning_info": {
             "bins": [
                 0,
