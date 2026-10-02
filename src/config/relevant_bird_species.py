@@ -237,11 +237,16 @@ def add_water_need_to_config():
     with open(SPECIES_CONFIG_PATH, "r") as file:
         species_config = json.load(file)
 
-    with open(LANDCOVER_CONFIG_PATH, "r") as file:
-        landcover_config = json.load(file)
+    value_list = []
 
-    water_min = landcover_config["water"]["binning_info"]["bins"][0]
-    water_max = landcover_config["water"]["binning_info"]["bins"][-1]
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        water_dict = landcover_preferences["water"]
+
+        value_list.append(water_dict["preference_mean"])
+
+    water_min = min(value_list)
+    water_max = max(value_list)
 
     for species_dict in species_config.values():
         landcover_preferences = species_dict["landcover_preferences"]

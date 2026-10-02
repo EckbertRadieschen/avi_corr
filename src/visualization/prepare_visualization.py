@@ -250,6 +250,7 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
         fig.update_layout(
             xaxis_title=col,
             yaxis_title="Species count",
+            showlegend=False
         )
 
         if selected_model:
@@ -269,7 +270,7 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
     if category == "land_cover":
         _ , distribution_df = get_landcover_high_count_distribution(df, col)
 
-        return px.bar(
+        fig = px.bar(
             distribution_df,
             x=distribution_df.index,
             y="proportion",
@@ -281,7 +282,6 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
             }
         )
 
-
-
+        return fig
 
         

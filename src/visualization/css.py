@@ -23,7 +23,8 @@ def treemap_css():
 
         .treemap {
             flex: 1;
-            border: 3px double #880000
+            border: 3px double #880000;
+            margin-left: 10px
         }
 
         .box-icon {
@@ -40,11 +41,11 @@ def urbanization_css():
     st.markdown("""
     <style>
         .info-circle {
-            width: 100px;
+            width: 85px;
             aspect-ratio: 1;
             border: 2px solid #880000;
             border-radius: 50%;
-            background: white;
+            background: #b5b5b5;
 
             display: flex;
             align-items: center;
@@ -53,10 +54,9 @@ def urbanization_css():
         }
 
         .info-content {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            color: #17384a;
-            padding: 15px;
+            color: #17384a
         }
     </style>
     """, unsafe_allow_html=True)
@@ -67,12 +67,12 @@ def water_need_css():
         <style>
         .water-gauge {
             position: relative;
-            width: 100px;
+            width: 85px;
             aspect-ratio: 1;
             border: 2px solid #880000;
             border-radius: 50%;
             overflow: hidden;
-            background: white
+            background: #e4f5f5
         }
 
         .water-fill {
@@ -106,7 +106,7 @@ def water_need_css():
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             color: #17384a;
             z-index: 2

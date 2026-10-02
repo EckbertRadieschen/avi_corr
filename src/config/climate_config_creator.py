@@ -1,6 +1,4 @@
 import pandas as pd
-import math
-import numpy as np
 import json 
 from zipfile import ZipFile
 from pathlib import Path

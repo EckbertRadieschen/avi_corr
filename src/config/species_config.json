@@ -56,7 +56,7 @@
                 "range_lower_cap": 1.8,
                 "range_upper_cap": 12.8,
                 "range_type": "wide",
-                "water_need": 0.30153061224489797
+                "water_need": 0.4656487775185148
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -845,7 +845,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4444933145672061
+                "water_need": 0.6902236464196632
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -2270,7 +2270,7 @@
                 "range_lower_cap": 1.2,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.5614048649762934
+                "water_need": 0.8738757156632777
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -3119,7 +3119,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.04591836734693877
+                "water_need": 0.06411687125900375
             },
             "developed": {
                 "preference_range": 21.099999999999998,
@@ -3998,7 +3998,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.1931453136810279
+                "water_need": 0.2953902847760005
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -5387,7 +5387,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.1604308390022676
+                "water_need": 0.24400031562454208
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -6036,7 +6036,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.43060183256976253
+                "water_need": 0.6684020265304053
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -6825,7 +6825,7 @@
                 "range_lower_cap": 1.2,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4203958691910499
+                "water_need": 0.652369852749743
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -8549,7 +8549,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4072948328267478
+                "water_need": 0.6317899149324706
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -9433,7 +9433,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.1004918611918802
+                "water_need": 0.14984437239475226
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -12890,7 +12890,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.32204775113929063
+                "water_need": 0.4978783989693393
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -13973,7 +13973,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.11656200941915226
+                "water_need": 0.17508837920727946
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -14821,7 +14821,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.2796938775510204
+                "water_need": 0.4313462513949478
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -15900,7 +15900,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.30181498829039816
+                "water_need": 0.4660954934248276
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -17365,7 +17365,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4316215616681454
+                "water_need": 0.670003881593747
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -18365,7 +18365,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.1764497878359264
+                "water_need": 0.26916389518631273
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -19413,7 +19413,7 @@
                 "range_lower_cap": 0.009,
                 "range_upper_cap": 8.4,
                 "range_type": "wide",
-                "water_need": 0.15459722621442942
+                "water_need": 0.23483650712227103
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -22234,7 +22234,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 13.9,
                 "range_type": "wide",
-                "water_need": 0.48051948051948046
+                "water_need": 0.7468158300054415
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -23039,7 +23039,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 12.8,
                 "range_type": "wide",
-                "water_need": 0.45357142857142857
+                "water_need": 0.7044841229583039
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -23698,7 +23698,7 @@
                 "range_lower_cap": 2.4,
                 "range_upper_cap": 13.9,
                 "range_type": "wide",
-                "water_need": 0.48617346938775496
+                "water_need": 0.7556974738764328
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -24517,7 +24517,7 @@
                 "range_lower_cap": 1.2,
                 "range_upper_cap": 13.9,
                 "range_type": "wide",
-                "water_need": 0.5501700680272108
+                "water_need": 0.856227384937946
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -25373,7 +25373,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 8.6,
                 "range_type": "wide",
-                "water_need": 0.08215095562034334
+                "water_need": 0.12103331610280982
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -28542,7 +28542,7 @@
                 "range_lower_cap": 0.4,
                 "range_upper_cap": 10.6,
                 "range_type": "wide",
-                "water_need": 0.3214285714285714
+                "water_need": 0.4969057522572791
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -29727,7 +29727,7 @@
                 "range_lower_cap": 0.02,
                 "range_upper_cap": 12.2,
                 "range_type": "wide",
-                "water_need": 0.2657876633799587
+                "water_need": 0.4095014892741484
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -31591,7 +31591,7 @@
                 "range_lower_cap": 0.2,
                 "range_upper_cap": 3.5,
                 "range_type": "narrow",
-                "water_need": 0.017106842737094837
+                "water_need": 0.018857903311471694
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -32859,7 +32859,7 @@
                 "range_lower_cap": 0.02,
                 "range_upper_cap": 3.5,
                 "range_type": "narrow",
-                "water_need": 0.016472303206997087
+                "water_need": 0.017861128422151047
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -34380,7 +34380,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 8.4,
                 "range_type": "wide",
-                "water_need": 0.057139160011830815
+                "water_need": 0.08174320316761574
             },
             "developed": {
                 "preference_range": 4.8,
@@ -37301,7 +37301,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 13.9,
                 "range_type": "wide",
-                "water_need": 0.4750566893424035
+                "water_need": 0.7382345315793626
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -38625,7 +38625,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.04591836734693877
+                "water_need": 0.06411687125900375
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -39827,7 +39827,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.21129103815439218
+                "water_need": 0.3238947382350217
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -41039,7 +41039,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4282815398886827
+                "water_need": 0.6647571638060631
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -42442,7 +42442,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 8.6,
                 "range_type": "wide",
-                "water_need": 0.05339699982557125
+                "water_need": 0.07586478089673789
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -43392,7 +43392,7 @@
                 "range_lower_cap": 0.2,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.19025866160417657
+                "water_need": 0.2908557488362656
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -44282,7 +44282,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011259676284306826
+                "water_need": 0.009672803853729017
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -45924,7 +45924,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.1362116275081461
+                "water_need": 0.20595524402314438
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -46544,7 +46544,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.1640526581002771
+                "water_need": 0.24968969849088882
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -47399,7 +47399,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.0113223371540397
+                "water_need": 0.00977123551721119
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -48716,7 +48716,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -50656,7 +50656,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.009827420901246407
+                "water_need": 0.0074229263705893654
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -51598,7 +51598,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011398289723412875
+                "water_need": 0.009890546624462308
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -55894,7 +55894,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.007346938775510205
+                "water_need": 0.0035264279192452072
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -56682,7 +56682,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.012562777600371581
+                "water_need": 0.011719797947058292
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -59402,7 +59402,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 5.9,
                 "range_type": "wide",
-                "water_need": 0.19387755102040813
+                "water_need": 0.2965405295728923
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -60763,7 +60763,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.0064330079858030175
+                "water_need": 0.0020907675410544715
             },
             "developed": {
                 "preference_range": 0.6000000000000001,
@@ -61441,7 +61441,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 7.9,
                 "range_type": "wide",
-                "water_need": 0.04499072356215213
+                "water_need": 0.06265966963948094
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -62132,7 +62132,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.009117663237801861
+                "water_need": 0.0063079940726513154
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -64362,7 +64362,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011477198759428726
+                "water_need": 0.010014501936795617
             },
             "developed": {
                 "preference_range": 4.8,
@@ -67477,7 +67477,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.048599541857559346
+                "water_need": 0.06832863002155311
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -71099,7 +71099,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00935265826075653
+                "water_need": 0.0066771391406669515
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -75720,7 +75720,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.011636674374183174
+                "water_need": 0.010265016334569572
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -79874,7 +79874,7 @@
                 "range_lower_cap": 0.03,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.016522762951334383
+                "water_need": 0.017940393784971247
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -81705,7 +81705,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.006957328385899815
+                "water_need": 0.002914403239045626
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -82854,7 +82854,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.007632974449622367
+                "water_need": 0.003975750875312239
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -84935,7 +84935,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010559376954124268
+                "water_need": 0.008572729304825015
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -89385,7 +89385,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01103233501192685
+                "water_need": 0.00931568178194941
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -91896,7 +91896,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.006211180124223602
+                "water_need": 0.0017423062842120585
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -93483,7 +93483,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.25863422291993715
+                "water_need": 0.3982644118588118
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -95479,7 +95479,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.006511815252416756
+                "water_need": 0.0022145629875642745
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -96465,7 +96465,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.010352684763225681
+                "water_need": 0.008248044118269906
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -97756,7 +97756,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.11191923577941816
+                "water_need": 0.16779521627356306
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -99666,7 +99666,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.010974660134324
+                "water_need": 0.009225082430746967
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -103364,7 +103364,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.08568605307735744
+                "water_need": 0.1265864711220252
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -105724,7 +105724,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.00930527651475098
+                "water_need": 0.006602708892604663
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -108885,7 +108885,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.00573539760731879
+                "water_need": 0.0009949169678121269
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -110041,7 +110041,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.012846330585214219
+                "water_need": 0.012165220937552701
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -113122,7 +113122,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.07099506469254369
+                "water_need": 0.10350893595407797
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -115051,7 +115051,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.0534739373456389
+                "water_need": 0.07598563922693241
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -118366,7 +118366,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.07951377272220361
+                "water_need": 0.11689066215183126
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -121906,7 +121906,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01184636944906718
+                "water_need": 0.010594418641509203
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -125646,7 +125646,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.3178908355795148
+                "water_need": 0.49134845268471217
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -126783,7 +126783,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.007799671592775041
+                "water_need": 0.004237609307347951
             },
             "developed": {
                 "preference_range": 2.2,
@@ -127623,7 +127623,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00937692150030744
+                "water_need": 0.0067152533743289455
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -130639,7 +130639,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.010424058357696348
+                "water_need": 0.008360162281685122
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -133207,7 +133207,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.013514636623880324
+                "water_need": 0.013215038397500553
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -136103,7 +136103,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01055334885632105
+                "water_need": 0.008563259986940769
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -139215,7 +139215,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00872717508055854
+                "water_need": 0.005694590539450991
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -140649,7 +140649,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008375048132460532
+                "water_need": 0.005141447223599359
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -142067,7 +142067,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.009385572410782493
+                "water_need": 0.006728842772502397
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -145089,7 +145089,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.011607998904259691
+                "water_need": 0.010219971089941875
             },
             "developed": {
                 "preference_range": 25.799999999999997,
@@ -148197,7 +148197,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.012123762986079745
+                "water_need": 0.011030165981176706
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -150976,7 +150976,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.018434732383519444
+                "water_need": 0.02094383648436797
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -151992,7 +151992,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.010595209122831415
+                "water_need": 0.008629016745249228
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -155586,7 +155586,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.006174252463677325
+                "water_need": 0.0016842979758120826
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -157676,7 +157676,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.05397209731350167
+                "water_need": 0.07676818046081567
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -160789,7 +160789,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.012345225860128223
+                "water_need": 0.011378053892485078
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -163642,7 +163642,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.0060870883006668005
+                "water_need": 0.0015473749870675403
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -165227,7 +165227,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008792878853669127
+                "water_need": 0.005797802188314168
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -166639,7 +166639,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.011248128595067372
+                "water_need": 0.009654664011973542
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -169580,7 +169580,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010380014074595358
+                "water_need": 0.00829097473176773
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -171229,7 +171229,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.011083743842364532
+                "water_need": 0.009396438029336759
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -172076,7 +172076,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010352947545065772
+                "water_need": 0.008248456912630457
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -174159,7 +174159,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.009770574896625316
+                "water_need": 0.007333629065572326
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -176435,7 +176435,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.13394258802422065
+                "water_need": 0.20239089306756955
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -177676,7 +177676,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.19624191139870584
+                "water_need": 0.3002546166275298
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -179340,7 +179340,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -180281,7 +180281,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.005782312925170068
+                "water_need": 0.001068614520983395
             },
             "developed": {
                 "preference_range": 4.6000000000000005,
@@ -181359,7 +181359,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.006517246414250895
+                "water_need": 0.002223094600614879
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -184348,7 +184348,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.009728992811699578
+                "water_need": 0.007268309292518644
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -185710,7 +185710,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.012190753852561433
+                "water_need": 0.011135399477839224
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -189009,7 +189009,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -190154,7 +190154,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -191082,7 +191082,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "narrow",
-                "water_need": 0.009429841975700785
+                "water_need": 0.006798384209369075
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -193634,7 +193634,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.010815085912784567
+                "water_need": 0.008974413135188824
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -197812,7 +197812,7 @@
                 "range_lower_cap": 0.02,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.014011946241911398
+                "water_need": 0.01399624384800204
             },
             "developed": {
                 "preference_range": 24.5,
@@ -199462,7 +199462,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -200440,7 +200440,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011785380422246234
+                "water_need": 0.010498613214777387
             },
             "developed": {
                 "preference_range": 35.4,
@@ -204794,7 +204794,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.0938554933251496
+                "water_need": 0.13941954536335766
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -206579,7 +206579,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.01065549676660788
+                "water_need": 0.008723720395065072
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -211191,7 +211191,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.21232472580869083
+                "water_need": 0.32551852028221256
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -212572,7 +212572,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010243351336982395
+                "water_need": 0.008076296246508614
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -217016,7 +217016,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.013449892151982744
+                "water_need": 0.013113333679750512
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -219965,7 +219965,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008399911688813455
+                "water_need": 0.005180504472921534
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -222366,7 +222366,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 8.3,
                 "range_type": "wide",
-                "water_need": 0.03964824363909265
+                "water_need": 0.054267363752430825
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -225200,7 +225200,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.04951583658037884
+                "water_need": 0.06976800381562201
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -227665,7 +227665,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.008419932390133968
+                "water_need": 0.005211954258784048
             },
             "developed": {
                 "preference_range": 29.9,
@@ -229344,7 +229344,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.008676149969620071
+                "water_need": 0.0056144370629600485
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -231228,7 +231228,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011121377684932241
+                "water_need": 0.009455555653189698
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -234837,7 +234837,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 7.4,
                 "range_type": "wide",
-                "water_need": 0.05168853255587949
+                "water_need": 0.0731810122852022
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -235954,7 +235954,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 0.3999999999999999,
@@ -237198,7 +237198,7 @@
                 "range_lower_cap": 0.009,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.2758700194363459
+                "water_need": 0.42533949284289146
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -238667,7 +238667,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -239714,7 +239714,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.01256502601040416
+                "water_need": 0.011723329891964899
             },
             "developed": {
                 "preference_range": 77.4,
@@ -243452,7 +243452,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.00853920515574651
+                "water_need": 0.005399315474442424
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -244752,7 +244752,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.05087381610982931
+                "water_need": 0.07190120408284438
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -248261,7 +248261,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -249770,7 +249770,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -250405,7 +250405,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -251002,7 +251002,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.009174623286121543
+                "water_need": 0.006397470524734297
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -253403,7 +253403,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.06322135595811358
+                "water_need": 0.09129750184188197
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -255657,7 +255657,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.0066137566137566125
+                "water_need": 0.0023746989355186566
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -256271,7 +256271,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00881062102260259
+                "water_need": 0.0058256727111675455
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -258975,7 +258975,7 @@
                 "range_lower_cap": 0.009,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.014574175824175823
+                "water_need": 0.014879429690731303
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -260003,7 +260003,7 @@
                 "range_lower_cap": 0.4,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.33418367346938765
+                "water_need": 0.5169422745257177
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -260701,7 +260701,7 @@
                 "range_lower_cap": 4.7,
                 "range_upper_cap": 12.8,
                 "range_type": "wide",
-                "water_need": 0.4144557823129251
+                "water_need": 0.6430387880017585
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -261362,7 +261362,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00970002458814851
+                "water_need": 0.007222804171948012
             },
             "developed": {
                 "preference_range": 2.2,
@@ -263667,7 +263667,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.08944854537559703
+                "water_need": 0.13249683236235615
             },
             "developed": {
                 "preference_range": 0.7,
@@ -264699,7 +264699,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.19387755102040813
+                "water_need": 0.29654052957289234
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -265717,7 +265717,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.046566358574134444
+                "water_need": 0.06513477692623494
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -269557,7 +269557,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.1423870361152591
+                "water_need": 0.2156559670496776
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -270476,7 +270476,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.006310418904403867
+                "water_need": 0.0018981968464836642
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -271700,7 +271700,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.011382926553246067
+                "water_need": 0.009866413183571279
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -274520,7 +274520,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.005639097744360903
+                "water_need": 0.0008436430428816287
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -275127,7 +275127,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 0.8999999999999999,
@@ -275990,7 +275990,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.046139817629179326
+                "water_need": 0.0644647393903026
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -279328,7 +279328,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -280340,7 +280340,7 @@
                 "range_lower_cap": 0.02,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.11923058322855205
+                "water_need": 0.17928034399014914
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -281639,7 +281639,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.010866974527037093
+                "water_need": 0.009055923057384839
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -284378,7 +284378,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010087241003271536
+                "water_need": 0.007831068245374504
             },
             "developed": {
                 "preference_range": 30.0,
@@ -285920,7 +285920,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -286942,7 +286942,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.013016799714047421
+                "water_need": 0.012433004643635007
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -290105,7 +290105,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.07486690328305234
+                "water_need": 0.10959106527693846
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -291966,7 +291966,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008393680052666228
+                "water_need": 0.005170715424113206
             },
             "developed": {
                 "preference_range": 1.0,
@@ -293526,7 +293526,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01141753998896856
+                "water_need": 0.009920786161021529
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -296084,7 +296084,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.010696716228692692
+                "water_need": 0.008788470537189575
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -299244,7 +299244,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010204081632653062
+                "water_need": 0.008014608907375473
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -300584,7 +300584,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.032206632653061215
+                "water_need": 0.04257760982043217
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -301727,7 +301727,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.01261435608726249
+                "water_need": 0.011800820701549398
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -303720,7 +303720,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.007090077410274456
+                "water_need": 0.0031229338156325125
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -304743,7 +304743,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.006493506493506494
+                "water_need": 0.0021858024292842194
             },
             "developed": {
                 "preference_range": 2.2,
@@ -306153,7 +306153,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "narrow",
-                "water_need": 0.00767474128461583
+                "water_need": 0.004041360865475451
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -308377,7 +308377,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008886570226010684
+                "water_need": 0.005944978530947493
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -310416,7 +310416,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.012721755368814192
+                "water_need": 0.011969530296309119
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -313338,7 +313338,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010323794322198154
+                "water_need": 0.008202661183414449
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -316732,7 +316732,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011333892274344608
+                "water_need": 0.009789387032155008
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -321112,7 +321112,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.15970488914990452
+                "water_need": 0.24285994761054294
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -324250,7 +324250,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.006264531128907259
+                "water_need": 0.0018261134219336522
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -325748,7 +325748,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.09975832438238451
+                "water_need": 0.14869208630788697
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -327777,7 +327777,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.011820569812083247
+                "water_need": 0.010553890937435022
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -331631,7 +331631,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.09151170120557875
+                "water_need": 0.13573776823244205
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -334414,7 +334414,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.009394233884029803
+                "water_need": 0.006742448763347618
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -337015,7 +337015,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.09338446788111218
+                "water_need": 0.13867962875835863
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -340229,7 +340229,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010225823283858997
+                "water_need": 0.008048762070333036
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -343241,7 +343241,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "narrow",
-                "water_need": 0.011464863081491257
+                "water_need": 0.009995124272477491
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -345796,7 +345796,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.6104855735397607
+                "water_need": 0.9509748017337584
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -347170,7 +347170,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.0058309037900874635
+                "water_need": 0.0011449441296250674
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -348098,7 +348098,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.010617760617760617
+                "water_need": 0.008664442062027536
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -348951,7 +348951,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.01015795106469351
+                "water_need": 0.00794214408904477
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -351187,7 +351187,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.016677638797454465
+                "water_need": 0.018183682574798108
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -352345,7 +352345,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.08148583174276904
+                "water_need": 0.11998849738308165
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -354364,7 +354364,7 @@
                 "range_lower_cap": 0.02,
                 "range_upper_cap": 12.2,
                 "range_type": "wide",
-                "water_need": 0.33216744529136943
+                "water_need": 0.5137750555840078
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -355811,7 +355811,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.008163265306122448
+                "water_need": 0.004808765344425281
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -357180,7 +357180,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "wide",
-                "water_need": 0.009089066090012162
+                "water_need": 0.00626307186139275
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -358523,7 +358523,7 @@
                 "range_lower_cap": 0.009,
                 "range_upper_cap": 13.4,
                 "range_type": "wide",
-                "water_need": 0.16982919254658382
+                "water_need": 0.2587638447186065
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -359520,7 +359520,7 @@
                 "range_lower_cap": 0.009,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.3718450356333009
+                "water_need": 0.5761031279036251
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -360814,7 +360814,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.009523809523809523
+                "water_need": 0.006945994386392073
             },
             "developed": {
                 "preference_range": 3.4000000000000004,
@@ -361908,7 +361908,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.010502849788564073
+                "water_need": 0.008483932852401961
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -364217,7 +364217,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.07501985965841389
+                "water_need": 0.10983133884050732
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -367603,7 +367603,7 @@
                 "range_lower_cap": 3.5,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.641694652544562
+                "water_need": 1.0
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -368642,7 +368642,7 @@
                 "range_lower_cap": 1.2,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.19387755102040813
+                "water_need": 0.29654052957289234
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -369586,7 +369586,7 @@
                 "range_lower_cap": 0.04,
                 "range_upper_cap": 4.7,
                 "range_type": "wide",
-                "water_need": 0.006867071152785439
+                "water_need": 0.0027726214598488117
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -370741,7 +370741,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.3864709148965708
+                "water_need": 0.5990783855390589
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -372142,7 +372142,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.583621584226911
+                "water_need": 0.908775145599015
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -373243,7 +373243,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "wide",
-                "water_need": 0.008875425170068027
+                "water_need": 0.005927471171079773
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -374897,7 +374897,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.40865384615384603
+                "water_need": 0.633924739154525
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -376183,7 +376183,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -376909,7 +376909,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.4,
                 "range_type": "narrow",
-                "water_need": 0.008257638315441785
+                "water_need": 0.004957012445602171
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -378992,7 +378992,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "wide",
-                "water_need": 0.006671899529042386
+                "water_need": 0.002466033509961683
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -380852,7 +380852,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.26456088053198806
+                "water_need": 0.4075743810649593
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -383026,7 +383026,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.11134453781512603
+                "water_need": 0.16689244430652445
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -384045,7 +384045,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.7,
                 "range_type": "wide",
-                "water_need": 0.010374963382482182
+                "water_need": 0.008283040784655991
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -385747,7 +385747,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008667671614100186
+                "water_need": 0.005601118725040813
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -387480,7 +387480,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.19387755102040816
+                "water_need": 0.2965405295728924
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -388484,7 +388484,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008549365692222836
+                "water_need": 0.005415276288767212
             },
             "developed": {
                 "preference_range": 5.8,
@@ -389589,7 +389589,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.06449182580453756
+                "water_need": 0.09329323635563148
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -393500,7 +393500,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01003428312687991
+                "water_need": 0.007747878658477078
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -396331,7 +396331,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.008560090702947847
+                "water_need": 0.005432123814998931
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -398114,7 +398114,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.006122448979591836
+                "water_need": 0.0016029217814750943
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -399300,7 +399300,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.27654146765089016
+                "water_need": 0.4263942462317524
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -400342,7 +400342,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.16053279019117528
+                "water_need": 0.24416046701026256
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -402548,24 +402548,24 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/house-sparrow_001_winter_poland_hederabaltica_flickrccby-sa-2.0_adult-male.jpg",
                 "author": "Hedera Baltica/Flickr (CC BY-SA 2.0)"
-            }
-        },
-        "measurements": {
-            "both_sexes": {
-                "length": {
-                    "lower": 15.0,
-                    "upper": 17.0,
-                    "unit": "cm"
-                },
-                "wingspan": {
-                    "lower": 19.0,
-                    "upper": 25.0,
-                    "unit": "cm"
-                },
-                "weight": {
-                    "lower": 27.0,
-                    "upper": 30.0,
-                    "unit": "g"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 15.0,
+                        "upper": 17.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 19.0,
+                        "upper": 25.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 27.0,
+                        "upper": 30.0,
+                        "unit": "g"
+                    }
                 }
             }
         },
@@ -402581,7 +402581,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010965338516358924
+                "water_need": 0.009210439442761651
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -406584,7 +406584,7 @@
                 "range_lower_cap": 0.04,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.04239332096474954
+                "water_need": 0.058579505104817076
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -407243,24 +407243,24 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/spragues-pipit_004_alamy_cfbtf6_adult_allcanadaphotos.jpg",
                 "author": "AllCanadaPhotos/Alamy"
-            }
-        },
-        "measurements": {
-            "both_sexes": {
-                "length": {
-                    "lower": 15.0,
-                    "upper": 17.0,
-                    "unit": "cm"
-                },
-                "wingspan": {
-                    "lower": 25.0,
-                    "upper": 25.0,
-                    "unit": "cm"
-                },
-                "weight": {
-                    "lower": 18.0,
-                    "upper": 27.0,
-                    "unit": "g"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 15.0,
+                        "upper": 17.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 25.0,
+                        "upper": 25.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 18.0,
+                        "upper": 27.0,
+                        "unit": "g"
+                    }
                 }
             }
         },
@@ -407276,7 +407276,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.009238830667402095
+                "water_need": 0.006498331546520651
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -407845,7 +407845,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 0.3999999999999999,
@@ -408889,7 +408889,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.4,
                 "range_type": "narrow",
-                "water_need": 0.0135494317487474
+                "water_need": 0.013269696783768364
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -412326,7 +412326,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.4,
                 "range_type": "wide",
-                "water_need": 0.05103383458646617
+                "water_need": 0.07215257124245128
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -415510,24 +415510,24 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/h_brown_thrasher_003_flickr_briankushner_summer_adults.jpg",
                 "author": "Brian Kushner"
-            }
-        },
-        "measurements": {
-            "both_sexes": {
-                "length": {
-                    "lower": 23.0,
-                    "upper": 30.0,
-                    "unit": "cm"
-                },
-                "wingspan": {
-                    "lower": 29.0,
-                    "upper": 32.0,
-                    "unit": "cm"
-                },
-                "weight": {
-                    "lower": 61.0,
-                    "upper": 89.0,
-                    "unit": "g"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 23.0,
+                        "upper": 30.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 29.0,
+                        "upper": 32.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 61.0,
+                        "upper": 89.0,
+                        "unit": "g"
+                    }
                 }
             }
         },
@@ -415543,7 +415543,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.011254694928164315
+                "water_need": 0.009664978823952142
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -418769,7 +418769,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.00923427222128521
+                "water_need": 0.006491170850601624
             },
             "developed": {
                 "preference_range": 0.8,
@@ -420266,24 +420266,24 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/h_aud_gbbc-2016_carolina-wren_32214_kk_pa_photo-jeremy-coltogirone_adult.jpg",
                 "author": "Jeremy Coltogirone/Audubon Photography Awards"
-            }
-        },
-        "measurements": {
-            "both_sexes": {
-                "length": {
-                    "lower": 12.0,
-                    "upper": 14.0,
-                    "unit": "cm"
-                },
-                "wingspan": {
-                    "lower": 29.0,
-                    "upper": 29.0,
-                    "unit": "cm"
-                },
-                "weight": {
-                    "lower": 18.0,
-                    "upper": 22.0,
-                    "unit": "g"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 12.0,
+                        "upper": 14.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 29.0,
+                        "upper": 29.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 18.0,
+                        "upper": 22.0,
+                        "unit": "g"
+                    }
                 }
             }
         },
@@ -420299,7 +420299,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.011021360332624497
+                "water_need": 0.009298442060500935
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -422893,7 +422893,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010809408509166379
+                "water_need": 0.008965494709945442
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -424437,7 +424437,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.04307507560932218
+                "water_need": 0.05965044848683623
             },
             "developed": {
                 "preference_range": 3.5999999999999996,
@@ -427785,7 +427785,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 0.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -428528,7 +428528,7 @@
                 "range_lower_cap": 0.4,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.3565759637188209
+                "water_need": 0.552117502508088
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -429605,7 +429605,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 8.6,
                 "range_type": "wide",
-                "water_need": 0.11492220650636492
+                "water_need": 0.172512472917171
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -430621,7 +430621,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 11.2,
                 "range_type": "wide",
-                "water_need": 0.4226046350743687
+                "water_need": 0.6558395221154029
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -431757,6 +431757,25 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/aud_gbbc-2016_white-breasted-nuthatch_35889_kk_mi_photo-joan-tisdale_adult-male.jpg",
                 "author": "Joan Tisdale/Great Backyard Bird Count"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 13.0,
+                        "upper": 14.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 20.0,
+                        "upper": 27.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 18.0,
+                        "upper": 30.0,
+                        "unit": "g"
+                    }
+                }
             }
         },
         "landcover_preferences": {
@@ -431771,7 +431790,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010582410930473882
+                "water_need": 0.0086089125339817
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -434947,7 +434966,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.17414285714285713
+                "water_need": 0.265540022319164
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -436674,6 +436693,25 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/h_apa_2016-a1_1789_3_tufted-titmouse_gordon_jesse_kk_adult.jpg",
                 "author": "Gordon Jesse/Audubon Photography Awards"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 14.0,
+                        "upper": 16.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 20.0,
+                        "upper": 26.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 18.0,
+                        "upper": 26.0,
+                        "unit": "g"
+                    }
+                }
             }
         },
         "landcover_preferences": {
@@ -436688,7 +436726,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.011378099626947554
+                "water_need": 0.00985883074197585
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -439459,7 +439497,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 10.5,
                 "range_type": "wide",
-                "water_need": 0.08914965986394556
+                "water_need": 0.13202732406749854
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -441751,7 +441789,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010425909494232477
+                "water_need": 0.008363070164217884
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -443786,7 +443824,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 2.4000000000000004,
@@ -444831,6 +444869,25 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/web_h_a1_3180_6_golden-crowned-kinglet_gary_robinette_kk_adult-male.jpg",
                 "author": "Gary Robinette/Audubon Photography Awards"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 8.0,
+                        "upper": 11.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 14.0,
+                        "upper": 18.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 4.0,
+                        "upper": 8.0,
+                        "unit": "g"
+                    }
+                }
             }
         },
         "landcover_preferences": {
@@ -444845,7 +444902,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.005739795918367346
+                "water_need": 0.0010018261134219335
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -446030,6 +446087,25 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/h_ruby-crowned-kinglet_007_winter_california_traciehall_flickrcc-by-sa-2.0_adult-male.jpg",
                 "author": "Tracie Hall/Flickr (CC-BY-SA-2.0)"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 9.0,
+                        "upper": 11.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 16.0,
+                        "upper": 18.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 5.0,
+                        "upper": 10.0,
+                        "unit": "g"
+                    }
+                }
             }
         },
         "landcover_preferences": {
@@ -446044,7 +446120,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.005807983570786805
+                "water_need": 0.00110893959724692
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -447235,7 +447311,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010686286709805875
+                "water_need": 0.008772087188255472
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -450304,7 +450380,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.007045675413022352
+                "water_need": 0.003053184345666846
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -451272,6 +451348,25 @@
             "picture": {
                 "url": "https://media.audubon.org/nas_birdapi_hero/h_wood-thrush_008_fall_missouri_andyreagochrissymcclarren_flickrcc-by-2.0_adult.jpg",
                 "author": "Andy Reago and Chrissy McClarren/Flickr (CC-BY-2.0)"
+            },
+            "measurements": {
+                "both_sexes": {
+                    "length": {
+                        "lower": 19.0,
+                        "upper": 21.0,
+                        "unit": "cm"
+                    },
+                    "wingspan": {
+                        "lower": 30.0,
+                        "upper": 34.0,
+                        "unit": "cm"
+                    },
+                    "weight": {
+                        "lower": 40.0,
+                        "upper": 50.0,
+                        "unit": "g"
+                    }
+                }
             }
         },
         "landcover_preferences": {
@@ -451286,7 +451381,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.010578178229169986
+                "water_need": 0.008602263538649494
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -453974,7 +454069,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 15.0,
                 "range_type": "wide",
-                "water_need": 0.1679138321995465
+                "water_need": 0.25575507535535946
             },
             "developed": {
                 "preference_range": 2.3999999999999995,
@@ -455521,7 +455616,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.006509500351864883
+                "water_need": 0.0022109265951380606
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -456808,7 +456903,7 @@
                 "range_lower_cap": 0.6,
                 "range_upper_cap": 19.6,
                 "range_type": "wide",
-                "water_need": 0.6262161841480779
+                "water_need": 0.9756854413461336
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -458450,7 +458545,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.8,
                 "range_type": "narrow",
-                "water_need": 0.01099194627256974
+                "water_need": 0.009252236591708417
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -462621,7 +462716,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.00510204081632653
+                "water_need": 0.0
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -463288,7 +463383,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 1.2,
                 "range_type": "narrow",
-                "water_need": 0.013127314982932672
+                "water_need": 0.01260660902868312
             },
             "developed": {
                 "preference_range": 1.1999999999999993,
@@ -466435,7 +466530,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 4.1,
                 "range_type": "wide",
-                "water_need": 0.007411385606874328
+                "water_need": 0.0036276650843910015
             },
             "developed": {
                 "preference_range": 1.2000000000000002,
@@ -467674,7 +467769,7 @@
                 "range_lower_cap": 0.0,
                 "range_upper_cap": 2.9,
                 "range_type": "narrow",
-                "water_need": 0.010103478010922678
+                "water_need": 0.007856574365539897
             },
             "developed": {
                 "preference_range": 3.5999999999999996,

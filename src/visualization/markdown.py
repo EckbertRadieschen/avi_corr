@@ -30,9 +30,38 @@ def apply_markdown():
                 margin-bottom: 1rem
             }
 
+            [data-testid="stButton"] > button {
+                background-color: #e8c158;
+                color: #ffffff
+            }
+
+            [data-testid="stButton"] > button:hover {
+                background-color: #f9d269;
+                color: #ffffff
+            }
+
+            [data-testid="stButton"] > button:disabled {
+                background-color: #bfa26b;
+                color: #dddddd
+            }
+
+            [data-testid="stButton"] > button:disabled:hover {
+                background-color: #bfa26b;
+                color: #dddddd
+            }
+
+            [data-testid="stButton"] > button p {
+                font-size: 16px;
+            }
+
             [data-testid="stSidebarContent"] > div {
                 padding: 0 !important;
                 margin: 0 !important;
+            }
+
+            [data-testid="stWidgetLabel"] p {
+                font-size: 16px;
+                color: #ffffff
             }
 
             [data-testid="stSidebarHeader"] {
@@ -42,7 +71,7 @@ def apply_markdown():
             /* Divider */
             div[data-testid="stMarkdown"] hr {
                 margin-top: 0.25rem;
-                margin-bottom: 0.25rem
+                margin-bottom: 20px
             }
 
             /* Selectbox Container 
@@ -98,7 +127,30 @@ def apply_markdown():
             === Hauptbereich
             ========================================================== */    
 
+            h3 span {
+                font-size: 22px
+            }
+
+            [data-testid="stHeaderActionElements"] {
+                display: none;
+            }
+
+            .st-key-map_container_holder {
+                height: 300px;
+                display: flex;
+                align-items: center;
+                border-radius: 25px;
+                border: 1px solid #880000;
+                padding: 20px 40px          
+            }
+
+            .st-key-map_container_holder h3{
+                padding-top: 0;
+                margin-top: -5px
+            }
+
             .st-key-map_container {
+                width: 100%;
                 border-radius: 25px;
                 border: 1px solid #880000;
                 overflow: hidden
@@ -111,7 +163,13 @@ def apply_markdown():
             .st-key-bars_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 20px 60px
+                padding: 20px 60px 20px 60px
+            }
+
+            .st-key-bars_container h3 {
+                padding-top: 0;
+                padding-bottom: 20px;
+                margin-top: -8px;
             }
 
             .st-key-infobox_container {
@@ -120,14 +178,66 @@ def apply_markdown():
                 padding: 20px 20px
             }
 
+            .st-key-info_header h2{
+                padding: 0
+            }
+
+            .st-key-info_header h2 span{
+                font-size: 28px
+            }
+
+            .st-key-infobox_container h3 span{
+                font-size: 18px
+            }
+
+            .st-key-info_header p{
+                text-align: center;
+                font-style: italic
+            }
+
             .st-key-infobox_container div[data-testid="stImage"] {
-                height: 30%;
-                width: 50%
+                height: 80%;
+                width: 100%; 
+                margin-top: 15px
+            }
+
+            .st-key-infobox_container [data-testid="stElementToolbar"] {
+                display: none;
             }
 
             .st-key-habitat_container {
                 border-radius: 25px;
-                border: 1px solid #880000
+                border: 1px solid #880000;
+                padding: 0 10px
+            }
+
+            .st-key-habitat_container h3 {
+                padding-top: 8px;
+                padding-bottom: 20px
+            }
+
+            .st-key-water_visual,
+            .st-key-urbanization_visual {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3px;
+                margin-bottom: 20px
+            }
+
+            .st-key-water_visual [data-testid="stElementContainer"],
+            .st-key-urbanization_visual [data-testid="stElementContainer"] {
+                width: 100%;
+                display: flex;
+                justify-content: center
+            }
+
+            .st-key-water_visual p,
+            .st-key-urbanization_visual p {
+                font-size: 1rem;
+                font-weight: bold;
+                text-align: center
             }
 
             </style>

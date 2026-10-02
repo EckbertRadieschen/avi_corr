@@ -201,7 +201,7 @@ def get_preferred_habitat (landcover_preferences, landcover_config):
             "background_hex": variable_config["background_color"]
         }
 
-    treemap_html = setup_treemap_html("400px", "260px", landcover_dict)
+    treemap_html = setup_treemap_html("100%", "280px", landcover_dict)
 
     st.markdown(
         treemap_html,

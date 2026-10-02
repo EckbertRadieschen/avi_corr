@@ -1,6 +1,5 @@
 import pandas as pd
 import math
-import numpy as np
 import json 
 
 BBS_NLCD_PATH = "data/processed/full_bbs_landcover.csv"

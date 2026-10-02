@@ -20,6 +20,7 @@ from visualization.streamlit_functions import explorer_button, lexicon_button
 from visualization.climate_bar_visualization import visualize_species_bars
 from visualization.preferred_habitat_visual import get_preferred_habitat, water_visual, urbanization_visual
 from visualization.create_concentration_map import plot_species_usa_map
+from visualization.create_bird_size_visual import create_bird_size_visual
 
 
 load_dotenv()
@@ -258,54 +259,80 @@ analysis_df = remove_variable_null_values(analysis_df, selected_variable_indicat
 
 if st.session_state["page"] == "lexicon":
     scientiftic_name = species_dict["scientific_name"]
+    order = species_dict["order"]
+    family = species_dict["family"]
+    genus = species_dict["genus"]
+    
     picture_url = audubon_info["picture"]["url"]
     habitat = audubon_info["Habitat"]
 
-    measurements = (
-        audubon_info["measurements"]["both_sexes"] 
-        if "both_sexes" in audubon_info["measurements"]
-        else audubon_info["measurements"]["female"]
-    )
+    measurements = audubon_info["measurements"]
+        
 
-    length_dict = measurements["length"]
-    bird_length = f"{length_dict['lower']}-{length_dict['upper']} {length_dict['unit']}"
+    # length_dict = measurements["length"]
+    # bird_length = f"{length_dict['lower']}-{length_dict['upper']} {length_dict['unit']}"
 
-    span_dict = measurements["wingspan"]
-    bird_span = f"{span_dict['lower']}-{span_dict['upper']} {span_dict['unit']}"
+    # span_dict = measurements["wingspan"]
+    # bird_span = f"{span_dict['lower']}-{span_dict['upper']} {span_dict['unit']}"
 
-    weight_dict = measurements["weight"]
-    bird_weight = f"{weight_dict['lower']}-{weight_dict['upper']} {weight_dict['unit']}"    
+    # weight_dict = measurements["weight"]
+    # bird_weight = f"{weight_dict['lower']}-{weight_dict['upper']} {weight_dict['unit']}"    
 
 
-    col1, _ , col2 = st.columns([1.5, 0.25, 2])
+    col1, col2 = st.columns(2, gap=50)
 
     with col1:
-        with st.container(key="map_container"):
-            fig_map = plot_species_usa_map(grid_config, selected_species)
-            st.plotly_chart(
-                fig_map, 
-                width="stretch", 
-                config={
-                    "displayModeBar": False,
-                    "scrollZoom": True,
-                    "doubleClick": False,
-                    "showTips": False
-                })
+        with st.container(key="map_container_holder"):
+            st.subheader("Geographic Distribution", text_alignment="center")
 
-        with st.container(key="bars_container"):
+            with st.container(key="map_container"):
+                fig_map = plot_species_usa_map(grid_config, selected_species)
+                st.plotly_chart(
+                    fig_map, 
+                    width="stretch", 
+                    config={
+                        "displayModeBar": False,
+                        "scrollZoom": True,
+                        "doubleClick": False,
+                        "showTips": False
+                    })
+
+        with st.container(key="bars_container", gap=5):
+            st.subheader("Climate Preferences", text_alignment="center", )
+
             climate_preferences = species_dict["climate_preferences"]
             visualize_species_bars(climate_config["variables"], climate_preferences)
         
     with col2:
         with st.container(key="infobox_container"):
-            st.image(picture_url)
-            st.write(f"Length:   {bird_length}")
-            st.write(f"Wingspan: {bird_span}")
-            st.write(f"Weight:   {bird_weight}")
+            create_bird_size_visual(measurements)
+
+            with st.container(key="info_header"):
+                st.header(common_name, text_alignment="center")
+                st.write(f"({scientiftic_name})")
+
+            st.divider()
+           
+            _, info_col1, info_col2, _ = st.columns([1, 8, 9, 1], gap=20)
+
+            with info_col1:
+                st.subheader("Taxonomic Information:")
+                st.write(f"Order: {order}")
+                st.write(f"Family: {family}")
+                st.write(f"Genus: {genus}")
+
+            with info_col2:
+                st.image(picture_url, width="stretch")
+            
+            # st.write(f"Length:   {bird_length}")
+            # st.write(f"Wingspan: {bird_span}")
+            # st.write(f"Weight:   {bird_weight}")
 
 
-        with st.container(key="habitat_container", width=600, height=300):
-            habitat_col1, _, habitat_col2= st.columns([6, 1, 2.5])
+        with st.container(key="habitat_container", width=600, height=360, gap=5):
+            st.subheader("Habitat Preferences", text_alignment="center", )
+            
+            habitat_col1, habitat_col2= st.columns([6, 2])
 
             with habitat_col1:
                 landcover_preferences = species_dict["landcover_preferences"]
@@ -316,8 +343,12 @@ if st.session_state["page"] == "lexicon":
                 urbanization_type = landcover_preferences["developed"]["urbanization_type"]
                 urbanization_range = landcover_preferences["developed"]["urbanization_range"]
 
-                water_visual(water_need)
-                urbanization_visual(urbanization_type, urbanization_range)
+                with st.container(key="water_visual"):
+                    st.write("Water Access")
+                    water_visual(water_need)
+                with st.container(key="urbanization_visual"):
+                    st.write("Urbanization Tolerance")
+                    urbanization_visual(urbanization_type, urbanization_range)
 
 
             
@@ -341,7 +372,10 @@ elif st.session_state["page"] == "explorer":
     with title_col:
         st.title(common_name)
 
-    st.plotly_chart(figure)
+    st.plotly_chart(
+        figure, 
+        config={"displayModeBar": False}
+    )
 
     if info_text:
         st.write(info_text)

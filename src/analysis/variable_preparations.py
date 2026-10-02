@@ -110,7 +110,7 @@ def get_extension_frame(
             stringified = re.sub(r"[\[\]\(\)\s]", "", str(index_value))
 
             caps = map(float, stringified.split(","))
-            new_index_values.append(build_range_string(list(caps)) + " %")
+            new_index_values.append(build_range_string(list(caps)).lstrip("-") + " %")
 
         extension_df.index = new_index_values
 
