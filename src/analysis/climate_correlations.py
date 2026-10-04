@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import json
 from zipfile import ZipFile
-# from src.analysis.correlate import check_low_deviation
-# from src.analysis.variable_preparations import bin_high_climate_variable_values
-# from src.visualization.prepare_visualization import get_model, get_model_curves
+from src.analysis.correlate import check_low_deviation
+from src.analysis.variable_preparations import bin_high_climate_variable_values
+from src.visualization.prepare_visualization import get_model, get_model_curves
 
 CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"

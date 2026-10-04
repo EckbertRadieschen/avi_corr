@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import statsmodels.api as sm
 from patsy import dmatrix
 
-from analysis.variable_preparations import bin_high_climate_variable_values, get_landcover_high_count_distribution
+from src.analysis.variable_preparations import bin_high_climate_variable_values, get_landcover_high_count_distribution
 
 def check_low_deviation (x: pd.Series):
     mean = x.mean()

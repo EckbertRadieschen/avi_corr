@@ -116,7 +116,6 @@ def water_need_css():
     """, unsafe_allow_html=True
 )
     
-
 def climate_bar_css ():
     st.markdown("""
         <style>
@@ -224,3 +223,61 @@ def climate_bar_css ():
         }
         </style>
         """, unsafe_allow_html=True)
+
+def bird_size_css ():
+    st.markdown("""
+        <style>
+        .visual_holder {
+            position: relative;
+            display: flex; 
+            flex-direction: row;
+            width: 100%;
+            align-items: flex-end;
+            justify-content: space-between
+        }
+
+        .measurements {
+            position: absolute;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 100%
+        }
+
+        .measurements-header,
+        .measurements-row {
+            display: contents
+        }
+
+        .measurements > * > div {
+            padding: 5px 10px
+        }
+
+        .measurements > * > div:nth-child(2) {
+            border-right: 1px solid #888
+        }
+
+        .measurements-single {
+            position: absolute;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%
+        }
+
+        .measurements-single > div {
+            padding: 5px 10px
+        }
+
+        .measurements-single > div:nth-child(even) {
+            text-align: center
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+def main_css():
+    treemap_css()
+    urbanization_css()
+    water_need_css()
+    climate_bar_css()
+    bird_size_css()

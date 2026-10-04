@@ -2,9 +2,11 @@ import pandas as pd
 import numpy as np
 import re
 import json
-from helpers import build_range_string, extract_bin_caps_from_label, get_landcover_variable_range
+
 from zipfile import ZipFile
 from typing import Literal
+
+from src.helpers import build_range_string, extract_bin_caps_from_label, get_landcover_variable_range
 
 LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"

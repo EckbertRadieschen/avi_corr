@@ -1,7 +1,4 @@
 import streamlit as st
-import pandas as pd
-import json
-import plotly.graph_objects as go
 from pathlib import Path
 import base64
 
@@ -110,8 +107,7 @@ def build_branch_html (landcover_list: list[dict], box_number=1, markdown_string
     box_icon_html = (
         f'<img class="box-icon" '
         f'src="data:image/png;base64,{encoded}" '
-        f'title="{variable.capitalize()}: {round(proportion * 100, 1)}%" '
-        f'style=>'
+        f'title="{variable.capitalize()}: {round(proportion * 100, 1)}%">'
     )
         
     branches_html = (

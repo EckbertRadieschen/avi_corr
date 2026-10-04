@@ -240,6 +240,15 @@ def apply_markdown():
                 text-align: center
             }
 
+            .st-key-size_container {
+                width: 95%;
+                border-radius: 25px;
+                border: 1px solid #880000;
+                height: 150px !important;
+                min-height: 150px !important;
+                padding: 10px 30px 0px 25px
+            }
+
             </style>
         """, unsafe_allow_html=True
     )

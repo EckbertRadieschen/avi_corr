@@ -1,5 +1,4 @@
-import streamlit as st
-from visualization.create_climate_bars import climate_bar
+from src.visualization.create_climate_bars import climate_bar
 
 def visualize_species_bars(climate_config, climate_preferences):
     
