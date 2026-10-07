@@ -1,6 +1,6 @@
 import streamlit as st
 
-from app.streamlit_functions import explorer_button, lexicon_button
+from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
 from src.visualization.climate_bar_visualization import visualize_species_bars
 from src.visualization.preferred_habitat_visual import get_preferred_habitat, water_visual, urbanization_visual
@@ -17,38 +17,43 @@ def get_lexicon_content():
 
     with st.sidebar:
         with st.container(key="sidebar_navigation"):
-            nav_button_cols = st.columns(2)
+            st.button(
+                "Explorer", 
+                disabled = st.session_state["page"] == "explorer", 
+                use_container_width=True, 
+                on_click=explorer_button
+            )
+                
+            st.button(
+                "Lexicon", 
+                disabled = st.session_state["page"] == "lexicon", 
+                use_container_width=True, 
+                on_click=lexicon_button
+            )
 
-            with nav_button_cols[0]:
-                st.button(
-                    "Explorer", 
-                    disabled = st.session_state["page"] == "explorer", 
-                    use_container_width=True, 
-                    on_click=explorer_button
-                )
+            st.button(
+                "Statistics", 
+                disabled = st.session_state["page"] == "statistics", 
+                width="stretch",
+                on_click=statistics_button
+            )
+
+        st.divider()
                     
-            with nav_button_cols[1]:
-                st.button(
-                    "Lexicon", 
-                    disabled = st.session_state["page"] == "lexicon", 
-                    use_container_width=True, 
-                    on_click=lexicon_button
-                )
-                    
-            st.text_input("Species Search", key="species_search_input")
+        st.text_input("Species Search", key="species_search_input")
 
-            species_list = st.session_state["species_list"]
+        species_list = st.session_state["species_list"]
 
-            species_search = st.session_state.get("species_search_input", "")
+        species_search = st.session_state.get("species_search_input", "")
 
-            filtered_species_list = [
-                species_tuple 
-                for species_tuple in species_list 
-                if species_search.lower() in species_tuple[1].lower()
-            ]
-    
-            st.selectbox("Species", filtered_species_list, format_func= lambda x: x[1], key="selected_species")
-            selected_species = st.session_state["selected_species"][0]
+        filtered_species_list = [
+            species_tuple 
+            for species_tuple in species_list 
+            if species_search.lower() in species_tuple[1].lower()
+        ]
+
+        st.selectbox("Species", filtered_species_list, format_func= lambda x: x[1], key="selected_species")
+        selected_species = st.session_state["selected_species"][0]
     
     # =======================================================================================================
     # Main Content
@@ -88,7 +93,7 @@ def get_lexicon_content():
                     })
 
         with st.container(key="bars_container", gap=5):
-            st.subheader("Climate Preferences", text_alignment="center", )
+            st.subheader("Climate Preferences", text_alignment="center")
 
             climate_preferences = species_dict["climate_preferences"]
             climate_config = st.session_state["climate_config"]

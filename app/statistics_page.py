@@ -1,7 +1,15 @@
 import streamlit as st
+import pandas as pd
 
-from app.streamlit_functions import explorer_button, lexicon_button
+from app.streamlit_functions import (
+    explorer_button, lexicon_button, statistics_button,
+    top_button_main, bottom_button_main,
+    top_button_width, bottom_button_width
+)
 
+from src.visualization.climate_stat_visualization import (
+    main_bar_chart, range_type_pie, optimum_class_bars, range_width_chart
+)
 
 INDICATORS = {
     "temperature": [
@@ -31,56 +39,132 @@ INDICATORS = {
 
 
 def get_statistics_content ():
-    # =======================================================================================================
-    # Sidebar
-    # =======================================================================================================
-
-    with st.sidebar:
-        with st.container(key="sidebar_navigation"):
-            nav_button_cols = st.columns(2)
-
-            with nav_button_cols[0]:
-                st.button(
-                    "Explorer", 
-                    disabled = st.session_state["page"] == "explorer", 
-                    use_container_width=True, 
-                    on_click=explorer_button
-                )
+    with st.container(key="statistics_header", width="stretch"):
+        with st.container(key="header_navigation", width="content"):
+            st.button(
+                "Explorer", 
+                disabled = st.session_state["page"] == "explorer",  
+                on_click=explorer_button
+            )
                     
-            with nav_button_cols[1]:
-                st.button(
-                    "Lexicon", 
-                    disabled = st.session_state["page"] == "lexicon", 
-                    use_container_width=True, 
-                    on_click=lexicon_button
-                )
-                    
+            st.button(
+                "Lexicon", 
+                disabled = st.session_state["page"] == "lexicon", 
+                on_click=lexicon_button
+            )
+
+            st.button(
+                "Statistics", 
+                disabled = st.session_state["page"] == "statistics", 
+                on_click=statistics_button
+            )
+
+        with st.container(key="header_slicer", width="content"):         
             variable_list = [
                 (variable, variable.replace("_", " ").capitalize())
                 for variable in INDICATORS.keys()
             ]   
-            st.selectbox("Variable", variable_list, format_func= lambda x: x[1], key="selected_variable")
-            selected_variable = st.session_state["selected_variable"][0]
-            
-            indicator_method_list = [
-                (method, method.replace("_", " ").capitalize())
-                if method is not None
-                else (None, "Proportion")
-                for method in INDICATORS[selected_variable]
-            ]
-            st.selectbox("Indicator Method", indicator_method_list, format_func= lambda x: x[1], key="selected_indicator_method")
-            selected_indicator_method = st.session_state["selected_indicator_method"][0]
-            
-            selected_variable_indicator = (
-                f"{selected_variable}_{selected_indicator_method}" 
-                if selected_indicator_method is not None 
-                else selected_variable
+            st.selectbox("Variable", variable_list, format_func= lambda x: x[1], key="selected_variable_header")
+            selected_variable = st.session_state["selected_variable_header"][0]
+
+            climate_stat_config = st.session_state["climate_stat_config"]
+            variable_config = climate_stat_config[selected_variable]
+        
+            species_values = variable_config["species_values"]
+            meta_data = variable_config["meta_data"]
+        
+            min_value = meta_data["min"]
+            max_value = meta_data["max"]
+            slider_step = meta_data["slider_step"]
+            unit = meta_data["unit"]
+            rounding_decimals = meta_data["rounding_decimals"]
+                    
+            min_chart, max_chart = st.slider(
+                "Optimum",
+                min_value=min_value,
+                max_value=max_value,
+                value=(min_value, max_value),
+                step=slider_step
             )
-    
+
+
     # =======================================================================================================
     # Main Content
     # =======================================================================================================
 
-    climate_stat_config = st.session_state["climate_stat_config"]
+    with st.container(key="main_section"):
+        data = species_values.values()
+        variable_df = pd.DataFrame(data)
 
-    
+        cap_filter = (variable_df["optimum"] <= max_chart) & (variable_df["optimum"] >= min_chart)
+        variable_df = variable_df[cap_filter]
+
+        sector_col1, sector_col2 = st.columns(2, gap=50)
+
+        with sector_col1:
+            if not "top_bottom_main" in st.session_state:
+                st.session_state["top_bottom_main"] = "top"
+
+            top_bottom_main = st.session_state["top_bottom_main"]
+
+            with st.container(key="main_container", width="stretch", gap=0, border=True):
+                header_prefix_main = "Highest" if top_bottom_main == "top" else "Lowest"
+
+                with st.container(key="main_chart_header"):
+                    st.subheader(
+                        f"{header_prefix_main} by Preference {selected_variable.replace('_', ' ').capitalize()}", 
+                        width="stretch"
+                    )
+
+                    with st.container(key="top_bottom_button_container_main", width="stretch"):
+                        st.button(
+                            "Top", key="top_button_main", 
+                            disabled=top_bottom_main == "top", width=100, on_click=top_button_main
+                        )
+                        st.button(
+                            "Bottom", key="bottom_button_main",
+                            disabled=top_bottom_main == "bottom", width=100, on_click=bottom_button_main
+                        )
+
+                with st.container(key="main_chart_container", width="stretch"):
+                    main_chart_fig = main_bar_chart(variable_df, top_bottom_main, rounding_decimals, unit)
+                    st.plotly_chart(main_chart_fig, height=300, config={"displayModeBar": False})
+
+            if not "top_bottom_width" in st.session_state:
+                st.session_state["top_bottom_width"] = "top"
+
+            top_bottom_width = st.session_state["top_bottom_width"]
+
+            with st.container(key="width_container", width="stretch", gap=0, border=True):
+                header_prefix_width = "Widest" if top_bottom_width == "top" else "Narrowest"
+
+                with st.container(key="width_chart_header"):
+                    st.subheader(
+                        f"{header_prefix_width} Preference Ranges by {selected_variable.replace('_', ' ').capitalize()}", 
+                        width="stretch"
+                    )
+
+                    with st.container(key="top_bottom_button_container_width", width="stretch"):
+                        st.button(
+                            "Top", key="top_button_width",
+                            disabled=top_bottom_width == "top", width=100, on_click=top_button_width
+                        )
+                        st.button(
+                            "Bottom", key="bottom_button_width",
+                            disabled=top_bottom_width == "bottom", width=100, on_click=bottom_button_width
+                        )
+
+                with st.container(key="width_chart_container", width="stretch"):
+                    width_chart_fig = range_width_chart(variable_df, top_bottom_width, rounding_decimals, unit)
+                    st.plotly_chart(width_chart_fig, height=300, config={"displayModeBar": False})
+
+        with sector_col2:
+            with st.container(key="optimum_bars_container", border=True):
+                optimum_class_fig = optimum_class_bars(selected_variable, variable_df)
+                st.plotly_chart(optimum_class_fig, height=335, width=550, config={"displayModeBar": False})
+
+            with st.container(key="range_type_container", border=True):
+                range_type_fig = range_type_pie(selected_variable, variable_df)
+                st.plotly_chart(range_type_fig, height=335, width=300, config={"displayModeBar": False})
+
+            

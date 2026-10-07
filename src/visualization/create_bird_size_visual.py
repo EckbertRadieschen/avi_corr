@@ -143,8 +143,9 @@ def create_bird_size_visual(measure_dict):
     st.markdown(
         f"""
         <div class="visual_holder">
-            {size_info_html}
             {size_html}
         </div>
         """, unsafe_allow_html=True
     )
+
+    # {size_info_html}

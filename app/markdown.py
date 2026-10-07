@@ -27,12 +27,15 @@ def apply_markdown():
             }
 
             .st-key-sidebar_navigation {
+                display: flex;
                 margin-bottom: 1rem
             }
 
             [data-testid="stButton"] > button {
                 background-color: #e8c158;
-                color: #ffffff
+                color: #ffffff;
+                height: fit-content;
+                min-height: 1rem
             }
 
             [data-testid="stButton"] > button:hover {
@@ -115,20 +118,66 @@ def apply_markdown():
                display: None
             }
 
-            .block-container {
-                padding-top: 0.5rem;
-            }
-
             [data-testid="stMainBlockContainer"] > div[data-testid="stVerticalBlock"] {
-                gap: 0.4rem;
+                gap: 0
             }
 
+            [data-testid="stMainBlockContainer"] {
+                padding: 0
+            }
+
+            .st-key-statistics_header {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                background-color: #f2dcb8;
+                padding: 10px 10px;
+                align-items: center
+            }
+
+            .st-key-header_navigation{
+                display: flex;
+                flex-flow: row nowrap;
+                margin-left: 30px
+            }
+
+            .st-key-header_slicer {
+                display: flex;
+                flex-flow: row nowrap;
+                margin-bottom: 10px;
+                padding-right: 10px;
+                gap: 50px
+            }
+
+            .st-key-header_slicer * {
+                color: #333
+            }
+
+            .st-key-header_slicer [data-testid="stWidgetLabel"] * {
+                color: #333;
+            }
+
+            .st-key-selected_variable_header {
+                width: 30%
+            }
+
+            
             /* ==========================================================
             === Hauptbereich
             ========================================================== */    
 
+            .st-key-main_section {
+                width: 100%;
+                padding: 10px 100px 50px 100px;
+            }
+
             h3 span {
                 font-size: 22px
+            }
+
+            .stHeading {
+                display: flex;
+                align-items: center;
             }
 
             [data-testid="stHeaderActionElements"] {
@@ -141,7 +190,9 @@ def apply_markdown():
                 align-items: center;
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 20px 40px          
+                padding: 20px 40px;
+                margin-left: 20px;
+                margin-top: 20px       
             }
 
             .st-key-map_container_holder h3{
@@ -163,7 +214,9 @@ def apply_markdown():
             .st-key-bars_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 20px 60px 20px 60px
+                padding: 20px 60px 20px 60px;
+                margin-left: 20px;
+                margin-top: 20px    
             }
 
             .st-key-bars_container h3 {
@@ -175,7 +228,9 @@ def apply_markdown():
             .st-key-infobox_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 20px 20px
+                padding: 20px 20px;
+                margin-right: 20px;
+                margin-top: 20px    
             }
 
             .st-key-info_header h2{
@@ -248,6 +303,69 @@ def apply_markdown():
                 min-height: 150px !important;
                 padding: 10px 30px 0px 25px
             }
+
+            
+            .st-key-main_container, .st-key-width_container {
+                padding-top: 20px
+            }
+
+            .st-key-main_chart_header, .st-key-width_chart_header {
+                display: flex;
+                flex-direction: row;
+                justify-content: center
+            }
+
+            .st-key-main_chart_header > [data-testid="stElementContainer"], .st-key-width_chart_header > [data-testid="stElementContainer"]{
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center
+            }
+
+            .st-key-main_chart_header h3, .st-key-width_chart_header h3 {
+                text-align: center;
+                padding: 0
+            }
+
+            .st-key-main_chart_header h3 span, .st-key-width_chart_header h3 span {
+                font-size: 20px;
+                font-weight: bold
+            }
+
+            .st-key-main_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]) {
+                flex: 3 
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_main) {
+                flex: 1
+            }
+
+            .st-key-width_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]) {
+                flex: 3 
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_width) {
+                flex: 1
+            }
+
+            .st-key-top_bottom_button_container_main, .st-key-top_bottom_button_container_width {
+                display: flex;
+                flex-direction: row
+            }
+
+            .st-key-main_section [data-testid="stButton"] > button p {
+                font-size: 14px !important;
+            }
+
+            .st-key-main_section [data-testid="stButton"] > button {
+                padding: 3px 5px
+            }
+
+            .st-key-optimum_bars_container, .st-key-range_type_container {
+                display: flex;
+                align-items: center
+            }
+
 
             </style>
         """, unsafe_allow_html=True

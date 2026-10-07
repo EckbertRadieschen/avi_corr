@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
 CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
@@ -23,7 +24,10 @@ with open(SPECIES_CONFIG_PATH, "r") as file:
 statistics_config = {}
 
 for variable, list in INDICATORS.items():
-    variable_dict = statistics_config[variable] = {}
+    variable_dict = statistics_config[variable] = {
+        "meta_data": {},
+        "species_values": {}
+    }
 
     variable_config = climate_config["variables"][variable]
 
@@ -57,8 +61,16 @@ for variable, list in INDICATORS.items():
         else:
             value_list.append(optimum)
 
+    meta_data = variable_dict["meta_data"]
+
     min_value = min(value_list)
     max_value = max(value_list)
+
+    meta_data["min"] = np.floor(min_value * (10 ** rounding_decimals)) / (10 ** rounding_decimals)
+    meta_data["max"] = np.ceil(max_value * (10 ** rounding_decimals)) / (10 ** rounding_decimals)
+    meta_data["slider_step"] = 1 / (10 ** rounding_decimals)
+    meta_data["unit"] = unit
+    meta_data["rounding_decimals"] = rounding_decimals
 
     value_range = max_value - min_value
     bin_range = value_range / 5
@@ -78,7 +90,10 @@ for variable, list in INDICATORS.items():
     missing_optima = len(missing_optima_list)
     relevant_species = len(species_config) - missing_optima
 
+    species_values = variable_dict["species_values"]
+
     for species_id, species_dict in species_config.items():
+        common_name = species_dict["audubon_info"]["common_name"]
         climate_preferences = species_dict["climate_preferences"]
 
         if (
@@ -88,10 +103,13 @@ for variable, list in INDICATORS.items():
             or indicator not in climate_preferences[variable][indicator_group]["main"]
         ):    
             continue
-        
+
         indicator_dict = climate_preferences[variable][indicator_group]["main"][indicator]
         optimum = indicator_dict["optimum"]
         range_type = indicator_dict["range_type"]
+        preference_range = indicator_dict["preference_range"]
+        preference_lower = preference_range[0]
+        preference_upper = preference_range[1]
 
         for cap, name, string in zip(bin_caps[1:], bin_names, bin_strings):
             if optimum <= cap:
@@ -99,9 +117,11 @@ for variable, list in INDICATORS.items():
                 type_bin = string
                 break
 
-        variable_dict[species_id] = {
+        species_values[species_id] = {
+            "common_name": common_name,
             "optimum": optimum,
             "variable_preference": preference_type,
+            "preference_range_width": preference_upper - preference_lower,
             "preference_type_bin": type_bin,
             "range_type": range_type
         }
