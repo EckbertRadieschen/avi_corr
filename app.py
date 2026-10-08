@@ -6,6 +6,7 @@ import streamlit as st
 from sqlalchemy.engine import URL
 from sqlalchemy import create_engine
 import json
+from pathlib import Path
 
 from app.css import main_css
 from app.markdown import apply_markdown   
@@ -34,16 +35,23 @@ ENGINE = create_engine(
     pool_pre_ping=True
 )
 
-SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
-SPECIES_CONFIG_PATH = "src/config/species_config.json"
-ROUTE_CONFIG_PATH = "src/config/route_config.json"
-GRID_CONFIG_PATH = "src/config/grid_config.json"
-DISPLAY_GRID_CONFIG_PATH = "src/config/display_grid_config.json"
+BASE_DIR = Path(__file__).resolve().parent
 
-CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
-LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
+PROCESSED_DATA_DIR = BASE_DIR / "data" / "processed"
+SPECIES_ZIP_PATH = PROCESSED_DATA_DIR / "species_csv_files.zip"
 
-CLIMATE_STAT_CONFIG_PATH = "src/config/climate_stat_config.json"
+CONFIG_DIR = BASE_DIR / "src" / "config"
+SPECIES_GRID_ZIP = CONFIG_DIR / "species_grid_configs.zip"
+
+SPECIES_CONFIG_PATH = CONFIG_DIR / "species_config.json"
+ROUTE_CONFIG_PATH = CONFIG_DIR / "route_config.json"
+GRID_CONFIG_PATH = CONFIG_DIR / "grid_config.json"
+BASE_GRID_CONFIG_PATH = CONFIG_DIR / "base_grid.json"
+
+CLIMATE_CONFIG_PATH = CONFIG_DIR / "climate_config.json"
+LANDCOVER_CONFIG_PATH = CONFIG_DIR / "landcover_config.json"
+
+CLIMATE_STAT_CONFIG_PATH = CONFIG_DIR / "climate_stat_config.json"
 
 # =====================================================
 
@@ -83,7 +91,7 @@ if "route_config" not in st.session_state:
 route_config = st.session_state["route_config"]
 
 if "grid_config" not in st.session_state:
-    with open(DISPLAY_GRID_CONFIG_PATH, "r") as file:
+    with open(BASE_GRID_CONFIG_PATH, "r") as file:
         st.session_state["grid_config"] = json.load(file)
 
 if "climate_config" not in st.session_state:

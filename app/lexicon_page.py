@@ -1,4 +1,7 @@
 import streamlit as st
+from pathlib import Path
+import json
+from zipfile import ZipFile
 
 from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
@@ -7,9 +10,30 @@ from src.visualization.preferred_habitat_visual import get_preferred_habitat, wa
 from src.visualization.create_concentration_map import plot_species_usa_map
 from src.visualization.create_bird_size_visual import create_bird_size_visual
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+CONFIG_DIR = BASE_DIR / "src" / "config"
+SPECIES_GRID_ZIP = CONFIG_DIR / "species_grid_configs.zip"
+
+
+def load_species_grid(species_id, base_grid):
+    with ZipFile(SPECIES_GRID_ZIP, "r") as zip:
+        with zip.open(f"{species_id}_grid.json", "r") as file:
+            species_grid_config = json.load(file)
+
+    features = species_grid_config["features"]
+
+    for feature in features:
+        cell_id = feature["id"]
+        geometry = base_grid[cell_id]
+        feature["geometry"] = geometry
+
+    st.session_state["species_grid"] = species_grid_config
+
 
 def get_lexicon_content():
     species_config = st.session_state["species_config"]
+    base_grid = st.session_state["grid_config"]
 
     # =======================================================================================================
     # Sidebar
@@ -59,6 +83,9 @@ def get_lexicon_content():
     # Main Content
     # =======================================================================================================
 
+    load_species_grid(selected_species, base_grid)
+    species_grid = st.session_state["species_grid"]
+
     species_dict = species_config[selected_species]
     audubon_info = species_dict["audubon_info"]
 
@@ -72,78 +99,93 @@ def get_lexicon_content():
 
     measurements = audubon_info["measurements"]
 
-    col1, col2 = st.columns(2, gap=50)
+    st.session_state["bird_gender"] = "male" if "male" in measurements else "both"
 
-    with col1:
-        with st.container(key="map_container_holder"):
-            st.subheader("Geographic Distribution", text_alignment="center")
+    with st.container(key="main_section"):
 
-            with st.container(key="map_container"):
-                grid_config = st.session_state["grid_config"]
+        col1, col2 = st.columns(2, gap=50)
 
-                fig_map = plot_species_usa_map(grid_config, selected_species)
-                st.plotly_chart(
-                    fig_map, 
-                    width="stretch", 
-                    config={
-                        "displayModeBar": False,
-                        "scrollZoom": True,
-                        "doubleClick": False,
-                        "showTips": False
-                    })
+        with col1:
+            with st.container(key="map_container_holder"):
+                st.subheader("Geographic Distribution", text_alignment="center")
 
-        with st.container(key="bars_container", gap=5):
-            st.subheader("Climate Preferences", text_alignment="center")
+                map_placeholder = st.empty()
 
-            climate_preferences = species_dict["climate_preferences"]
-            climate_config = st.session_state["climate_config"]
+                with map_placeholder.container():
+                    st.markdown(
+                        """
+                        <div class="map-loading-placeholder">
+                            Lade Kartendaten...
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+            
+            with st.container(key="bars_container", gap=5):
+                st.subheader("Climate Preferences", text_alignment="center")
 
-            visualize_species_bars(climate_config["variables"], climate_preferences)
+                climate_preferences = species_dict["climate_preferences"]
+                climate_config = st.session_state["climate_config"]
+
+                visualize_species_bars(climate_config["variables"], climate_preferences)
+            
+        with col2:
+            with st.container(key="infobox_container"):
+                with st.container(key="info_header"):
+                    st.header(common_name, text_alignment="center")
+                    st.write(f"({scientiftic_name})")
+
+                st.divider()
+                
+                with st.container(key="bird_info"):                
+                    with st.container(key="bird_taxonomic"):
+                        st.subheader("Taxonomic Information")
+                        st.write(f"Order: {order}")
+                        st.write(f"Family: {family}")
+
+                    with st.container(key="bird_picture"):
+                        st.image(picture_url, width="stretch")
+
+                with st.container(key="size_container"):
+                    create_bird_size_visual(measurements)
+
+
+            with st.container(key="habitat_container", width=600, height=360, gap=5):
+                st.subheader("Habitat Preferences", text_alignment="center", )
+                
+                habitat_col1, habitat_col2= st.columns([6, 2])
+
+                with habitat_col1:
+                    landcover_preferences = species_dict["landcover_preferences"]
+                    landcover_config = st.session_state["landcover_config"]
+
+                    get_preferred_habitat(landcover_preferences, landcover_config)
+
+                with habitat_col2:
+                    water_need = landcover_preferences["water"]["water_need"]
+                    urbanization_type = landcover_preferences["developed"]["urbanization_type"]
+                    urbanization_range = landcover_preferences["developed"]["urbanization_range"]
+
+                    with st.container(key="water_visual"):
+                        st.write("Water Access")
+                        water_visual(water_need)
+                    with st.container(key="urbanization_visual"):
+                        st.write("Urbanization Tolerance")
+                        urbanization_visual(urbanization_type, urbanization_range)
+
+
+        fig_map = plot_species_usa_map(species_grid)
+
+        map_placeholder.empty()
         
-    with col2:
-        with st.container(key="infobox_container"):
-            with st.container(key="info_header"):
-                st.header(common_name, text_alignment="center")
-                st.write(f"({scientiftic_name})")
-
-            st.divider()
+        with map_placeholder.container(key="map_container"):
+            st.plotly_chart(
+                fig_map, 
+                width="stretch", 
+                config={
+                    "displayModeBar": False,
+                    "scrollZoom": True,
+                    "doubleClick": False,
+                    "showTips": False
+                })
             
-            _, info_col1, info_col2, _ = st.columns([1, 8, 9, 1], gap=20)
-
-            with info_col1:
-                st.subheader("Taxonomic Information:")
-                st.write(f"Order: {order}")
-                st.write(f"Family: {family}")
-                st.write(f"Genus: {genus}")
-
-            with info_col2:
-                st.image(picture_url, width="stretch")
-
-            with st.container(key="size_container"):
-                create_bird_size_visual(measurements)
-
-
-        with st.container(key="habitat_container", width=600, height=360, gap=5):
-            st.subheader("Habitat Preferences", text_alignment="center", )
-            
-            habitat_col1, habitat_col2= st.columns([6, 2])
-
-            with habitat_col1:
-                landcover_preferences = species_dict["landcover_preferences"]
-                landcover_config = st.session_state["landcover_config"]
-
-                get_preferred_habitat(landcover_preferences, landcover_config)
-
-            with habitat_col2:
-                water_need = landcover_preferences["water"]["water_need"]
-                urbanization_type = landcover_preferences["developed"]["urbanization_type"]
-                urbanization_range = landcover_preferences["developed"]["urbanization_range"]
-
-                with st.container(key="water_visual"):
-                    st.write("Water Access")
-                    water_visual(water_need)
-                with st.container(key="urbanization_visual"):
-                    st.write("Urbanization Tolerance")
-                    urbanization_visual(urbanization_type, urbanization_range)
-
-    

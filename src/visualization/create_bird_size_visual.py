@@ -1,6 +1,8 @@
 from pathlib import Path
 import streamlit as st
 import base64
+from app.streamlit_functions import male_button, female_button
+from app.css import bird_size_css
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ASSETS_DIR = BASE_DIR / "assets"
@@ -26,10 +28,12 @@ def extract_info_string (dict):
     upper = dict["upper"]
     unit = dict["unit"]
 
-    return f"{lower:.1f}-{upper:.1f}{unit}"
+    return f"{lower:.1f} - {upper:.1f} {unit}"
 
 
 def create_bird_size_visual(measure_dict):
+    bird_size_css()
+
     if "female" in measure_dict:
         female_dict = measure_dict["female"]
         female_length_dict = female_dict["length"]
@@ -46,37 +50,15 @@ def create_bird_size_visual(measure_dict):
         
         length_mean = (female_mean + male_mean) / 2
 
-        length_1 = extract_info_string(male_dict["length"])
-        length_2 = extract_info_string(female_dict["length"])
-        span_1 = extract_info_string(male_dict["wingspan"])
-        span_2 = extract_info_string(female_dict["wingspan"])
-        weight_1 = extract_info_string(male_dict["weight"])
-        weight_2 = extract_info_string(female_dict["weight"])
+        if st.session_state.get("bird_gender", "Male") == "Male":
+            length = extract_info_string(male_dict["length"])
+            span = extract_info_string(male_dict["wingspan"])
+            weight = extract_info_string(male_dict["weight"])
 
-        size_info_html = (
-            '<div class="measurements">'
-                '<div class="measurements-header">'
-                    '<div></div>'
-                    '<div>♂</div>'
-                    '<div>♀</div>'
-                '</div>'
-                '<div class="measurements-row">'
-                    '<div>Length:</div>'
-                    f'<div>{length_1}</div>'
-                    f'<div>{length_2}</div>'
-                '</div>'
-                '<div class="measurements-row">'
-                    '<div>Wing-span:</div>'
-                    f'<div>{span_1}</div>'
-                    f'<div">{span_2}</div>'
-                '</div>'
-                '<div class="measurements-row">'
-                '<div>Weight:</div>'
-                    f'<div">{weight_1}</div>'
-                    f'<div>{weight_2}</div>'
-                '</div>'
-            '</div>'
-        )
+        else:
+            length = extract_info_string(female_dict["length"])
+            span = extract_info_string(female_dict["wingspan"])
+            weight = extract_info_string(female_dict["weight"])
 
     else:
         main_dict = measure_dict["both_sexes"]
@@ -86,21 +68,41 @@ def create_bird_size_visual(measure_dict):
         length_max = length_dict["upper"]
         length_mean = (length_min + length_max) / 2
 
-        length_string = extract_info_string(main_dict["length"])
-        span_string = extract_info_string(main_dict["wingspan"])
-        weight_string = extract_info_string(main_dict["weight"])
+        length = extract_info_string(main_dict["length"])
+        span = extract_info_string(main_dict["wingspan"])
+        weight = extract_info_string(main_dict["weight"])
 
-        size_info_html = (
-            '<div class="measurements-single">'
-                '<div></div>'
-                '<div>Measurements</div>'
-                '<div>Length:</div>'
-                f'<div>{length_string}</div>'
-                '<div>Wing-span:</div>'
-                f'<div>{span_string}</div>'
-                '<div>Weight:</div>'
-                f'<div>{weight_string}</div>'
-            '</div>'
+    with st.container(key="measurments_box", gap=0):
+        with st.container(key="measurements_header"):
+            st.subheader("Measurements")
+            st.button(
+                "♂", 
+                key="male_button", 
+                disabled=st.session_state["bird_gender"] == "male", 
+                on_click=male_button
+            )
+            st.button(
+                "♀", 
+                key="female_button",
+                disabled=st.session_state["bird_gender"] == "female", 
+                on_click=female_button
+            )
+
+        st.markdown(
+            f"""
+            <div class="measurements">
+                <div class="measure_title">
+                    <span>Length:</span>
+                    <span>Wingspan:</span>
+                    <span>Weight:</span>
+                </div>
+                <div class="measure_value">
+                    <p>{length}</p>
+                    <p>{span}</p>
+                    <p>{weight}</p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True
         )
         
     species_size = next(name for value, name in SIZE_MAP if length_mean >= value)
@@ -148,4 +150,4 @@ def create_bird_size_visual(measure_dict):
         """, unsafe_allow_html=True
     )
 
-    # {size_info_html}
+    

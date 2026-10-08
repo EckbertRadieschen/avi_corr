@@ -166,9 +166,13 @@ def apply_markdown():
             === Hauptbereich
             ========================================================== */    
 
+            .st-key-main_section p {
+                margin: 0
+            }
+
             .st-key-main_section {
                 width: 100%;
-                padding: 10px 100px 50px 100px;
+                padding: 10px 100px 50px 100px
             }
 
             h3 span {
@@ -177,11 +181,11 @@ def apply_markdown():
 
             .stHeading {
                 display: flex;
-                align-items: center;
+                align-items: center
             }
 
             [data-testid="stHeaderActionElements"] {
-                display: none;
+                display: none
             }
 
             .st-key-map_container_holder {
@@ -191,8 +195,11 @@ def apply_markdown():
                 border-radius: 25px;
                 border: 1px solid #880000;
                 padding: 20px 40px;
-                margin-left: 20px;
-                margin-top: 20px       
+                margin-top: 10px
+            }
+
+            [data-testid="stLayoutWrapper"]:has(.st-key-map_container_holder) {
+                height: 420px        
             }
 
             .st-key-map_container_holder h3{
@@ -204,33 +211,42 @@ def apply_markdown():
                 width: 100%;
                 border-radius: 25px;
                 border: 1px solid #880000;
-                overflow: hidden
+                overflow: hidden;
+                margin: 20px 0 30px 0
+            }
+
+            .map-loading-placeholder {
+                width: 100%;
+                height: 280px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px
             }
 
             .st-key-map_container .maplibregl-ctrl-bottom-right {
-                display: none !important;
+                display: none !important
             }
 
             .st-key-bars_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 20px 60px 20px 60px;
-                margin-left: 20px;
-                margin-top: 20px    
+                padding: 40px 60px 40px 60px
             }
 
             .st-key-bars_container h3 {
                 padding-top: 0;
                 padding-bottom: 20px;
-                margin-top: -8px;
+                margin-top: -8px
             }
 
             .st-key-infobox_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
                 padding: 20px 20px;
-                margin-right: 20px;
-                margin-top: 20px    
+                margin-top: 10px 
             }
 
             .st-key-info_header h2{
@@ -243,6 +259,20 @@ def apply_markdown():
 
             .st-key-infobox_container h3 span{
                 font-size: 18px
+            }
+
+            .st-key-bird_info {
+                display: flex;
+                flex-flow: row nowrap;
+                padding: 0 5px 5px 5px
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-bird_picture) {
+                width: 40%
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-bird_taxonomic) {
+                width: 60%
             }
 
             .st-key-info_header p{
@@ -292,19 +322,19 @@ def apply_markdown():
             .st-key-urbanization_visual p {
                 font-size: 1rem;
                 font-weight: bold;
-                text-align: center
+                text-align: center;
+                margin-bottom: 20px !important
             }
 
             .st-key-size_container {
-                width: 95%;
+                position: relative;
+                width: 100%;
                 border-radius: 25px;
                 border: 1px solid #880000;
-                height: 150px !important;
-                min-height: 150px !important;
-                padding: 10px 30px 0px 25px
+                min-height: 185px !important;
+                padding: 0 30px 0px 35px
             }
 
-            
             .st-key-main_container, .st-key-width_container {
                 padding-top: 20px
             }

@@ -20,3 +20,9 @@ def top_button_width ():
 
 def bottom_button_width ():
     st.session_state["top_bottom_width"] = "bottom"
+
+def male_button ():
+    st.session_state["bird_gender"] = "male"
+
+def female_button ():
+    st.session_state["bird_gender"] = "female"    

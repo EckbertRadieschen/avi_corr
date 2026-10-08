@@ -225,53 +225,84 @@ def climate_bar_css ():
         """, unsafe_allow_html=True)
 
 def bird_size_css ():
-    st.markdown("""
+    gender_button_display = "None" if st.session_state["bird_gender"] == "both" else "block"
+
+    st.markdown(f"""
         <style>
-        .visual_holder {
-            position: relative;
+        .visual_holder {{
             display: flex; 
             flex-direction: row;
-            width: 100%;
+            width: 90%;
             align-items: flex-end;
-            justify-content: space-between
-        }
+            justify-content: space-between;
+        }}
 
-        .measurements {
+        [data-testid="stElementContainer"]:has(.visual_holder) {{
+            position: absolute;
+            z-index: 0;
+            top: 50px
+        }}
+
+        [data-testid="stLayoutWrapper"]:has(.measurements_box) {{
             position: absolute;
             z-index: 10;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            width: 100%
-        }
+            width: 30%;
+            top: -100px
+        }}
 
-        .measurements-header,
-        .measurements-row {
-            display: contents
-        }
+        [data-testid="stElementContainer"]:has(#measurements) {{
+            margin-top: -5px
+        }}
 
-        .measurements > * > div {
-            padding: 5px 10px
-        }
+        .st-key-measurements_header {{
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center
+        }}
 
-        .measurements > * > div:nth-child(2) {
-            border-right: 1px solid #888
-        }
+        .st-key-measurements_header [data-testid="stMarkdownContainer"] {{
+            margin: 0
+        }}
 
-        .measurements-single {
-            position: absolute;
-            z-index: 10;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            width: 100%
-        }
+        .st-key-measurements_header h3 {{
+            margin: 0;
+            padding: 0 0 5px 0;
+        }}
 
-        .measurements-single > div {
-            padding: 5px 10px
-        }
+        .st-key-male_button button, .st-key-female_button button{{
+            width: 30px;
+            height: 30px;
+            border: 1px solid, #880000;
+            border-radius: 50%;
+            padding: 0 !important;
+            display: {gender_button_display}
+        }}
 
-        .measurements-single > div:nth-child(even) {
-            text-align: center
-        }
+        .st-key-male_button p, .st-key-female_button p {{
+            font-size: 12px;
+            font-weight: bold
+        }}
+
+        .measure_title, .measure_value {{
+            display: flex;
+            flex-flow: column nowrap
+        }}
+
+        .measure_title span {{
+            font-size: 12px;
+            font-weight: bold
+        }}
+
+        .measure_value p {{
+            font-size: 12px
+        }}
+
+        .measurements {{
+            display: flex;
+            flex-flow: row nowrap;
+            gap: 10px
+        }}
+
         </style>
         """, unsafe_allow_html=True)
 
@@ -280,4 +311,3 @@ def main_css():
     urbanization_css()
     water_need_css()
     climate_bar_css()
-    bird_size_css()
