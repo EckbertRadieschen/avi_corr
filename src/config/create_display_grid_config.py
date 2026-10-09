@@ -3,23 +3,24 @@ import math
 import numpy as np
 import geopandas as gpd
 from pathlib import Path
+import zipfile
 
 from shapely.geometry import Polygon, mapping
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SRC_DIR = BASE_DIR / "src"
-
 CONFIG_DIR = SRC_DIR / "config"
-SPECIES_GRID_CONFIG_DIR = CONFIG_DIR / "species_grid_configs"
 
 ROUTE_CONFIG_PATH = CONFIG_DIR / "route_config.json"
 SPECIES_CONFIG_PATH = CONFIG_DIR / "species_config.json"
 GRID_CONFIG_PATH = CONFIG_DIR / "grid_config.json"
+ORIGIN_GRID_PATH = CONFIG_DIR /"origin_grid_config.json"
 DISPLAY_GRID_CONFIG_PATH = CONFIG_DIR / "display_grid_config.json"
+SPECIES_GRIDS_ZIP_PATH = CONFIG_DIR / "species_grid_configs.zip"
 
-ANALYSIS_DIR = SRC_DIR / "analysis"
-BOUNDARY_DIR = ANALYSIS_DIR / "boundaries"
+DATA_DIR = BASE_DIR / "data"
+BOUNDARY_DIR = DATA_DIR / "boundaries"
 USA_BOUNDARY_PATH = BOUNDARY_DIR / "cb_2025_us_nation_5m.zip"
 
 MIN_LAT = 24
@@ -157,11 +158,16 @@ def get_base_grid_config():
                 sum(ratios) / len(ratios)
             )
 
-    return {
+    origin_grid_config = {
         cell_id: cell
         for cell_id, cell in grid_config.items()
         if cell["high_count_ratios"]
     }
+
+    with open(ORIGIN_GRID_PATH, "w") as file:
+        json.dump(origin_grid_config, file, ensure_ascii=False, indent=4)
+
+    return origin_grid_config
 
 
 # =====================================================================
@@ -180,7 +186,6 @@ def get_sorted_neighbors(target_cells, grid_config):
     ])
 
     total_cells = len(target_cells)
-
     neighbors_by_cell = []
 
     for target_count, target in enumerate(target_cells, start=1):
@@ -198,7 +203,12 @@ def get_sorted_neighbors(target_cells, grid_config):
 
         sorted_indices = np.argsort(distances)
 
-        neighbors_by_cell.append(sorted_indices)
+        neighbors = [
+            (index, distances[index])
+            for index in sorted_indices
+        ]
+
+        neighbors_by_cell.append(neighbors)
 
     return source_cells, neighbors_by_cell
 
@@ -251,49 +261,46 @@ def get_distance(lat1, lon1, lat2, lon2):
     return 2 * radius * math.asin(math.sqrt(a))
 
 
-def interpolate_cell_value(species_id, target_cells, source_cells, neighbors_by_cell, max_neighbors=8, power=2):
+def interpolate_cell_value(
+    species_id,
+    target_cells,
+    source_cells,
+    neighbors_by_cell,
+    max_neighbors=8,
+    power=2,
+    max_distance=100
+):
     relevant_indices = {
         i
         for i, cell in enumerate(source_cells)
         if species_id in cell["high_count_ratios"]
     }
 
-    if not relevant_indices:
-        return np.zeros(len(target_cells))
-
     results = np.zeros(len(target_cells), dtype=float)
+
+    if not relevant_indices:
+        return results
 
     total_cells = len(neighbors_by_cell)
 
-    for cell_index, sorted_indices in enumerate(neighbors_by_cell):
+    for cell_index, sorted_neighbors in enumerate(neighbors_by_cell):
         if (cell_index + 1) % 1000 == 0:
-            print(f"    Cell {cell_index +1}/{total_cells}")
+            print(f"    Cell {cell_index + 1}/{total_cells}")
 
         relevant_neighbors = [
-            i for i in sorted_indices
-            if i in relevant_indices
+            (i, distance)
+            for i, distance in sorted_neighbors
+            if distance <= max_distance
+            and i in relevant_indices
         ][:max_neighbors]
 
         if not relevant_neighbors:
             continue
 
-        target_meta = target_cells[cell_index]["meta_data"]
-        target_lat = target_meta["lat"]
-        target_lon = target_meta["lon"]
-
         weighted_sum = 0.0
         weight_total = 0.0
 
-        for i in relevant_neighbors:
-            source_meta = source_cells[i]["meta_data"]
-
-            distance = get_distance(
-                target_lat,
-                target_lon,
-                source_meta["lat"],
-                source_meta["lon"]
-            )
-
+        for i, distance in relevant_neighbors:
             value = source_cells[i]["high_count_ratios"][species_id]
 
             if distance == 0:
@@ -496,38 +503,51 @@ def create_species_grids():
 
         base_grid[cell] = cell_dict["geometry"]
 
-    with open(SPECIES_GRID_CONFIG_DIR / "base_grid.json", "w") as file:
-        json.dump(base_grid, file, ensure_ascii=False, indent=4)
+    with zipfile.ZipFile(
+        SPECIES_GRIDS_ZIP_PATH,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED
+    ) as zip_file:
 
+        zip_file.writestr(
+            "base_grid.json",
+            json.dumps(base_grid, ensure_ascii=False, indent=4)
+        )
 
-    species_ids = list(species_config.keys())
+        species_ids = list(species_config.keys())
 
-    for species_id in species_ids:
-        features = []
+        for species_id in species_ids:
+            features = []
 
-        print(f"Working on ID {species_id}")
+            print(f"Working on ID {species_id}")
 
-        for cell_id, cell in grid_config.items():
-            value = cell["display_ratios"].get(species_id)
+            for cell_id, cell in grid_config.items():
+                value = cell["display_ratios"].get(species_id)
 
-            if value is None:
-                continue
+                if value is None:
+                    continue
 
-            features.append({
-                "type": "Feature",
-                "id": cell_id,
-                "properties": {
-                    "value": float(value)
-                }
-            })
+                features.append({
+                    "type": "Feature",
+                    "id": cell_id,
+                    "properties": {
+                        "value": float(value)
+                    }
+                })
 
-        geojson = {
-            "type": "FeatureCollection",
-            "features": features
-        }
+            geojson = {
+                "type": "FeatureCollection",
+                "features": features
+            }
 
-        with open(SPECIES_GRID_CONFIG_DIR / f"{species_id}_grid.json", "w") as file:
-            json.dump(geojson, file, ensure_ascii=False, indent=4)
+            zip_file.writestr(
+                f"{species_id}_grid.json",
+                json.dumps(geojson, ensure_ascii=False, indent=4)
+            )
+
 
 if __name__ == "__main__":
+    # get_base_grid_config()
+    # create_grid_config()
+    # create_display_grid_config()
     create_species_grids()

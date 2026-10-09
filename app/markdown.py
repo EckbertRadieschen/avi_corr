@@ -290,6 +290,41 @@ def apply_markdown():
                 display: none;
             }
 
+            .taxonomic_information {
+                display: flex;
+                flex-flow: row nowrap
+            }
+
+            .taxonomic_titles, .taxonomic_values {
+                display: flex;
+                flex-flow: column nowrap
+            }
+
+            .taxonomic_titles {
+                margin-right: 10px
+            }
+
+            .taxonomic_titles span {
+                font-size: 14px;
+                font-weight: bold
+            }
+
+            .taxonomic_values > div {
+                font-size: 14px
+            }
+
+            .taxonomic_values p {
+                margin-top: 4px;
+                margin-left: 5px;
+                font-size: 10px
+            }
+
+            .tax_value_row {
+                display: flex;
+                flex-flow: row nowrap
+            }
+
+
             .st-key-habitat_container {
                 border-radius: 25px;
                 border: 1px solid #880000;

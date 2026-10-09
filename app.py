@@ -7,13 +7,13 @@ from sqlalchemy.engine import URL
 from sqlalchemy import create_engine
 import json
 from pathlib import Path
+from zipfile import ZipFile
 
 from app.css import main_css
 from app.markdown import apply_markdown   
 from app.explorer_page import get_explorer_content
 from app.lexicon_page import get_lexicon_content
 from app.statistics_page import get_statistics_content
-
 
 load_dotenv()
 
@@ -44,9 +44,9 @@ CONFIG_DIR = BASE_DIR / "src" / "config"
 SPECIES_GRID_ZIP = CONFIG_DIR / "species_grid_configs.zip"
 
 SPECIES_CONFIG_PATH = CONFIG_DIR / "species_config.json"
+TAXONOMIC_CONFIG_PATH = CONFIG_DIR / "taxonomic.json"
 ROUTE_CONFIG_PATH = CONFIG_DIR / "route_config.json"
 GRID_CONFIG_PATH = CONFIG_DIR / "grid_config.json"
-BASE_GRID_CONFIG_PATH = CONFIG_DIR / "base_grid.json"
 
 CLIMATE_CONFIG_PATH = CONFIG_DIR / "climate_config.json"
 LANDCOVER_CONFIG_PATH = CONFIG_DIR / "landcover_config.json"
@@ -84,6 +84,10 @@ if "species_config" not in st.session_state:
 
 species_config = st.session_state["species_config"]
 
+if "taxonomic_config" not in st.session_state:
+    with open(TAXONOMIC_CONFIG_PATH, "r") as file:
+        st.session_state["taxonomic_config"] = json.load(file)
+
 if "route_config" not in st.session_state:
     with open(ROUTE_CONFIG_PATH, "r") as file:
         st.session_state["route_config"] = json.load(file)
@@ -91,8 +95,9 @@ if "route_config" not in st.session_state:
 route_config = st.session_state["route_config"]
 
 if "grid_config" not in st.session_state:
-    with open(BASE_GRID_CONFIG_PATH, "r") as file:
-        st.session_state["grid_config"] = json.load(file)
+    with ZipFile(SPECIES_GRID_ZIP, "r") as zip:
+        with zip.open("base_grid.json", "r") as file:
+            st.session_state["grid_config"] = json.load(file)
 
 if "climate_config" not in st.session_state:
     with open(CLIMATE_CONFIG_PATH, "r") as file:

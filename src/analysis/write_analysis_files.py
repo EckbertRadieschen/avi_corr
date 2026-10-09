@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import pandas as pd
 from sqlalchemy.engine import URL
 from sqlalchemy import create_engine
-
+import zipfile 
 
 load_dotenv()
 
@@ -26,6 +26,8 @@ ENGINE = create_engine(
     DATABASE_URL,
     pool_pre_ping=True
 )
+
+SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
 
 # =====================================================
 
@@ -169,29 +171,37 @@ WHERE o.species_id = %(species_id)s;
 counter = 1
 total_files = 0
 
-for species_id in species_list:
-    print(f"\n[{counter}/{len(species_list)}] {species_id}")
-    counter += 1
+with zipfile.ZipFile(
+        SPECIES_ZIP_PATH,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED
+    ) as zip_file:
 
-    species_df = pd.read_sql(query, ENGINE, params={"species_id": species_id})
+    for species_id in species_list:
+        print(f"\n[{counter}/{len(species_list)}] {species_id}")
+        counter += 1
 
-    relevance_filter = species_df["sufficient_observations"] == 1
-    species_df = species_df[relevance_filter]
+        species_df = pd.read_sql(query, ENGINE, params={"species_id": species_id})
 
-    route_count = len(species_df["route_id"].unique())
+        relevance_filter = species_df["sufficient_observations"] == 1
+        species_df = species_df[relevance_filter]
 
-    records = sum(relevance_filter)
+        route_count = len(species_df["route_id"].unique())
 
-    species_id_str = str(species_id).zfill(5)
+        records = sum(relevance_filter)
 
-    if records >= 100:
-        print(f"Finale Zeilenzahl: {records}")
+        species_id_str = str(species_id).zfill(5)
 
-        file_url = rf"data/processed/species_csv_files/{species_id_str}.csv"
-        species_df.to_csv(file_url, index=False)
+        if records >= 100:
+            print(f"Finale Zeilenzahl: {records}")
 
-        total_files += 1
+            zip_file.writestr(
+                f"{species_id_str}.csv",
+                species_df.to_csv(index=False)
+            )
 
-    else: print(f"Nicht gespeichert - Routes: {route_count} → {records} Zeilen")
+            total_files += 1
+
+        else: print(f"Nicht gespeichert - Routes: {route_count} → {records} Zeilen")
 
 print(f"{total_files}/{counter} Dateien")
