@@ -1,0 +1,56 @@
+{
+    "geographic_distribution": {
+        "title": "",
+        "lines": [
+            "The USA was divided into grid cells.", 
+            "Each cell contains an interpolated proportion", 
+            "of high counts in bird observations,", 
+            "based on the routes relevant to that cell."
+        ]
+    },
+    "climate_preferences": {
+        "title": "For further info hover over visual elements",
+        "lines": [
+            "The total range of the variable was binned and each bin",
+            "associated with its proportion of high counts",
+            "in bird observations.",
+            "--------------------------------------------------------------------------",
+            "Yellow: Total variable range relevant for the species",
+            "Red: Range with optimal conditions for the species",
+            "Dotted Marker: Absolute Optimum (if given)"
+        ]
+    },
+    "habitat_preferences": {
+        "title": "For further info hover over visual elements",
+        "lines": [
+            "Each habitat type was associated with its proportion",
+            "of high counts in bird observations.",
+            "Based on that a preferred habitat was approximated.",
+            "---------------------------------------------------------------------------",
+            "Water Access and Urbanization Tolerance were excluded",
+            "from the original habitat types."
+        ]
+    },
+    "water_access": {
+        "title": "",
+        "lines": [
+            "Each species was assigned a percentage based", 
+            "on the full range of water proportions",
+            "observed across all species."
+        ]
+    },
+    "urbanization_tolerance": {
+        "title": "",
+        "lines": [
+            "Each species was classified regarding its", 
+            "developed area proportion compared to",
+            "the full proportion range", 
+            "observed across all species.",
+            "-------------------------------------------------------------",
+            "Low vs. Mid vs. High:", 
+            "Optimum positioning in total range",
+            "Adaptive vs. Rigid: Width of urbanization range"
+
+        ]
+    }
+}

@@ -66,7 +66,7 @@ def prepare_and_check_dataframe (base_df, indicator):
         return analysis_df
     
 
-def get_preference_dictionary (base_df, indicator, max_range):
+def get_preference_dictionary (base_df, indicator, max_range, low_value_cap, high_value_cap):
     analysis_df = prepare_and_check_dataframe(base_df, indicator)
 
     if not isinstance(analysis_df, pd.DataFrame):
@@ -87,21 +87,27 @@ def get_preference_dictionary (base_df, indicator, max_range):
     else:
         range_type = "narrow" if relevance_range_abs / max_range < 0.5 else "wide"
 
+    optimum_type = (
+        None if optimum is None
+        else "low" if optimum < low_value_cap
+        else "high" if optimum > high_value_cap
+        else "medium"
+    )
 
     return {
         "relevance_range": relevance_range,
         "preference_range": preference_range,
         "optimum": optimum,
-        "range_type": range_type
+        "range_type": range_type,
+        "optimum_type": optimum_type
     }
-
 
 
 def calculate_climate_correlations():
     with open(CLIMATE_CONFIG_PATH, "r") as file:
         climate_config = json.load(file)
 
-    variable_config = climate_config["variables"]
+    all_variable_config = climate_config["variables"]
 
     with open(SPECIES_CONFIG_PATH, "r") as file:
         species_config = json.load(file)
@@ -129,6 +135,8 @@ def calculate_climate_correlations():
         for variable_group, indicator_prefix_list in INDICATORS.items():
             print(variable_group)
 
+            variable_config = all_variable_config[variable_group]
+
             variable_group_dict = climate_preferences[variable_group] = {}
 
             for indicator_prefix in indicator_prefix_list:
@@ -145,7 +153,16 @@ def calculate_climate_correlations():
 
                 main_max_range = variable_config[main_indicator]["max"] - variable_config[main_indicator]["min"]
 
-                main_preference_dict = get_preference_dictionary(species_df, main_indicator, main_max_range)
+                low_value_cap = variable_config[main_indicator]["low_value_cap"]
+                high_value_cap = variable_config[main_indicator]["high_value_cap"]
+
+                main_preference_dict = get_preference_dictionary(
+                    species_df, 
+                    main_indicator, 
+                    main_max_range, 
+                    low_value_cap, 
+                    high_value_cap
+                )
 
                 if not main_preference_dict:
                     continue
@@ -159,8 +176,10 @@ def calculate_climate_correlations():
 
                 for indicator in secondary_indicators:
                     max_range = variable_config[indicator]["range"]
+                    low_value_cap = variable_config[main_indicator]["low_value_cap"]
+                    high_value_cap = variable_config[main_indicator]["high_value_cap"]
                     
-                    preference_dict = get_preference_dictionary(species_df, indicator, max_range)
+                    preference_dict = get_preference_dictionary(species_df, indicator, max_range, low_value_cap, high_value_cap)
     
                     if not preference_dict or preference_dict["range_type"] == "wide":
                         continue
@@ -180,44 +199,7 @@ def delete_climate_preferences():
     with open(SPECIES_CONFIG_PATH, "w") as file:
         json.dump(species_config, file, ensure_ascii=False, indent=4)
 
-
-def add_further_climate_info():
-    with open(CLIMATE_CONFIG_PATH, "r") as file:
-        climate_config = json.load(file)
-
-    variable_config = climate_config["variables"]
-
-    with open(SPECIES_CONFIG_PATH, "r") as file:
-        species_config = json.load(file)
-
-    for species_dict in species_config.values():
-
-        preferences = species_dict["climate_preferences"]
-        for variable_dict in preferences.values():
-
-            for indicator_group_dict in variable_dict.values():
-
-                for priority_type_dict in indicator_group_dict.values():
-
-                    if len(priority_type_dict) == 0:
-                        continue
-                
-                    for indicator, indicator_dict in priority_type_dict.items():
-                        indicator_config = variable_config[indicator]
-                        optimum = indicator_dict["optimum"]
-
-                        indicator_dict["optimum_type"] = (
-                            None if not optimum
-                            else "low" if optimum < indicator_config["low_value_cap"]
-                            else "high" if optimum > indicator_config["high_value_cap"]
-                            else "medium"
-                        )
-
-    with open(SPECIES_CONFIG_PATH, "w") as file:
-        json.dump(species_config, file, ensure_ascii=False, indent=4)
-
-                        
+               
 if __name__ == "__main__":
-    # calculate_climate_correlations()
+    calculate_climate_correlations()
     # delete_climate_preferences()
-    add_further_climate_info()

@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 def main_bar_chart(variable_df, top_bottom, rounding_decimals, unit):
-    sort_order = top_bottom == "top"
+    sort_order = top_bottom == "top" 
 
     variable_df = variable_df.sort_values("optimum", ascending=sort_order)
     variable_df = variable_df.tail(10)

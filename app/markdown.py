@@ -110,6 +110,13 @@ def apply_markdown():
                 margin-bottom: 0;
             }
 
+            .sidebar_search_info {
+                color: #ffffff;
+                font-size: 12px;
+                margin-top: -10px;
+                margin-left: 4px
+            }
+
             /* ==========================================================
             === Hauptbereich Header
             ========================================================== */
@@ -191,6 +198,7 @@ def apply_markdown():
             .st-key-map_container_holder {
                 height: 300px;
                 display: flex;
+                position: relative;
                 align-items: center;
                 border-radius: 25px;
                 border: 1px solid #880000;
@@ -199,7 +207,7 @@ def apply_markdown():
             }
 
             [data-testid="stLayoutWrapper"]:has(.st-key-map_container_holder) {
-                height: 420px        
+                height: 397px        
             }
 
             .st-key-map_container_holder h3{
@@ -238,8 +246,8 @@ def apply_markdown():
 
             .st-key-bars_container h3 {
                 padding-top: 0;
-                padding-bottom: 20px;
-                margin-top: -8px
+                padding-bottom: 30px;
+                margin-top: -20px
             }
 
             .st-key-infobox_container {
@@ -328,7 +336,8 @@ def apply_markdown():
             .st-key-habitat_container {
                 border-radius: 25px;
                 border: 1px solid #880000;
-                padding: 0 10px
+                padding: 0 10px;
+                overflow: visible
             }
 
             .st-key-habitat_container h3 {
@@ -338,6 +347,7 @@ def apply_markdown():
 
             .st-key-water_visual,
             .st-key-urbanization_visual {
+                position: relative;
                 width: 100%;
                 display: flex;
                 flex-direction: column;

@@ -47,11 +47,13 @@ SPECIES_CONFIG_PATH = CONFIG_DIR / "species_config.json"
 TAXONOMIC_CONFIG_PATH = CONFIG_DIR / "taxonomic.json"
 ROUTE_CONFIG_PATH = CONFIG_DIR / "route_config.json"
 GRID_CONFIG_PATH = CONFIG_DIR / "grid_config.json"
+HOVER_INFO_TEXT_CONFIG_PATH = CONFIG_DIR / "hover_info_text_config.json"
 
 CLIMATE_CONFIG_PATH = CONFIG_DIR / "climate_config.json"
 LANDCOVER_CONFIG_PATH = CONFIG_DIR / "landcover_config.json"
 
 CLIMATE_STAT_CONFIG_PATH = CONFIG_DIR / "climate_stat_config.json"
+LANDCOVER_STAT_CONFIG_PATH = CONFIG_DIR / "landcover_stat_config.json"
 
 # =====================================================
 
@@ -111,6 +113,31 @@ if "climate_stat_config" not in st.session_state:
     with open(CLIMATE_STAT_CONFIG_PATH, "r") as file:
         st.session_state["climate_stat_config"] = json.load(file)
 
+if "landcover_stat_config" not in st.session_state:
+    with open(LANDCOVER_STAT_CONFIG_PATH, "r") as file:
+        landcover_stat_config = st.session_state["landcover_stat_config"] = json.load(file)
+
+    landcover_types = landcover_stat_config["landcover_types"]
+    water_access = landcover_stat_config["water_access"]
+    urbanization_tolerance = landcover_stat_config["urbanization_tolerance"]
+
+    st.session_state["landcover_type_data"] = sorted([
+        {"type": type, "count": type_dict["species_count"]}
+        for type, type_dict in landcover_types.items()
+    ], key=lambda x: x["count"])
+
+    st.session_state["water_access_data"] = sorted(
+        [{"name": common_name, "value": value} for common_name, value in water_access.items()], 
+        key=lambda x: x["value"])
+
+    st.session_state["urbanization_tolerance_data"] = sorted(
+        [{"name": common_name, "value": value} for common_name, value in urbanization_tolerance.items()],
+        key=lambda x: x["value"])
+
+if "hover_info_text_config" not in st.session_state:
+    with open(HOVER_INFO_TEXT_CONFIG_PATH, "r") as file:
+        st.session_state["hover_info_text_config"] = json.load(file)
+
 if "species_list" not in st.session_state:
     species_list = []
 
@@ -137,5 +164,3 @@ elif st.session_state["page"] == "lexicon":
 
 elif st.session_state["page"] == "statistics":
     get_statistics_content()
-    
-    

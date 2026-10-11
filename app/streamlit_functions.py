@@ -21,6 +21,18 @@ def top_button_width ():
 def bottom_button_width ():
     st.session_state["top_bottom_width"] = "bottom"
 
+def top_button_water ():
+    st.session_state["top_bottom_water"] = "top"
+
+def bottom_button_water ():
+    st.session_state["top_bottom_water"] = "bottom"
+
+def top_button_urban ():
+    st.session_state["top_bottom_urban"] = "top"
+
+def bottom_button_urban ():
+    st.session_state["top_bottom_urban"] = "bottom"
+
 def male_button ():
     st.session_state["bird_gender"] = "male"
 

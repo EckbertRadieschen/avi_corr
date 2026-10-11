@@ -268,7 +268,7 @@ def interpolate_cell_value(
     neighbors_by_cell,
     max_neighbors=8,
     power=2,
-    max_distance=100
+    max_distance=200
 ):
     relevant_indices = {
         i

@@ -306,8 +306,114 @@ def bird_size_css ():
         </style>
         """, unsafe_allow_html=True)
 
+
+def info_hover_css ():
+    st.markdown("""
+        <style>
+            .info_hover_holder {
+                display: flex;
+                border: 1px solid #c0bdae;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                align-items: center;
+                justify-content: center;
+                color: #c0bdae;
+                font-size: 16px;
+                font-weight: bold;
+                position: absolute;
+                z-index: 100
+            }
+
+            .hover_element {
+                display: flex;
+                flex-flow: column nowrap;
+                position: absolute;
+                z-index: 100;
+                background-color: #ebd18d;
+                border: 1px solid #880000;
+                border-radius: 10px;
+                opacity: 0;
+                width: 25px;
+                height: 25px;
+                overflow: hidden;
+                padding: 10px;
+            }
+
+            .hover_element:hover {
+                opacity: 1;
+                width: fit-content !important;
+                height: fit-content !important
+            }
+
+            .hover_element h3 {
+                padding: 0 0 3px 0 !important;
+                margin: -15px 0 0 0
+            }
+            
+            .hover_element h3 span {
+                font-size: 12px
+            }
+
+            .hover_line {
+                font-size: 11px
+            }
+
+            .st-key-habitat_container .hover_element,
+            .st-key-habitat_container .info_hover_holder {
+                top: -33px;
+                left: 15px
+            }
+
+            .st-key-water_visual .hover_element,
+            .st-key-water_visual .info_hover_holder {
+                top: -28px !important;
+                left: 0px !important;
+                width: 15px; 
+                height: 15px;
+                font-size: 12px
+            }
+
+            .st-key-water_visual .hover_element:hover {
+                width: 235px !important;
+                height: 92px !important
+            }
+
+            .st-key-urbanization_visual .hover_element,
+            .st-key-urbanization_visual .info_hover_holder {
+                top: -39px !important;
+                left: 0px !important;
+                width: 15px; 
+                height: 15px;
+                font-size: 12px
+            }
+
+            .st-key-urbanization_visual .hover_element:hover {
+                width: 235px !important;
+                height: 179px !important
+            }
+
+            .st-key-map_container_holder .hover_element,
+            .st-key-map_container_holder .info_hover_holder {
+                top: -28px;
+                left: 20px
+            }
+
+            .st-key-bars_container .hover_element,
+            .st-key-bars_container .info_hover_holder {
+                top: -42px;
+                left: 6px;
+            }
+            
+            
+
+        </style>
+        """, unsafe_allow_html=True)
+
+
 def main_css():
     treemap_css()
     urbanization_css()
     water_need_css()
     climate_bar_css()
+    info_hover_css()

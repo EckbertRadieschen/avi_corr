@@ -1,9 +1,7 @@
 import streamlit as st
 from pathlib import Path
 import json
-import pandas as pd
 from zipfile import ZipFile
-import plotly.express as px
 
 from app.streamlit_functions import explorer_button, lexicon_button, statistics_button, clear_map_data
 
@@ -11,6 +9,7 @@ from src.visualization.climate_bar_visualization import visualize_species_bars
 from src.visualization.preferred_habitat_visual import get_preferred_habitat, water_visual, urbanization_visual
 from src.visualization.create_concentration_map import plot_species_usa_map
 from src.visualization.create_bird_size_visual import create_bird_size_visual
+from src.visualization.info_hover import create_info_hover_html
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,6 +34,7 @@ def load_species_grid(species_id, base_grid):
 def get_lexicon_content():
     species_config = st.session_state["species_config"]
     base_grid = st.session_state["grid_config"]
+    hover_info_text_config = st.session_state["hover_info_text_config"]
 
     # =======================================================================================================
     # Sidebar
@@ -67,8 +67,6 @@ def get_lexicon_content():
 
         species_list = st.session_state["species_list"]
 
-        st.write("For Species Search type in selectbox below!")
-
         st.selectbox(
             "Species", 
             species_list, 
@@ -76,6 +74,14 @@ def get_lexicon_content():
             key="selected_species", 
             on_change=clear_map_data
         )
+
+        st.markdown(
+            """
+                <div class="sidebar_search_info">For Species Search type in selectbox above!</div>
+            """,
+            unsafe_allow_html=True
+        )
+
         selected_species = st.session_state["selected_species"][0]
     
     # =======================================================================================================
@@ -170,8 +176,13 @@ def get_lexicon_content():
         col1, col2 = st.columns(2, gap=50)
 
         with col1:
-            with st.container(key="map_container_holder"):
+            with st.container(key="map_container_holder", gap=5):
                 st.subheader("Geographic Distribution", text_alignment="center")
+
+                st.markdown(
+                    create_info_hover_html(hover_info_text_config["geographic_distribution"]),
+                    unsafe_allow_html=True
+                )
 
                 if st.session_state.get("map_loaded", False):
                     map_placeholder = st.container()
@@ -190,6 +201,11 @@ def get_lexicon_content():
             
             with st.container(key="bars_container", gap=5):
                 st.subheader("Climate Preferences", text_alignment="center")
+
+                st.markdown(
+                    create_info_hover_html(hover_info_text_config["climate_preferences"]),
+                    unsafe_allow_html=True
+                )
 
                 climate_preferences = species_dict["climate_preferences"]
                 climate_config = st.session_state["climate_config"]
@@ -231,6 +247,11 @@ def get_lexicon_content():
 
             with st.container(key="habitat_container", width=600, height=360, gap=5):
                 st.subheader("Habitat Preferences", text_alignment="center", )
+
+                st.markdown(
+                    create_info_hover_html(hover_info_text_config["habitat_preferences"]),
+                    unsafe_allow_html=True
+                )
                 
                 habitat_col1, habitat_col2= st.columns([6, 2])
 
@@ -247,9 +268,19 @@ def get_lexicon_content():
 
                     with st.container(key="water_visual"):
                         st.write("Water Access")
+                        st.markdown(
+                            create_info_hover_html(hover_info_text_config["water_access"]),
+                            unsafe_allow_html=True
+                        )
+
                         water_visual(water_need)
                     with st.container(key="urbanization_visual"):
                         st.write("Urbanization Tolerance")
+                        st.markdown(
+                            create_info_hover_html(hover_info_text_config["urbanization_tolerance"]),
+                            unsafe_allow_html=True
+                        )
+
                         urbanization_visual(urbanization_type, urbanization_range)
 
         if not "map_figure" in st.session_state:

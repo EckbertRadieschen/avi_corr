@@ -222,9 +222,9 @@ def add_urbanization_type_to_config():
         developed_optimum = developed_dict["preference_mean"]
 
         developed_dict["urbanization_type"] = (
-            "high" if developed_optimum > 0.15 
-            else "low" if developed_optimum > 0.05
-            else "mid"
+            "high" if developed_optimum > 10
+            else "mid" if developed_optimum > 3
+            else "low"
         )
 
         developed_dict["urbanization_range"] = "adaptive" if developed_range_type == "wide" else "rigid"
@@ -260,10 +260,33 @@ def add_water_need_to_config():
         json.dump(species_config, file, ensure_ascii=False, indent=4)
 
 
+def add_habitat_type():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+
+        landcover_means = []
+        
+        for variable, variable_dict in landcover_preferences.items():
+            if not variable in ["water", "developed"]:
+                landcover_means.append((variable, variable_dict["preference_mean"]))
+
+        total_means = sum(mean for _, mean in landcover_means)
+
+        preferred_landcover_list = [variable for variable, mean in landcover_means if mean / total_means >= 1/3]
+
+        species_dict["preferred_landcover_list"] = sorted(preferred_landcover_list)
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=True, indent=4)
+
 if __name__ == "__main__":
     # extract_species_list()
     # add_bird_observation_count_to_config()
     # add_high_count_cap_to_config()
     # add_route_list_to_config()
-    # add_urbanization_type_to_config()
-    add_water_need_to_config()
+    add_urbanization_type_to_config()
+    # add_water_need_to_config()
+    # add_habitat_type()

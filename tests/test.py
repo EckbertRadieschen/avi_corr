@@ -1,38 +1,22 @@
 import json
-import numpy as np
+import pandas as pd
 
-with open("src/config/species_config.json", "r") as file:
+SPECIES_CONFIG_PATH = "src/config/species_config.json"
+
+with open(SPECIES_CONFIG_PATH, "r") as file:
     species_config = json.load(file)
 
-VARIABLE = "temperature"
-INDICATOR_GROUP = "mean"
+developed_list = []
 
-INDICATOR = f"{VARIABLE}_{INDICATOR_GROUP}_year"
-
-value_list = []
-missing_optima_list = []
 
 for species_id, species_dict in species_config.items():
-    climate_preferences = species_dict["climate_preferences"]
-    indicator_dict = climate_preferences[VARIABLE][INDICATOR_GROUP]["main"][INDICATOR]
-    optimum = indicator_dict["optimum"]
-    
-    if optimum is None:
-        missing_optima_list.append(species_id)
+    developed_preferences = species_dict["landcover_preferences"]["developed"]
 
-    else:
-        value_list.append(optimum)
+    developed_list.append({
+        "name": species_dict["audubon_info"]["common_name"],
+        "value": developed_preferences["preference_mean"]
+    })
 
-min_value = min(value_list)
-max_value = max(value_list)
+df = pd.DataFrame(developed_list)
 
-q5 = np.quantile(value_list, 0.05)
-q95 = np.quantile(value_list, 0.95)
-iqr = q95 - q5
-bin_range = iqr / 5
-
-missing_optima = len(missing_optima_list)
-relevant_species = len(species_config) - missing_optima
-
-print(f"Range: {min_value} - {max_value}")
-print(f"Missing Optima: {missing_optima}")
+print(df["value"].max())

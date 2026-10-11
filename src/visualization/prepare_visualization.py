@@ -91,7 +91,14 @@ def get_model_optimum(model, model_type, x_min, x_max):
         )
 
         predictions = model.predict(X_spline)
-        optimum = x_values[np.argmax(predictions)]
+
+        optimum_values = []
+
+        for x, y in zip(list(x_values), list(predictions)):
+            if y >= 0.9 * max(predictions):
+                optimum_values.append(x)
+
+        optimum = np.mean(optimum_values)
 
         return optimum
 
