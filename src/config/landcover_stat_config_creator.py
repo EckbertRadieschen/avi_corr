@@ -20,7 +20,7 @@ def create_landcover_stats_config ():
     for species_id, species_dict in species_config.items():
         common_name = species_dict["audubon_info"]["common_name"]
         preferred_landcover_list = species_dict["preferred_landcover_list"]
-        species_water_need = species_dict["landcover_preferences"]["water"]["water_need"]
+        species_water_need = species_dict["landcover_preferences"]["water"]["preference_mean"]
         species_urbanization_tolerance = species_dict["landcover_preferences"]["developed"]["preference_mean"]
         
         if len(preferred_landcover_list) == 0:

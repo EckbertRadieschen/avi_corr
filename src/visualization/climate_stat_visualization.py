@@ -34,7 +34,9 @@ def main_bar_chart(variable_df, top_bottom, rounding_decimals, unit):
         xaxis_title=None,
         yaxis_title=None,
         margin=dict(t=20, b=10),
-        hovermode=False
+        hovermode=False,
+        plot_bgcolor = "#fae6bb",
+        paper_bgcolor="#fae6bb"
     )
 
     return fig
@@ -49,7 +51,7 @@ def range_type_pie (variable, variable_df: pd.DataFrame):
             "#E4B75C",
             "#E4422D"
         ],
-        title="Distribution by Preference Range"
+        title=f"Distribution by {variable.replace('_', ' ').capitalize()} Preference Range"
     )
 
     fig.update_traces(
@@ -60,7 +62,7 @@ def range_type_pie (variable, variable_df: pd.DataFrame):
     )
 
     fig.update_layout(
-        margin=dict(t=60, b=10),
+        margin=dict(l=100, r=100, t=70, b=20),
         hovermode=False,
         title={
             "x": 0.5,
@@ -68,7 +70,9 @@ def range_type_pie (variable, variable_df: pd.DataFrame):
             "font": {
                 "size": 20
             }
-        }
+        },
+        plot_bgcolor = "#fae6bb",
+        paper_bgcolor="#fae6bb"
     )
 
     return fig
@@ -85,7 +89,7 @@ def optimum_class_bars (variable, variable_df: pd.DataFrame):
         optimum_classes_df,
         x="range_type",
         y="proportion",
-        category_orders={"x": class_order},
+        category_orders={"range_type": class_order},
         color_discrete_sequence=["#c77a44"],
         text="text",
         title=f"Distribution by {variable.replace('_', ' ').capitalize()} Preference"
@@ -112,7 +116,9 @@ def optimum_class_bars (variable, variable_df: pd.DataFrame):
             "font": {
                 "size": 20
             }
-        }
+        },
+        plot_bgcolor = "#fae6bb",
+        paper_bgcolor="#fae6bb"
     )
 
     return fig
@@ -151,7 +157,9 @@ def range_width_chart(variable_df, top_bottom, rounding_decimals, unit):
         xaxis_title=None,
         yaxis_title=None,
         margin=dict(t=20, b=10),
-        hovermode=False
+        hovermode=False,
+        plot_bgcolor = "#fae6bb",
+        paper_bgcolor="#fae6bb"
     )
 
     return fig

@@ -380,6 +380,11 @@ def apply_markdown():
                 padding: 0 30px 0px 35px
             }
 
+            /* ============================================================
+            Statistics Page
+            Climate
+            */ ============================================================
+
             .st-key-main_container, .st-key-width_container {
                 padding-top: 20px
             }
@@ -390,7 +395,8 @@ def apply_markdown():
                 justify-content: center
             }
 
-            .st-key-main_chart_header > [data-testid="stElementContainer"], .st-key-width_chart_header > [data-testid="stElementContainer"]{
+            .st-key-main_chart_header > [data-testid="stElementContainer"], 
+            .st-key-width_chart_header > [data-testid="stElementContainer"]{
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: center;
@@ -407,18 +413,12 @@ def apply_markdown():
                 font-weight: bold
             }
 
-            .st-key-main_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]) {
-                flex: 3 
-            }
-
-            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_main) {
-                flex: 1
-            }
-
+            .st-key-main_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]),
             .st-key-width_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]) {
                 flex: 3 
             }
 
+            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_main),
             [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_width) {
                 flex: 1
             }
@@ -439,6 +439,67 @@ def apply_markdown():
             .st-key-optimum_bars_container, .st-key-range_type_container {
                 display: flex;
                 align-items: center
+            }
+
+        /* ======================================================================
+           Statistice Page
+           Landcover
+        */ ======================================================================
+
+            .st-key-water_stats_container, .st-key-urban_stats_container {
+                padding-top: 20px
+            }
+
+            .st-key-water_stats_chart_header, .st-key-urban_stats_chart_header {
+                display: flex;
+                flex-direction: row;
+                justify-content: center
+            }
+
+            .st-key-water_stats_chart_header > [data-testid="stElementContainer"], 
+            .st-key-urban_stats_chart_header > [data-testid="stElementContainer"]{
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center
+            }
+
+            .st-key-water_stats_chart_header h3, .st-key-urban_stats_chart_header h3 {
+                text-align: center;
+                padding: 0
+            }
+
+            .st-key-water_stats_chart_header h3 span, .st-key-urban_stats_chart_header h3 span {
+                font-size: 20px;
+                font-weight: bold
+            }
+
+            .st-key-water_stats_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]),
+             .st-key-urban_stats_chart_header > [data-testid="stElementContainer"]:has([data-testid="stHeading"]) {
+                flex: 3 
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_water),
+            [data-testid="stLayoutWrapper"]:has(>.st-key-top_bottom_button_container_urban) {
+                flex: 1
+            }
+
+            .st-key-top_bottom_button_container_water, .st-key-top_bottom_button_container_urban {
+                display: flex;
+                flex-direction: row
+            }
+
+            .st-key-landcover_type_stats_container, .st-key-urbanization_distribution_container {
+                display: flex;
+                align-items: center
+            }
+
+            .st-key-map_container_holder, .st-key-bars_container, .st-key-infobox_container, .st-key-habitat_container,
+            .st-key-main_container, .st-key-width_container, .st-key-optimum_bars_container, .st-key-range_type_container,
+            .st-key-landcover_type_stats_container, .st-key-urbanization_distribution_container,
+            .st-key-water_stats_container, .st-key-urban_stats_container {
+                background-color: #fae6bb;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
             }
 
 

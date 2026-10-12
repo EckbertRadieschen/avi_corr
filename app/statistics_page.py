@@ -119,7 +119,7 @@ def get_statistics_content ():
             cap_filter = (variable_df["optimum"] <= max_chart) & (variable_df["optimum"] >= min_chart)
             variable_df = variable_df[cap_filter]
 
-            sector_col1, sector_col2 = st.columns(2, gap=50)
+            sector_col1, sector_col2 = st.columns([3, 2], gap=50)
 
             with sector_col1:
                 if not "top_bottom_main" in st.session_state:
@@ -185,7 +185,7 @@ def get_statistics_content ():
 
                 with st.container(key="range_type_container", border=True):
                     range_type_fig = range_type_pie(selected_variable, variable_df)
-                    st.plotly_chart(range_type_fig, height=335, width=300, config={"displayModeBar": False})
+                    st.plotly_chart(range_type_fig, height=335, width=500, config={"displayModeBar": False})
 
         # ===============================================================================================================
         # Landcover Statistics
@@ -201,11 +201,11 @@ def get_statistics_content ():
             with sector_col1:
                 with st.container(key="landcover_type_stats_container", border=True):
                     landcover_type_fig = habitat_type_bar_chart(landcover_type_data)
-                    st.plotly_chart(landcover_type_fig, height=335, width=550, config={"displayModeBar": False})
+                    st.plotly_chart(landcover_type_fig, height=335, width=650, config={"displayModeBar": False})
 
                 with st.container(key="urbanization_distribution_container", border=True):
                     urbanization_distribution_fig = urbanization_boxplot(urbanization_tolerance_data)
-                    st.plotly_chart(urbanization_distribution_fig, height=335, width=300, config={"displayModeBar": False})
+                    st.plotly_chart(urbanization_distribution_fig, height=335, width=600, config={"displayModeBar": False})
 
             with sector_col2:
                 if not "top_bottom_water" in st.session_state:
