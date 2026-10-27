@@ -481,13 +481,37 @@ def analyse_species_size_descriptions():
     print()
     print(missing_species)
 
+def clean_audubon_photo_author ():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+    
+    for species_id, species_dict in species_config.items():
+        audubon_info = species_dict["audubon_info"]
+        picture_author = audubon_info["picture"]["author"]
+    
+        picture_author = audubon_info["picture"]["author"]
+
+        if "Photo:" in picture_author:
+            picture_author = picture_author.rsplit("Photo:", 1)[1].strip()
+
+        if "(" in picture_author:
+            picture_author = picture_author.rsplit("(", 1)[0].strip()
+
+        if "/" in picture_author:
+            picture_author = picture_author.rsplit("/", 1)[0].strip()
+
+        audubon_info["picture"]["author"] = picture_author
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=True, indent=4)
 
 if __name__ == "__main__":
     # build_bird_config()
     # check_config_for_missing_urls()
     # get_audubon_urls()
     # requester("audubon")
-    analyse_species_size_descriptions()
+    # analyse_species_size_descriptions()
+    clean_audubon_photo_author()
 
     # problematic_species = [
     #     '01440', '01460', '01960', '02010', '02140', '02210', '02890', '03091', '03131', '03250', 

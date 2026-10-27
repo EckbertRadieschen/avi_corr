@@ -1,39 +1,23 @@
 import streamlit as st
 from pathlib import Path
-import json
-from zipfile import ZipFile
 
-from app.streamlit_functions import explorer_button, lexicon_button, statistics_button, clear_map_data
+from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
 from src.visualization.climate_bar_visualization import visualize_species_bars
 from src.visualization.preferred_habitat_visual import get_preferred_habitat, water_visual, urbanization_visual
-from src.visualization.create_concentration_map import plot_species_usa_map
 from src.visualization.create_bird_size_visual import create_bird_size_visual
 from src.visualization.info_hover import create_info_hover_html
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SPECIES_MAP_VISUAL_DIR = BASE_DIR / "assets" / "map_visuals"
+
 CONFIG_DIR = BASE_DIR / "src" / "config"
 SPECIES_GRID_ZIP = CONFIG_DIR / "species_grid_configs.zip"
-
-def load_species_grid(species_id, base_grid):
-    with ZipFile(SPECIES_GRID_ZIP, "r") as zip:
-        with zip.open(f"{species_id}_grid.json", "r") as file:
-            species_grid_config = json.load(file)
-
-    features = species_grid_config["features"]
-
-    for feature in features:
-        cell_id = feature["id"]
-        geometry = base_grid[cell_id]
-        feature["geometry"] = geometry
-
-    st.session_state["species_grid"] = species_grid_config
 
 
 def get_lexicon_content():
     species_config = st.session_state["species_config"]
-    base_grid = st.session_state["grid_config"]
     hover_info_text_config = st.session_state["hover_info_text_config"]
 
     # =======================================================================================================
@@ -71,8 +55,7 @@ def get_lexicon_content():
             "Species", 
             species_list, 
             format_func= lambda x: x[1], 
-            key="selected_species", 
-            on_change=clear_map_data
+            key="selected_species"
         )
 
         st.markdown(
@@ -88,8 +71,7 @@ def get_lexicon_content():
     # Main Content
     # =======================================================================================================
 
-    load_species_grid(selected_species, base_grid)
-    species_grid = st.session_state["species_grid"]
+    species_map_file_path = SPECIES_MAP_VISUAL_DIR / f"map_{selected_species}.png"
 
     species_dict = species_config[selected_species]
     audubon_info = species_dict["audubon_info"]
@@ -103,73 +85,15 @@ def get_lexicon_content():
 
     common_order = taxonomic_config["orders"][order]
     common_family = taxonomic_config["families"][family]
+
+    picture_content = audubon_info["picture"]
     
-    picture_url = audubon_info["picture"]["url"]
+    picture_url = picture_content["url"]
+    picture_author = picture_content["author"]
 
     measurements = audubon_info["measurements"]
 
     st.session_state["bird_gender"] = "male" if "male" in measurements else "both"
-
-
-    # if not "origin_grid" in st.session_state:
-    #     with open("src/config/origin_grid_config.json", "r") as file:
-    #         st.session_state["origin_grid"] = json.load(file)
-
-    # origin_grid = st.session_state["origin_grid"]
-
-    # entries = []
-
-    # for cell_id, cell_dict in origin_grid.items():
-    #     high_count_ratios = cell_dict["high_count_ratios"]
-
-    #     if not selected_species in high_count_ratios:
-    #         continue
-
-    #     value = high_count_ratios[selected_species] 
-
-    #     meta_data = cell_dict["meta_data"]
-    #     latitude = meta_data["lat"]
-    #     longitude = meta_data["lon"]
-
-    #     entries.append(
-    #         {
-    #             "cell_id": cell_id,
-    #             "latitude": latitude,
-    #             "longitude": longitude,
-    #             "value": value
-    #         }
-    #     )
-
-    # df = pd.DataFrame(entries)
-
-    # origin_map_figure = px.scatter_map(
-    #     df,
-    #     lat="latitude",
-    #     lon="longitude",
-    #     color="value",
-    #     color_continuous_scale="YlOrRd",
-    #     hover_data=["value"],
-    #     zoom=2.5,
-    #     center={"lat": 39.5, "lon": -98.35},
-    #     map_style="carto-positron",
-    #     title="Werteverteilung in den USA"
-    # )
-
-    # origin_map_figure.update_layout(
-    #     height=270,
-    #     margin={"r": 0, "t": 50, "l": 0, "b": 0}
-    # )
-
-    # st.plotly_chart(
-    #     origin_map_figure, 
-    #     width=400, 
-    #     config={
-    #         "displayModeBar": False,
-    #         "scrollZoom": True,
-    #         "doubleClick": False,
-    #         "showTips": False
-    #     })
-    
 
     with st.container(key="main_section"):
 
@@ -184,20 +108,7 @@ def get_lexicon_content():
                     unsafe_allow_html=True
                 )
 
-                if st.session_state.get("map_loaded", False):
-                    map_placeholder = st.container()
-                else:
-                    map_placeholder = st.empty()
-
-                    with map_placeholder.container():
-                        st.markdown(
-                            """
-                            <div class="map-loading-placeholder">
-                                Lade Kartendaten...
-                            </div>
-                            """,
-                            unsafe_allow_html=True
-                        )
+                st.image(species_map_file_path)
             
             with st.container(key="bars_container", gap=5):
                 st.subheader("Climate Preferences", text_alignment="center")
@@ -240,12 +151,12 @@ def get_lexicon_content():
                         )
 
                     with st.container(key="bird_picture"):
-                        st.image(picture_url, width="stretch")
+                        st.image(picture_url, caption=f"By: {picture_author}", width="stretch")
 
                 with st.container(key="size_container"):
                     create_bird_size_visual(measurements)
 
-            with st.container(key="habitat_container", width=600, height=360, gap=5):
+            with st.container(key="habitat_container", width=600, height=373, gap=5):
                 st.subheader("Habitat Preferences", text_alignment="center", )
 
                 st.markdown(
@@ -283,20 +194,9 @@ def get_lexicon_content():
 
                         urbanization_visual(urbanization_type, urbanization_range)
 
-        if not "map_figure" in st.session_state:
-            st.session_state["map_figure"] = plot_species_usa_map(species_grid)
-            st.session_state["map_loaded"] = True
-
-        map_placeholder.empty()
         
-        with map_placeholder.container(key="map_container"):
-            st.plotly_chart(
-                st.session_state["map_figure"], 
-                width="stretch", 
-                config={
-                    "displayModeBar": False,
-                    "scrollZoom": True,
-                    "doubleClick": False,
-                    "showTips": False
-                })
+
+      
+        
+        
             

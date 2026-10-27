@@ -196,7 +196,7 @@ def apply_markdown():
             }
 
             .st-key-map_container_holder {
-                height: 300px;
+                height: 320px;
                 display: flex;
                 position: relative;
                 align-items: center;
@@ -206,8 +206,14 @@ def apply_markdown():
                 margin-top: 10px
             }
 
+            .st-key-map_container_holder img {
+                width: 400px;
+                height: 270px;
+                margin-top: 10px
+            }
+
             [data-testid="stLayoutWrapper"]:has(.st-key-map_container_holder) {
-                height: 397px        
+                height: 370px        
             }
 
             .st-key-map_container_holder h3{
@@ -215,27 +221,8 @@ def apply_markdown():
                 margin-top: -5px
             }
 
-            .st-key-map_container {
-                width: 100%;
-                border-radius: 25px;
-                border: 1px solid #880000;
-                overflow: hidden;
-                margin: 20px 0 30px 0
-            }
-
-            .map-loading-placeholder {
-                width: 100%;
-                height: 280px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 18px;
-                font-weight: bold;
-                margin-bottom: 10px
-            }
-
-            .st-key-map_container .maplibregl-ctrl-bottom-right {
-                display: none !important
+            .st-key-map_container_holder [data-testid="stElementToolbar"] {
+                display: none
             }
 
             .st-key-bars_container {
@@ -248,6 +235,10 @@ def apply_markdown():
                 padding-top: 0;
                 padding-bottom: 30px;
                 margin-top: -20px
+            }
+
+            [data-testid="stLayoutWrapper"]:has(.st-key-bars_container) {
+                height: 490px
             }
 
             .st-key-infobox_container {
@@ -276,11 +267,17 @@ def apply_markdown():
             }
 
             [data-testid="stLayoutWrapper"]:has(>.st-key-bird_picture) {
-                width: 40%
+                width: 40%;
+                margin-bottom: -15px
             }
 
             [data-testid="stLayoutWrapper"]:has(>.st-key-bird_taxonomic) {
                 width: 60%
+            }
+
+            .st-key-infobox_container [data-testid="stCaptionContainer"] p {
+                font-size: 11px;
+                color: black
             }
 
             .st-key-info_header p{
@@ -292,6 +289,10 @@ def apply_markdown():
                 height: 80%;
                 width: 100%; 
                 margin-top: 15px
+            }
+
+            .st-key-infobox_container img {
+                height: 110px
             }
 
             .st-key-infobox_container [data-testid="stElementToolbar"] {
@@ -383,7 +384,7 @@ def apply_markdown():
             /* ============================================================
             Statistics Page
             Climate
-            */ ============================================================
+            ============================================================ */ 
 
             .st-key-main_container, .st-key-width_container {
                 padding-top: 20px
@@ -444,7 +445,7 @@ def apply_markdown():
         /* ======================================================================
            Statistice Page
            Landcover
-        */ ======================================================================
+        ====================================================================== */ 
 
             .st-key-water_stats_container, .st-key-urban_stats_container {
                 padding-top: 20px
@@ -497,11 +498,25 @@ def apply_markdown():
             .st-key-map_container_holder, .st-key-bars_container, .st-key-infobox_container, .st-key-habitat_container,
             .st-key-main_container, .st-key-width_container, .st-key-optimum_bars_container, .st-key-range_type_container,
             .st-key-landcover_type_stats_container, .st-key-urbanization_distribution_container,
-            .st-key-water_stats_container, .st-key-urban_stats_container {
+            .st-key-water_stats_container, .st-key-urban_stats_container, .st-key-main_explorer_container {
                 background-color: #fae6bb;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
             }
 
+        /* ============================================================
+            Explorer Page
+        ============================================================ */ 
+
+            .st-key-main_section h1 {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center
+            }
+
+            .st-key-main_explorer_container {
+                width: 80%
+            }
 
             </style>
         """, unsafe_allow_html=True

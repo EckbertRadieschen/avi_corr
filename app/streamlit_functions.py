@@ -38,7 +38,3 @@ def male_button ():
 
 def female_button ():
     st.session_state["bird_gender"] = "female"
-
-def clear_map_data ():
-    del st.session_state["map_figure"]
-    del st.session_state["map_loaded"]

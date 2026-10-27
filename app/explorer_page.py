@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 from zipfile import ZipFile
+from pathlib import Path
 
 from src.visualization.prepare_visualization import create_categorybased_visual
 from src.analysis.variable_preparations import remove_variable_null_values
 from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
-SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
+BASE_DIR = Path(__file__).resolve().parent.parent
+SPECIES_ZIP_PATH = BASE_DIR / "data" / "processed" / "species_csv_files.zip"
 
 INDICATORS = {
     "climate": {
@@ -50,6 +52,8 @@ INDICATORS = {
 
 def get_explorer_content ():
     species_config = st.session_state["species_config"]
+    climate_config = st.session_state["climate_config"]
+    landcover_config = st.session_state["landcover_config"]
 
     # ==============================================================
     # Sidebar
@@ -80,19 +84,9 @@ def get_explorer_content ():
 
         st.divider()
                     
-        st.text_input("Species Search", key="species_search_input")
-
         species_list = st.session_state["species_list"]
 
-        species_search = st.session_state.get("species_search_input", "")
-
-        filtered_species_list = [
-            species_tuple 
-            for species_tuple in species_list 
-            if species_search.lower() in species_tuple[1].lower()
-        ]
-
-        st.selectbox("Species", filtered_species_list, format_func= lambda x: x[1], key="selected_species")
+        st.selectbox("Species", species_list, format_func= lambda x: x[1], key="selected_species")
         selected_species = st.session_state["selected_species"][0]
 
         category_list = [
@@ -129,6 +123,10 @@ def get_explorer_content ():
     # Main Content
     # ======================================================================================================
 
+    indicator_dict = climate_config["variables"][selected_variable][selected_variable_indicator]
+    
+    indicator_unit = indicator_dict["unit"] if indicator_dict["unit"] is not None else "units"
+    
     species_dict = species_config[selected_species]
     audubon_info = species_dict["audubon_info"]
     common_name = audubon_info["common_name"]
@@ -142,34 +140,35 @@ def get_explorer_content ():
 
     analysis_df = remove_variable_null_values(analysis_df, selected_variable_indicator, "species_total")
 
-    figure = create_categorybased_visual(selected_category, analysis_df, selected_variable_indicator)
+    with st.container(key="main_section", width="stretch"):
 
-    if isinstance(figure, str):
-        info_message = figure
-        st.write(info_message)
-        st.stop()
-
-    if isinstance(figure, tuple):
-        figure, info_text = figure
-
-    else:
-        info_text = None
-
-    _ , title_col, _ = st.columns([2, 5, 2])
-
-    with title_col:
         st.title(common_name)
 
-    st.plotly_chart(
-        figure, 
-        config={"displayModeBar": False}
-    )
+        figure = create_categorybased_visual(selected_category, analysis_df, selected_variable_indicator, indicator_unit)
 
-    if info_text:
-        st.write(info_text)
+        with st.container(key="main_explorer_container", border=True):
 
-    total_observation_count = analysis_df[selected_variable_indicator].size
-    route_count = len(analysis_df["route_id"].unique())
+            if isinstance(figure, str):
+                info_message = figure
+                st.write(info_message)
+                st.stop()
 
-    st.write(f"Total Observations: {total_observation_count}")
-    st.write(f"Anzahl Routen: {route_count}")
+            if isinstance(figure, tuple):
+                figure, info_text = figure
+
+            else:
+                info_text = None
+
+            st.plotly_chart(
+                figure, 
+                config={"displayModeBar": False}
+            )
+
+            if info_text:
+                st.write(info_text)
+
+            total_observation_count = analysis_df[selected_variable_indicator].size
+            route_count = len(analysis_df["route_id"].unique())
+
+            st.write(f"Total Observations: {total_observation_count}")
+            st.write(f"Anzahl Routen: {route_count}")

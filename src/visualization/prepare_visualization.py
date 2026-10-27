@@ -224,9 +224,11 @@ def get_model_curves(model, model_type, min_value, max_value):
     return x_curve, y_curve
 
 
-def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
+def create_categorybased_visual (category: str, df: pd.DataFrame, col: str, unit: str):
     
     x_col = df[col]
+
+    col_label = col.replace("_", " ").title() + f" [{unit}]" 
 
     if category == "climate":
         if check_low_deviation(x_col):
@@ -237,7 +239,7 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
         # =========================================================================================================
         # Modellkurven generieren
         
-        selected_model, selected_model_type, optimum = get_model(binned_df["bin_value"], binned_df["proportion"])
+        selected_model, selected_model_type, _ = get_model(binned_df["bin_value"], binned_df["proportion"])
 
         if selected_model:
             x_curve, y_curve = get_model_curves(selected_model, selected_model_type, min_bin_value, max_bin_value)
@@ -249,22 +251,35 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str):
 
         fig.add_trace(go.Scatter(
             x=binned_df["bin_value"],
-            y=binned_df["proportion"],
+            y=binned_df["proportion"] * 100,
             mode="markers",
+            marker=dict(
+                color="#c77a44",
+                size=6
+            ),
             name="Top 20 %"
         ))
 
         fig.update_layout(
-            xaxis_title=col,
-            yaxis_title="Species count",
-            showlegend=False
-        )
+            xaxis_title=col_label,
+            yaxis_title="High Species Count Proportion [%]",
+            showlegend=False,
+            plot_bgcolor="#fae6bb",
+            paper_bgcolor="#fae6bb",
+            yaxis={
+                "gridcolor": "#e4ccbe"
+            }
+        ) 
 
         if selected_model:
             fig.add_trace(go.Scatter(
                 x=x_curve,
-                y=y_curve,
+                y=y_curve * 100,
                 mode="lines",
+                line=dict(
+                    color="#c77a44",
+                    width=2
+                ),
                 name=f"{selected_model_type.capitalize()} model"
             ))
 

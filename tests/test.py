@@ -6,17 +6,16 @@ SPECIES_CONFIG_PATH = "src/config/species_config.json"
 with open(SPECIES_CONFIG_PATH, "r") as file:
     species_config = json.load(file)
 
-developed_list = []
-
+longest_author = ""
+species_with_longest_author = ""
 
 for species_id, species_dict in species_config.items():
-    developed_preferences = species_dict["landcover_preferences"]["developed"]
+    audubon_info = species_dict["audubon_info"]
+    picture_author = audubon_info["picture"]["author"]
 
-    developed_list.append({
-        "name": species_dict["audubon_info"]["common_name"],
-        "value": developed_preferences["preference_mean"]
-    })
+    if len(picture_author) > len(longest_author):
+        longest_author = picture_author
+        species_with_longest_author = audubon_info["common_name"]
 
-df = pd.DataFrame(developed_list)
-
-print(df["value"].max())
+print(species_with_longest_author)
+print(longest_author)
