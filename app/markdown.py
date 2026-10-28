@@ -497,8 +497,10 @@ def apply_markdown():
 
             .st-key-map_container_holder, .st-key-bars_container, .st-key-infobox_container, .st-key-habitat_container,
             .st-key-main_container, .st-key-width_container, .st-key-optimum_bars_container, .st-key-range_type_container,
-            .st-key-landcover_type_stats_container, .st-key-urbanization_distribution_container,
-            .st-key-water_stats_container, .st-key-urban_stats_container, .st-key-main_explorer_container {
+            .st-key-landcover_type_stats_container, .st-key-urbanization_distribution_container, 
+            .st-key-water_stats_container, .st-key-urban_stats_container, 
+            .st-key-main_explorer_container, .st-key-explorer_model_info, .st-key-explorer_data_info, 
+            .st-key-landcover_binning_info {
                 background-color: #fae6bb;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
             }
@@ -508,16 +510,69 @@ def apply_markdown():
         ============================================================ */ 
 
             .st-key-main_section h1 {
-                display: flex;
-                justify-content: center;
-                align-items: center;
                 text-align: center
             }
 
+            [data-testid="stLayoutWrapper"]:has(>.st-key-main_explorer_container),
+            [data-testid="stLayoutWrapper"]:has(>.st-key-explorer_info_boxes),
+            [data-testid="stLayoutWrapper"]:has(>.st-key-explorer_infobox_headers) {
+                display: flex;
+                align-items: center
+            }
+
             .st-key-main_explorer_container {
+                width: 80%;
+                padding: 40px 60px
+            }
+
+            .st-key-explorer_info_boxes, .st-key-explorer_infobox_headers {
                 width: 80%
             }
 
+            .st-key-explorer_info_boxes, .st-key-explorer_infobox_headers,
+            .st-key-explorer_model_info, .st-key-explorer_data_info {
+                display: flex;
+                flex-direction: row
+            }
+
+            .st-key-landcover_binning_info {
+                display: flex;
+                flex-direction: column
+            }
+
+            .st-key-explorer_infobox_headers h3 {
+                text-align: center
+            }
+
+            .st-key-explorer_model_info, .st-key-explorer_data_info, .st-key-landcover_binning_info {
+                padding: 40px 30px
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-data_info_titles) {
+                width: 35%
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-model_info_titles) {
+                width: 60%
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-data_info_values) {
+                width: 65%
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-model_info_values) {
+                width: 40%
+            }
+
+            [data-testid="stLayoutWrapper"]:has(>.st-key-data_info_values) p,
+            [data-testid="stLayoutWrapper"]:has(>.st-key-model_info_values) p {
+                text-align: end
+            }
+
+            .st-key-model_info_titles p, .st-key-data_info_titles p {
+                font-weight: bold
+            }
+        
             </style>
         """, unsafe_allow_html=True
     )

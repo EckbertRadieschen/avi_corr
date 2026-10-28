@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from zipfile import ZipFile
 from pathlib import Path
 
-from src.visualization.prepare_visualization import create_categorybased_visual
+from src.visualization.prepare_visualization import create_categorybased_visual, get_model_info
 from src.analysis.variable_preparations import remove_variable_null_values
 from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
@@ -90,7 +91,7 @@ def get_explorer_content ():
         selected_species = st.session_state["selected_species"][0]
 
         category_list = [
-            (category, category.replace("_", " ").capitalize()) 
+            (category, category.replace("_", " ").title()) 
             for category in INDICATORS.keys()
         ]
         st.selectbox("Category", category_list, format_func= lambda x: x[1], key="selected_category")
@@ -122,10 +123,6 @@ def get_explorer_content ():
     # ======================================================================================================
     # Main Content
     # ======================================================================================================
-
-    indicator_dict = climate_config["variables"][selected_variable][selected_variable_indicator]
-    
-    indicator_unit = indicator_dict["unit"] if indicator_dict["unit"] is not None else "units"
     
     species_dict = species_config[selected_species]
     audubon_info = species_dict["audubon_info"]
@@ -140,35 +137,85 @@ def get_explorer_content ():
 
     analysis_df = remove_variable_null_values(analysis_df, selected_variable_indicator, "species_total")
 
+    if selected_category == "climate":
+        indicator_dict = climate_config["variables"][selected_variable][selected_variable_indicator]
+        indicator_unit = indicator_dict["unit"] if indicator_dict["unit"] is not None else "units"
+        round_decimals = indicator_dict["round_decimals"]
+
+    if selected_category == "land_cover":
+        indicator_unit = "%"
+        round_decimals = 1
+
     with st.container(key="main_section", width="stretch"):
 
-        st.title(common_name)
+        st.title("Data Explorer")
 
-        figure = create_categorybased_visual(selected_category, analysis_df, selected_variable_indicator, indicator_unit)
+        figure, model, model_type, error_message = create_categorybased_visual(
+            selected_category, 
+            analysis_df, 
+            selected_variable_indicator, 
+            indicator_unit,
+            round_decimals
+        )
 
         with st.container(key="main_explorer_container", border=True):
 
-            if isinstance(figure, str):
-                info_message = figure
-                st.write(info_message)
+            if error_message:
+                st.write(error_message)
                 st.stop()
-
-            if isinstance(figure, tuple):
-                figure, info_text = figure
-
-            else:
-                info_text = None
 
             st.plotly_chart(
                 figure, 
                 config={"displayModeBar": False}
             )
 
-            if info_text:
-                st.write(info_text)
+        with st.container(key="explorer_infobox_headers"):
+            if selected_category == "climate":
+                st.subheader("Info: Used Model")
+            if selected_category == "land_cover":
+                st.subheader("Info: Bar Extension Method")
+            
+            st.subheader("Info: Used Data")
 
+        with st.container(key="explorer_info_boxes"):
+            if selected_category == "climate":
+                with st.container(key="explorer_model_info", border=True):
+                    model_info = get_model_info(model, model_type)
+
+                    with st.container(key="model_info_titles"):
+                        for title in model_info:
+                            st.write(title)
+                        
+                    with st.container(key="model_info_values"):
+                        for value in model_info.values():
+                            st.write(str(value))
+
+            if selected_category == "land_cover":
+                with st.container(key="landcover_binning_info", border=True):
+                    st.write("If border bins (high and/or low) are strongly populated")
+                    st.write("there is a additional binning of these value ranges.")
+                    st.write("Regular bins are marked orange.")
+                    st.write("Additional bins are marked red.")
+                    
             total_observation_count = analysis_df[selected_variable_indicator].size
             route_count = len(analysis_df["route_id"].unique())
+            max_year = analysis_df["year"].max()
+            min_year = analysis_df["year"].min()
+            year_count = len(analysis_df["year"].unique())
+        
+            with st.container(key="explorer_data_info", border=True):
+                with st.container(key="data_info_titles"):
+                    st.write("Species")
+                    st.write("Observation Years")
+                    st.write("Route Count")
+                    st.write("Total Observations")
 
-            st.write(f"Total Observations: {total_observation_count}")
-            st.write(f"Anzahl Routen: {route_count}")
+                with st.container(key="data_info_values"):
+                    st.write(common_name)
+                    st.write(f"{min_year}-{max_year} (Total: {year_count})")
+                    st.write(str(route_count))
+                    st.write(str(total_observation_count))
+
+            
+
+            
