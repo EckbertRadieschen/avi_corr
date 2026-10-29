@@ -485,7 +485,7 @@ def clean_audubon_photo_author ():
     with open(SPECIES_CONFIG_PATH, "r") as file:
         species_config = json.load(file)
     
-    for species_id, species_dict in species_config.items():
+    for _, species_dict in species_config.items():
         audubon_info = species_dict["audubon_info"]
         picture_author = audubon_info["picture"]["author"]
     

@@ -139,21 +139,13 @@ def get_stops():
         connection.close()
 
 
-# ============================================================
-# FEHLERHAFTE SEKTOREN
-# ============================================================
-
 def save_failed_sectors(failed_sectors):
-    """Speichert die IDs der fehlgeschlagenen Sektoren."""
-
     with open(FAILED_SECTORS_FILE, "w", encoding="utf-8") as file:
         for sector_id in sorted(failed_sectors):
             file.write(f"{sector_id}\n")
 
 
 def load_failed_sectors():
-    """Liest fehlgeschlagene Sektoren aus der Datei."""
-
     if not os.path.exists(FAILED_SECTORS_FILE):
         return []
 
@@ -273,7 +265,6 @@ def get_combined_area(sectors, sector_ids):
 
 
 def download_sector_data(client, sector_id, area):
-    """Lädt die ERA5-Daten einer Route."""
 
     filename = os.path.join(tempfile.gettempdir(), f"era5_route_{sector_id}.nc")
 
@@ -297,7 +288,6 @@ def download_sector_data(client, sector_id, area):
 
 
 def extract_sector_data(nc_file, sector_stops) -> pd.DataFrame:
-    """Extrahiert für alle Stops eines Sektors die nächstgelegenen ERA5-Gitterwerte."""
 
     ds = xr.open_dataset(nc_file)
 
@@ -330,10 +320,6 @@ def extract_sector_data(nc_file, sector_stops) -> pd.DataFrame:
 
         ds_stops = ds_stops[dataset_keys]
 
-        # ==================================================================
-        # Erzeugen der DataFrame Struktur
-        # ==================================================================
-
         result_df = ds_stops.to_dataframe().reset_index()
 
         result_df = result_df.rename(
@@ -346,7 +332,7 @@ def extract_sector_data(nc_file, sector_stops) -> pd.DataFrame:
 
         result_df["stop_id"] = result_df["stop"].astype(int)
 
-        result_df = result_df.drop(columns=["stop", "latitude", "longitude"], errors="ignore")
+        result_df = result_df.drop(columns=["stop", "latitude", "longitude"])
      
         result_df["valid_time"] = pd.to_datetime(result_df["valid_time"])
         result_df["year"] = result_df["valid_time"].dt.year
@@ -374,10 +360,6 @@ def extract_sector_data(nc_file, sector_stops) -> pd.DataFrame:
     finally:
         ds.close()
 
-
-# ============================================================
-# MYSQL INSERT
-# ============================================================
 
 def insert_sector_data(data_df):
     connection = get_mysql_connection()
@@ -419,8 +401,6 @@ def insert_sector_data(data_df):
             cursor.executemany(query, batch)
 
             connection.commit()
-
-        print(f"{total_rows:,} Datensätze exportiert")
 
     finally:
         cursor.close()
@@ -513,9 +493,6 @@ def get_era5_data(bunch=False):
 
     if bunch == True:
         sectors = sectors_df.set_index("sector_id").to_dict("index")
-
-        if not sectors_to_process:
-            raise ValueError("Keiner der konfigurierten Sektoren enthält Stops")
 
         sector_ids = sectors_to_process
         combined_stops = stops_df[stops_df["sector_id"].isin(sector_ids)].copy()

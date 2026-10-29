@@ -178,7 +178,7 @@ ORDER BY `month`;
 -- erscheint aber insgesamt plausibel
 
 
--- Routenebene
+-- Jahresebene
 SELECT 
 	`year`,
     AVG(temperature) AS avg_temperature,

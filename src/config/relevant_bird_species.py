@@ -29,7 +29,6 @@ ENGINE = create_engine(
     pool_pre_ping=True
 )
 
-
 ZIP_PATH = "data/processed/species_csv_files.zip"
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
 ROUTE_CONFIG_PATH = "src/config/route_config.json"

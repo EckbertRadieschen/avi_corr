@@ -192,7 +192,7 @@ with zipfile.ZipFile(
 
         species_id_str = str(species_id).zfill(5)
 
-        if records >= 100:
+        if records >= 250:
             print(f"Finale Zeilenzahl: {records}")
 
             zip_file.writestr(

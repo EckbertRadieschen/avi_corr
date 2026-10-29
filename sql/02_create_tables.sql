@@ -566,3 +566,26 @@ CREATE TABLE IF NOT EXISTS analysis_relevant_observations (
     species_total INT,
     PRIMARY KEY (route_id, species_id, `year`)
 );
+
+-- ======================================================================
+--  BIRD_ORDERS
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS bird_orders;
+
+CREATE TABLE IF NOT EXISTS bird_orders (
+	scientific_name VARCHAR(50),
+    common_name VARCHAR(50)
+);
+
+-- ======================================================================
+--  BIRD_FAMILIES
+-- ======================================================================
+
+-- DROP TABLE IF EXISTS bird_families;
+
+CREATE TABLE IF NOT EXISTS bird_families (
+	scientific_name VARCHAR(50),
+    common_name VARCHAR(50)
+);
+
