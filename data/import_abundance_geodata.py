@@ -15,6 +15,7 @@ OBJ_KEY_MIDDLE = r"/ranges/"
 OBJ_KEY_SUFFIX = r"_range_smooth_9km_2023.gpkg"
 TEMP_DIR = Path("ebird_temp")
 TEMP_DIR.mkdir(exist_ok=True)
+
 # =========================================================
 db = mysql.connector.connect(
     host=os.getenv("MYSQL_HOST"),
@@ -23,6 +24,7 @@ db = mysql.connector.connect(
     database=os.getenv("MYSQL_DATABASE", "bbs_analysis")
 )
 cursor = db.cursor()
+
 # =========================================================
 cursor.execute("""
     SELECT ebird_species_code
@@ -31,6 +33,7 @@ cursor.execute("""
     ORDER BY ebird_species_code
 """)
 species_codes = [row[0] for row in cursor.fetchall()]
+
 # =========================================================
 insert_sql = """
     INSERT INTO ebird_breeding_ranges (
@@ -42,12 +45,12 @@ insert_sql = """
     )
     VALUES (%s, %s, %s, %s, %s)
 """
+
 # =========================================================
 for number, species_code in enumerate(species_codes, start=1):
     print(f"[{number}/{len(species_codes)}] - {species_code}")
     temp_file = TEMP_DIR / f"{species_code}_range.gpkg"
     try:
-        print("Lade GPKG herunter ...")
         object = rf"{OBJ_KEY_PREFIX}{species_code}{OBJ_KEY_MIDDLE}{species_code}{OBJ_KEY_SUFFIX}"
         response = requests.get(
             DOWNLOAD_URL,
@@ -85,7 +88,7 @@ for number, species_code in enumerate(species_codes, start=1):
         )
         db.commit()
     except Exception as error:
-        print(f"FEHLER bei {species_code}:")
+        print(f"Error in {species_code}:")
         print(error)
     finally:
         if temp_file.exists():
@@ -93,4 +96,4 @@ for number, species_code in enumerate(species_codes, start=1):
             
 cursor.close()
 db.close()
-print("DOWNLOAD ABGESCHLOSSEN")
+

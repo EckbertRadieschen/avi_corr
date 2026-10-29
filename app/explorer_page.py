@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from zipfile import ZipFile
 from pathlib import Path
 
-from src.visualization.prepare_visualization import create_categorybased_visual, get_model_info
+from src.analysis.models import get_model_info
+from src.visualization.prepare_visualization import create_categorybased_visual
 from src.analysis.variable_preparations import remove_variable_null_values
 from app.streamlit_functions import explorer_button, lexicon_button, statistics_button
 
@@ -54,7 +54,6 @@ INDICATORS = {
 def get_explorer_content ():
     species_config = st.session_state["species_config"]
     climate_config = st.session_state["climate_config"]
-    landcover_config = st.session_state["landcover_config"]
 
     # ==============================================================
     # Sidebar

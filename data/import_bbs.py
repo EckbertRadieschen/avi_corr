@@ -3,11 +3,6 @@ from zipfile import ZipFile
 import shutil
 import mysql.connector
 
-
-# ------------------------------------------------------------
-# Konfiguration des Directory Path und der Datenbank
-# ------------------------------------------------------------
-
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR
 RAW_DIR = DATA_DIR / "raw"
@@ -26,19 +21,8 @@ DB_CONFIG = {
     "database": "bbs_analysis"
 }
 
-# ------------------------------------------------------------
-# Verbindung
-# ------------------------------------------------------------
-
 connection = mysql.connector.connect(**DB_CONFIG)
 cursor = connection.cursor()
-
-print("Verbindung zu MySQL hergestellt.")
-
-
-# ============================================================
-# ZIP-IMPORT
-# ============================================================
 
 with ZipFile(STATES_ZIP, "r") as zip_file:
 
@@ -48,8 +32,6 @@ with ZipFile(STATES_ZIP, "r") as zip_file:
         if file.lower().endswith(".csv")
     ]
 
-    print(f"{len(csv_files)} CSV-Dateien gefunden.")
-    print("\nGefundene Dateien:")
     for file in csv_files:
         print(file)
 
@@ -62,17 +44,9 @@ with ZipFile(STATES_ZIP, "r") as zip_file:
         print(f"[{number}/{len(csv_files)}] {file_name}")
         print("=" * 60)
 
-        # ----------------------------------------------------
-        # CSV aus ZIP extrahieren
-        # ----------------------------------------------------
-
         extracted_file = Path(
             zip_file.extract(csv_file, DATA_DIR / "_temp_states")
         )
-
-        # ----------------------------------------------------
-        # Datei in MySQL Upload-Verzeichnis kopieren
-        # ----------------------------------------------------
 
         upload_file = MYSQL_UPLOAD_DIR / file_name
 
@@ -80,12 +54,6 @@ with ZipFile(STATES_ZIP, "r") as zip_file:
             extracted_file,
             upload_file
         )
-
-        print(f"Datei nach MySQL kopiert: {upload_file}")
-
-        # ----------------------------------------------------
-        # LOAD DATA INFILE
-        # ----------------------------------------------------
 
         sql = f"""
         LOAD DATA INFILE '{upload_file.as_posix()}'
@@ -122,43 +90,17 @@ with ZipFile(STATES_ZIP, "r") as zip_file:
         """
 
         cursor.execute(sql)
-
         connection.commit()
-
-        print(
-            f"Import abgeschlossen: "
-            f"{cursor.rowcount:,} Datensätze"
-        )
-
-        # ----------------------------------------------------
-        # Temporäre Dateien löschen
-        # ----------------------------------------------------
 
         upload_file.unlink()
         extracted_file.unlink()
-
-        print("Temporäre Datei gelöscht.")
-
-
-# ============================================================
-# AUFRÄUMEN
-# ============================================================
 
 temp_directory = DATA_DIR / "_temp_states"
 
 if temp_directory.exists():
     shutil.rmtree(temp_directory)
 
-
-# ============================================================
-# VERBINDUNG SCHLIESSEN
-# ============================================================
-
 cursor.close()
 connection.close()
 
-print()
-print("==============================================")
-print("GESAMTER ZIP-IMPORT ABGESCHLOSSEN")
-print("==============================================")
 

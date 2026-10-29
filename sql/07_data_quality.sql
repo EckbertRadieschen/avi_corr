@@ -10,7 +10,7 @@ FROM nlcd_year_data;
 SELECT COUNT(*)
 FROM analysis_stops;
 
--- Importiert wurden für jeden der 25.535 Stopps Daten für 41 Jahre
+-- Importiert wurde für jeden der 25.535 Stopps Daten für 41 Jahre
 -- nlcd_year_data ist also mit 1.046.935 Einträgen vollständig importiert worden.
 
 SELECT 
@@ -313,24 +313,6 @@ ORDER BY vc_class;
 
 
 -- =============================================
--- NACC_SPECIES_LIST
--- =============================================
-
-SELECT 
-	COUNT(`rank`) / COUNT(*) AS rank_perc,
-    COUNT(common_name) / COUNT(*) AS name_perc,
-    COUNT(`order`) / COUNT(*) AS order_perc,
-    COUNT(family) / COUNT(*) AS family_perc,
-    COUNT(sub_family) / COUNT(*) AS sub_family_perc,
-    COUNT(genus) / COUNT(*) AS genus_perc,
-    COUNT(species) / COUNT(*) AS species_perc
-FROM nacc_species_list;
-
--- 46% NULL-Values in sub_family, sonst alle vollständig
--- Sub-Family wird generell nicht benötigt
-
-
--- =============================================
 -- BBS_SPECIES_LIST
 -- =============================================
 
@@ -339,6 +321,11 @@ BBS listet beobachtete Vögel AOU-konform
 seit 1998 vergibt die AOU keine neuen Nummern mehr, 
 sodass BBS zwecks Konsistenz die Nummerierung eigenständig weiterführt
 */
+
+SELECT 
+	COUNT(DISTINCT species_id),
+    COUNT(DISTINCT route_id)
+FROM analysis_observations;
 
 SELECT DISTINCT
 	sl.common_name
@@ -437,6 +424,7 @@ Bubulcus ibis
 Carduelis carduelis
 Larus argentatus
 Porphyrio martinicus
+Troglodytes aedon
 */
 
 -- =====================================================

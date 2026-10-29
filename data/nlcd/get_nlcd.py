@@ -76,15 +76,10 @@ ENGINE = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 
 def create_result_dictionary(stop_tile_assignments, years):
-    """
-    Erstellt das Ergebnis-Dictionary für alle Stopps und Jahre.
-
-    Für jede Stop-Jahr-Kombination werden alle Land-Cover-Kategorien mit 0 Pixel vorgegeben.
-    """
-
+   
     landcover_indexes = []
     for index_list in LANDCOVER_GROUPS.values():
-        landcover_indexes += index_list
+        landcover_indexes.append(index_list)
 
     result_dictionary = {}
 
@@ -119,11 +114,7 @@ def get_tile_stops(mapping_df, tile_id):
 
 
 def create_stop_buffers(stop_df, target_crs):
-    """
-        Erzeugt einen Buffer um alle Stopps.
-        Anschließende Projektion der Buffer in das CRS des NLCD-Grids
-    """
-
+    
     stops_gdf = gpd.GeoDataFrame(
         stop_df.copy(), 
         geometry=gpd.points_from_xy(
@@ -220,8 +211,6 @@ def download_nlcd_file(s3, key, destination):
 # =============================================================================================================
 
 def read_buffer_pixels(dataset, geometry): 
-    """ Liest den Rasterbereich des Buffers und gibt die Pixel innerhalb des Buffers zurück""" 
-    
     try:
         geometry_list = [mapping(geometry)]
         window = geometry_window(dataset, geometry_list) # Reduktion des Rasters auf einen kleinstmöglichen Bereich
@@ -271,9 +260,6 @@ def process_tile(s3, tile_id, tile_crs, stop_df, landcover_counts):
         
         try: 
             with rasterio.open(local_path) as dataset: 
-                if dataset.crs != tile_crs: 
-                    raise ValueError(f"CRS stimmt für {local_path.name} nicht mit dem Tile-Grid überein") 
-                
                 for stop_id in stop_ids:
                     values = read_buffer_pixels(dataset, stop_buffers[stop_id])
 
@@ -340,8 +326,7 @@ def create_result_dataframe(landcover_counts):
 # ===================================================================================================
 
 def save_all(landcover_dict): 
-    """Identifiziert die Stopps eines Tiles, erstellt deren Buffer, verarbeitet das Tile und speichert die Ergebnisse""" 
-    
+
     result_df = create_result_dataframe(landcover_dict) 
     if result_df.empty: 
         return 

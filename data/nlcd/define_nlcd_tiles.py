@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 # KONFIGURATION
 # ============================================================
 
-TILE_GRID = Path("data/CONUS_C2_ARD_grid/CONUS_C2_ARD_grid.shp")
+TILE_GRID = Path("data/nlcd/CONUS_C2_ARD_grid/CONUS_C2_ARD_grid.shp")
 
 BUFFER_RADIUS_M = 1500
 
@@ -35,10 +35,6 @@ MYSQL_ENGINE = create_engine(f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWO
 OUTPUT_TILES = "data/stop_nlcd_tiles_assignments.csv"
 
 
-# ============================================================
-# MYSQL - QUERY
-# ============================================================
-
 def load_stops():
     connection = mysql.connector.connect(**DB_CONFIG)
 
@@ -56,10 +52,6 @@ def load_stops():
 
     return stops
 
-
-# =======================================================
-# GET RELEVANT TILES
-# =======================================================
 
 def create_stop_geodataframe(stops):
     return gpd.GeoDataFrame(
@@ -95,32 +87,9 @@ def assign_tiles(stops, tiles):
     return result
 
 
-# ==========================================================================
-# EVALUATE RELEVANT TILES
-# ==========================================================================
-
-def analyse_tiles(result):
-    stop_count = result["stop_id"].nunique()
-    print(f"\nAnzahl Stopps insgesamt: {stop_count:,}")
-
-    missing = result["h"].isna().sum()
-    print(f"Stops ohne zugeordnetes Tile: {missing:,}")
-
-    required_tiles = (
-        result[["tile_id"]]
-        .dropna()
-        .drop_duplicates()
-        .sort_values("tile_id")
-        .reset_index(drop=True)
-    )
-
-    print(f"\nBenötigte Tiles für {BUFFER_RADIUS_M:,}-m-Buffer: {len(required_tiles):,}")
-
+def write_result_to_csv(result):
     tile_assignments = result[["stop_id", "latitude", "longitude", "h", "v", "tile_id"]]
     tile_assignments.to_csv(OUTPUT_TILES, index=False)
-
-    print("\nDateien gespeichert:")
-    print(OUTPUT_TILES)
 
 
 # ============================================================
@@ -128,15 +97,11 @@ def analyse_tiles(result):
 # ============================================================
 
 def main():
-    print("=" * 60)
-    print("Zuordnung Stops -> NLCD Tiles")
-    print("=" * 60)
-
     stops = load_stops()
     stops = create_stop_geodataframe(stops)
     tiles = gpd.read_file(TILE_GRID)
     result = assign_tiles(stops, tiles)
-    analyse_tiles(result)
+    write_result_to_csv(result)
     
 
 
