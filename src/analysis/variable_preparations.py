@@ -3,19 +3,16 @@ import numpy as np
 import re
 import json
 
-from zipfile import ZipFile
 from typing import Literal
 
-from src.helpers import build_range_string, extract_bin_caps_from_label, get_landcover_variable_range
+from src.helpers import build_range_string
+from src.analysis.correlate import check_low_deviation
+from src.visualization.prepare_visualization import get_model, get_model_curves
 
 LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
 
-LANDCOVER_INDICATORS = [
-    "water", "developed", "barren", "forest", "shrubland",
-    "grassland", "pasture", "cropland", "wetland"
-]
 
 def bin_high_climate_variable_values(species_df: pd.DataFrame, variable_column: str, count_column="species_total"):
 
@@ -128,7 +125,6 @@ def get_extension_frame(
     return result_df
     
 
-
 def get_extension_dicts(
         distribution_series: pd.Series, 
         global_variable_values: pd.Series, 
@@ -218,132 +214,87 @@ def get_landcover_high_count_distribution(species_df: pd.DataFrame, variable_col
 
     return raw_distribution_df, distribution_df
 
-# =====================================================================================================
-# =====================================================================================================
 
-def get_species_landcover_preferences():
-    print("Start Preference Generator")
+def calculate_ranges(base_df, indicator):
+    binned_df, min_bin_value, max_bin_value = bin_high_climate_variable_values(base_df, indicator)
+    
+    bin_count = binned_df.shape[0]
+    relevance_threshold = 0.5 / bin_count
 
-    with open(SPECIES_CONFIG_PATH, "r") as file:
-        species_config = json.load(file)
+    if bin_count < 10:
+        model, model_type, optimum = None, None, None
 
-    total_species = len(species_config)
-    species_counter = 0
+    else:
+        model, model_type, optimum = get_model(binned_df["bin_value"], binned_df["proportion"])
+    
+    if model: 
+        x_curve, y_curve = get_model_curves(model, model_type, min_bin_value, max_bin_value)
 
-    for species_id, species_dict in species_config.items():
-        species_counter += 1
-        print(f"{species_counter}/{total_species} - {species_id}")
+        relevant = y_curve >= relevance_threshold
+        relevance_range = (x_curve[relevant].min(), x_curve[relevant].max())
 
-        if len(species_dict.get("landcover_preferences", {})) == 8:
-            continue 
-
-        filename = f"{species_id}.csv"
-
-        preferences = species_dict["landcover_preferences"] = {}
-
-        with ZipFile(SPECIES_ZIP_PATH, "r") as zip:
-            with zip.open(filename) as file:
-                species_df = pd.read_csv(file, encoding="utf-8")
-
-        for variable_column in LANDCOVER_INDICATORS:
-            print(f"    {variable_column}")
-
-            variable_dict = preferences[variable_column] = {}
-
-            raw_distribution, extended_distribution = get_landcover_high_count_distribution(species_df, variable_column)
-
-            analysis_df = raw_distribution.copy()
-
-            max_filter = analysis_df["proportion"] == analysis_df["proportion"].max()
-
-            top_list = analysis_df.index[max_filter].to_list()
-
-            top_group_cap = analysis_df.loc[top_list[0], "proportion"] * 0.8
-
-            top_bin_filter = analysis_df["proportion"] >= top_group_cap
-
-            top_bins = analysis_df.index[top_bin_filter].to_list()
-
-            base_bins = []
-
-            max_range, max_range_lowest_cap, max_range_highest_cap = get_landcover_variable_range(raw_distribution.index.to_list())
-            max_bins = raw_distribution.shape[0]
-
-            for bin in top_bins:
-                if ">" in bin or "<" in bin:
-                    analysis_df = extended_distribution.copy()
-                    max_range, max_range_lowest_cap, _ = get_landcover_variable_range(extended_distribution.index.to_list())
-                    max_bins = extended_distribution.shape[0]
-                else:
-                    base_bins.append(bin)
-
-
-            low_extension_filter = (analysis_df["origin"] == "lower") & (analysis_df["proportion"] >= 0.05)
-            low_extension_bins = analysis_df.index[low_extension_filter].to_list()
+        if optimum:
+            y_optimum = np.interp(optimum, x_curve, y_curve)
+            preferred = y_curve >= 0.8 * y_optimum
+            preference_range = (x_curve[preferred].min(), x_curve[preferred].max())            
             
-            high_extension_filter = (analysis_df["origin"] == "higher") & (analysis_df["proportion"] >= 0.05)
-            high_extension_bins = analysis_df.index[high_extension_filter].to_list()
+        else:
+            preference_range = None
 
-            analysis_bins = low_extension_bins + base_bins + high_extension_bins
+    else:
+        relevance_filter = binned_df["proportion"] >= relevance_threshold
+        relevant_binned_df = binned_df[relevance_filter].copy()
 
-            high_bins_df = analysis_df.copy().loc[analysis_bins]
-            high_bins_df = high_bins_df.reset_index(names="label")
+        relevance_range = (relevant_binned_df["bin_value"].min(), relevant_binned_df["bin_value"].max())
+        preference_range = None
 
-            high_bins_df["caps"] = high_bins_df["label"].apply(extract_bin_caps_from_label)
-            high_bins_df["bin_mean"] = high_bins_df["caps"].apply(np.mean)
+    return relevance_range, preference_range, optimum
 
-            preference_range, pref_range_low, pref_range_high = get_landcover_variable_range(list(high_bins_df["label"].values))
-            variable_dict["preference_range"] = preference_range
-            variable_dict["preference_lower_cap"] = pref_range_low
-            variable_dict["preference_upper_cap"] = pref_range_high
-                  
-            pref_mean = variable_dict["preference_mean"] = (
-                (high_bins_df["bin_mean"] * high_bins_df["proportion"]).sum() 
-                / 
-                high_bins_df["proportion"].sum()
-            )
 
-            left_type_cap = max_range_lowest_cap + max_range / 3
-            right_type_cap = max_range_lowest_cap + max_range / 3
+def prepare_and_check_dataframe (base_df, indicator):
+    analysis_df = base_df[["species_total", indicator]].copy()
+    no_null_filter = analysis_df["species_total"].notna() & analysis_df[indicator].notna()
+    analysis_df = analysis_df[no_null_filter]
 
-            if pref_mean < left_type_cap:
-                preference_type = "low"
-            elif pref_mean > right_type_cap:
-                preference_type = "high"
-            else:
-                preference_type = "middle"
+    if not check_low_deviation(analysis_df[indicator]):
+        return analysis_df
+    
 
-            variable_dict["preference_type"] = preference_type
-            
+def get_preference_dictionary (base_df, indicator, max_range, low_value_cap, high_value_cap):
+    analysis_df = prepare_and_check_dataframe(base_df, indicator)
 
-            variable_dict["is_real_optimum"] = len(analysis_bins) / max_bins < 1/3
+    if not isinstance(analysis_df, pd.DataFrame):
+        return
 
-            relevant_filter = analysis_df["proportion"] >= 0.05
-            relevant_bins_df = analysis_df.copy()[relevant_filter]
-            relevant_bins_df = relevant_bins_df.reset_index(names="label")
+    relevance_range, preference_range, optimum = calculate_ranges(analysis_df, indicator)
 
-            relevant_range, rel_range_low, rel_range_high = get_landcover_variable_range(list(relevant_bins_df["label"].values))
-            variable_dict["range"] = relevant_range
-            variable_dict["range_lower_cap"] = rel_range_low
-            variable_dict["range_upper_cap"] = rel_range_high
-            variable_dict["range_type"] = "wide" if relevant_range / max_range >= 0.5 else "narrow"
+    relevance_range_abs = relevance_range[1] - relevance_range[0]
 
-        with open(SPECIES_CONFIG_PATH, "w") as file:
-            json.dump(species_config, file, ensure_ascii=False, indent=4)
-            
+    preference_range_abs = (
+        preference_range[1] - preference_range[0]
+        if preference_range
+        else None
+    )
 
-def delete_landcover_preferences():
-    with open(SPECIES_CONFIG_PATH, "r") as file:
-        species_config = json.load(file)
+    if preference_range_abs:
+        range_type = "narrow" if preference_range_abs / max_range < 0.25 else "wide"
+    else:
+        range_type = "narrow" if relevance_range_abs / max_range < 0.5 else "wide"
 
-    for  species_dict in species_config.values():
-        if "landcover_preferences" in species_dict:
-            del species_dict["landcover_preferences"]
+    optimum_type = (
+        None if optimum is None
+        else "low" if optimum < low_value_cap
+        else "high" if optimum > high_value_cap
+        else "medium"
+    )
 
-    with open(SPECIES_CONFIG_PATH, "w") as file:
-        json.dump(species_config, file, ensure_ascii=False, indent=4)
+    return {
+        "relevance_range": relevance_range,
+        "preference_range": preference_range,
+        "optimum": optimum,
+        "range_type": range_type,
+        "optimum_type": optimum_type
+    }
 
-if __name__ == "__main__":
-    # get_species_landcover_preferences()
-    # delete_landcover_preferences()
-    pass
+
+    

@@ -80,7 +80,7 @@ def climate_bar(
     gmax = format_value(global_max)
 
     icon_path = ICON_DIR / f"{name}.png"
-    icon_title = name.replace("_", " ").capitalize()
+    icon_title = name.replace("_", " ").title()
 
     if icon_path.is_file():
         encoded = base64.b64encode(

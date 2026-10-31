@@ -4,7 +4,7 @@ from zipfile import ZipFile
 from pathlib import Path
 
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
-CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
+CLIMATE_CONFIG_PATH = "src/config/climate_config.json" 
 
 INDICATORS = {
     "temperature": [

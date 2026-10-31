@@ -49,12 +49,97 @@ def get_lexicon_content():
 
         st.divider()
 
-        species_list = st.session_state["species_list"]
+        def reset_search_selection():
+            st.session_state["selected_order"] = ("Any", "Any")
+            st.session_state["selected_family"] = ("Any", "Any")
+            st.session_state.pop("selected_species", None)
+            st.session_state["selected_species"] = st.session_state["species_options"][0]
+
+        selected_search_option = st.radio(
+            "Search Options", 
+            options=["Common Names", "Scientific Names"], 
+            key="selected_search_option",
+            on_change=reset_search_selection,
+            width=300
+        )
+
+        def taxonomic_format (option, scientific_index, common_index):
+            if selected_search_option == "Common Names":
+                return option[common_index]
+            else:
+                return option[scientific_index]
+
+        taxonomic_config = st.session_state["taxonomic_config"]
+        taxonomic_orders = taxonomic_config["orders"]
+        taxonomic_families = []
+
+        for values in taxonomic_orders.values():
+            for family, common_family in values["families"].items():
+                taxonomic_families.append((family, common_family))
+
+        all_orders = sorted(
+            [
+                (order, values["common_order"])
+                for order, values in taxonomic_orders.items()
+            ],
+            key=lambda x: taxonomic_format(x, 0, 1)
+        )
+
+        order_list = [("Any", "Any")] + all_orders
+
+        selected_order = st.selectbox(
+            "Orders", 
+            order_list, 
+            format_func=lambda x: taxonomic_format(x, 0, 1),
+            key="selected_order"
+        )
+
+        if selected_order[0] == "Any":
+            all_families = taxonomic_families
+        else:
+            order_family_dict = taxonomic_orders[selected_order[0]]["families"]
+            all_families = [
+                (family, common_family) 
+                for family, common_family in order_family_dict.items()
+            ]
+
+        all_families = sorted(all_families, key=lambda x: taxonomic_format(x, 0, 1))
+
+        family_list = [("Any", "Any")] + all_families
+
+        selected_family = st.selectbox(
+            "Family", 
+            family_list, 
+            format_func=lambda x: taxonomic_format(x, 0, 1),
+            key="selected_family"
+        )
+
+        all_species_list = st.session_state["species_list"]
+
+        if selected_family[0] != "Any":
+            species_list = [
+                species
+                for species in all_species_list
+                if species[4] == selected_family[0]
+            ]
+
+        else:
+            if selected_order[0] != "Any":
+                species_list = [
+                    species
+                    for species in all_species_list
+                    if species[3] == selected_order[0]
+                ]
+
+            else:
+                species_list = st.session_state["species_options"] = all_species_list
+
+        species_list = sorted(species_list, key=lambda x: taxonomic_format(x, 2, 1))
 
         st.selectbox(
             "Species", 
             species_list, 
-            format_func= lambda x: x[1], 
+            format_func=lambda x: taxonomic_format(x, 2, 1), 
             key="selected_species"
         )
 
@@ -78,13 +163,11 @@ def get_lexicon_content():
 
     common_name = audubon_info["common_name"]
     scientiftic_name = species_dict["scientific_name"]
-    order = species_dict["order"]
-    family = species_dict["family"]
+    species_order = species_dict["order"]
+    species_family = species_dict["family"]
 
-    taxonomic_config = st.session_state["taxonomic_config"]
-
-    common_order = taxonomic_config["orders"][order]
-    common_family = taxonomic_config["families"][family]
+    species_common_order = taxonomic_config["orders"][species_order]["common_order"]
+    species_common_family = taxonomic_config["orders"][species_order]["families"][species_family]
 
     picture_content = audubon_info["picture"]
     
@@ -143,8 +226,8 @@ def get_lexicon_content():
                                         <span>Family:</span>
                                     </div>
                                     <div class="taxonomic_values">
-                                        <div class="tax_value_row">{order}<p>({common_order})</p></div>
-                                        <div class="tax_value_row">{family}<p>({common_family})</p></div>
+                                        <div class="tax_value_row">{species_order}<p>({species_common_order})</p></div>
+                                        <div class="tax_value_row">{species_family}<p>({species_common_family})</p></div>
                                     </div>
                                 </div>
                             """, unsafe_allow_html=True

@@ -98,14 +98,14 @@ def get_explorer_content ():
 
         variable_dict = INDICATORS[selected_category]
         variable_list = [
-            (variable, variable.replace("_", " ").capitalize())
+            (variable, variable.replace("_", " ").title())
             for variable in variable_dict.keys()
         ]   
         st.selectbox("Variable", variable_list, format_func= lambda x: x[1], key="selected_variable")
         selected_variable = st.session_state["selected_variable"][0]
         
         indicator_method_list = [
-            (method, method.replace("_", " ").capitalize())
+            (method, method.replace("_", " ").title())
             if method is not None
             else (None, "Proportion")
             for method in variable_dict[selected_variable]
@@ -179,15 +179,19 @@ def get_explorer_content ():
         with st.container(key="explorer_info_boxes"):
             if selected_category == "climate":
                 with st.container(key="explorer_model_info", border=True):
-                    model_info = get_model_info(model, model_type)
+                    if model:
+                        model_info = get_model_info(model, model_type)
 
-                    with st.container(key="model_info_titles"):
-                        for title in model_info:
-                            st.write(title)
-                        
-                    with st.container(key="model_info_values"):
-                        for value in model_info.values():
-                            st.write(str(value))
+                        with st.container(key="model_info_titles"):
+                            for title in model_info:
+                                st.write(title)
+                            
+                        with st.container(key="model_info_values"):
+                            for value in model_info.values():
+                                st.write(str(value))
+
+                    else:   
+                        st.write("No Model found")
 
             if selected_category == "land_cover":
                 with st.container(key="landcover_binning_info", border=True):

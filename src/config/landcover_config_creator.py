@@ -45,14 +45,10 @@ def create_landcover_bins(values):
             bin = 0
 
         else:
-           bin_decimals = max(1, -math.floor(math.log10(pre_bin)))
            bin = round(pre_bin, decimals_z)
-           # bin = round(pre_bin, max(bin_decimals, decimals_z))
-
+           
         if not bin in bins:
             bins.append(bin)
-
-        print(f"{pre_bin} → {bin}")
 
     labels = [f"< {bins[1]} %"]
 

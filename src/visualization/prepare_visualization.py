@@ -15,7 +15,7 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str, unit
         col_label = col.replace("_", " ").title() + f" [{unit}]"
 
         if check_low_deviation(x_col):
-            return None, None, None, "Keine ausreichende Varianz in den Daten."
+            return None, None, None, "No sufficient variance in data"
 
         binned_df, min_bin_value, max_bin_value = bin_high_climate_variable_values(df, col)
 

@@ -145,19 +145,19 @@ if "species_list" not in st.session_state:
         audubon_info = species_dict["audubon_info"]
         meta_data = species_dict["meta_data"]
         common_name = audubon_info["common_name"]
+        species_order = species_dict["order"]
+        species_family = species_dict["family"]
+        scientific_name = species_dict["scientific_name"]
 
         if meta_data["total_observations"] >= 250:
-            species_list.append((species_id, common_name))
+            species_list.append((species_id, common_name, scientific_name, species_order, species_family))
 
-    # st.session_state["species_list"] = species_list
     st.session_state["species_list"] = sorted(species_list, key=lambda x: x[1])
 
 species_list = st.session_state["species_list"]
 
-
 if st.session_state["page"] == "explorer": 
     get_explorer_content()
-
 
 elif st.session_state["page"] == "lexicon":
     get_lexicon_content()

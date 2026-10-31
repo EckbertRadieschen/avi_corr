@@ -97,12 +97,14 @@ def optimum_class_bars (variable, variable_df: pd.DataFrame):
 
     fig.update_traces(
         textfont=dict(
-            color="#ffffff"
+            color="#222222",
+            weight="bold"
         )
     )
 
     fig.update_yaxes(
-        showticklabels=False
+        showticklabels=False,
+        showgrid=False
     )
 
     fig.update_layout(

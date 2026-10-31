@@ -2,6 +2,9 @@ import streamlit as st
 
 def explorer_button ():
     st.session_state["page"] = "explorer"
+    species_index = st.session_state["species_options"].index(st.session_state["selected_species"])
+    
+    st.session_state["selected_species"] = st.session_state["species_options"][species_index]
 
 def lexicon_button ():
     st.session_state["page"] = "lexicon"

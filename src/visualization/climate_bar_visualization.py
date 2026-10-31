@@ -15,7 +15,7 @@ def visualize_species_bars(climate_config, climate_preferences):
         
             global_min = indicator_config["min"]
             global_max = indicator_config["max"]
-            variable_unit = indicator_config["unit"]
+            variable_unit = indicator_config["unit"] if not variable == "vegetation_coeff" else ""
             round_decimals = indicator_config["round_decimals"]
         
             relevance_range = indicator_dict["relevance_range"]

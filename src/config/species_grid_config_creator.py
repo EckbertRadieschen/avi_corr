@@ -14,9 +14,7 @@ CONFIG_DIR = SRC_DIR / "config"
 
 ROUTE_CONFIG_PATH = CONFIG_DIR / "route_config.json"
 SPECIES_CONFIG_PATH = CONFIG_DIR / "species_config.json"
-GRID_CONFIG_PATH = CONFIG_DIR / "grid_config.json"
-ORIGIN_GRID_PATH = CONFIG_DIR /"origin_grid_config.json"
-DISPLAY_GRID_CONFIG_PATH = CONFIG_DIR / "display_grid_config.json"
+
 SPECIES_GRIDS_ZIP_PATH = CONFIG_DIR / "species_grid_configs.zip"
 
 DATA_DIR = BASE_DIR / "data"
@@ -158,16 +156,13 @@ def get_base_grid_config():
                 sum(ratios) / len(ratios)
             )
 
-    origin_grid_config = {
+    base_grid_config = {
         cell_id: cell
         for cell_id, cell in grid_config.items()
         if cell["high_count_ratios"]
     }
 
-    with open(ORIGIN_GRID_PATH, "w") as file:
-        json.dump(origin_grid_config, file, ensure_ascii=False, indent=4)
-
-    return origin_grid_config
+    return base_grid_config
 
 
 # =====================================================================
@@ -395,17 +390,12 @@ def create_grid_config():
         for cell, value in zip(target_cells, values):
             cell["high_count_ratios"][species_id] = float(value)
 
-        if species_counter % 20 == 0:
-            with open(GRID_CONFIG_PATH, "w", encoding="utf-8") as file:
-                json.dump(grid_config, file, ensure_ascii=False, indent=4)
-
-    with open(GRID_CONFIG_PATH, "w", encoding="utf-8") as file:
-        json.dump(grid_config, file, ensure_ascii=False, indent=4)
+    return grid_config
 
 
 def create_display_grid_config(self_weight=0.6, iterations=1, max_neighbors=8):
-    with open(GRID_CONFIG_PATH, "r") as file:
-        grid_config = json.load(file)
+    
+    grid_config = create_grid_config()
 
     cell_ids = list(grid_config.keys())
     target_cells = list(grid_config.values())
@@ -482,22 +472,20 @@ def create_display_grid_config(self_weight=0.6, iterations=1, max_neighbors=8):
         for cell_id, value in current_values.items():
             display_grid_config[cell_id]["display_ratios"][species_id] = float(value)
 
-    with open(DISPLAY_GRID_CONFIG_PATH, "w") as file:
-        json.dump(display_grid_config, file, ensure_ascii=False, indent=4)
+    return display_grid_config
 
 
 def create_species_grids():
     with open(SPECIES_CONFIG_PATH, "r") as file:
         species_config = json.load(file)
 
-    with open(DISPLAY_GRID_CONFIG_PATH, "r") as file:
-        grid_config = json.load(file)
+    display_grid_config = create_display_grid_config()
 
     base_grid = {}
 
-    cell_count = len(grid_config)
+    cell_count = len(display_grid_config)
 
-    for counter, (cell, cell_dict) in enumerate(grid_config.items(), start=1):
+    for counter, (cell, cell_dict) in enumerate(display_grid_config.items(), start=1):
         if counter % 100 == 0:
             print(f"{counter}/{cell_count} cells done")
 
@@ -521,7 +509,7 @@ def create_species_grids():
 
             print(f"Working on ID {species_id}")
 
-            for cell_id, cell in grid_config.items():
+            for cell_id, cell in display_grid_config.items():
                 value = cell["display_ratios"].get(species_id)
 
                 if value is None:
@@ -547,7 +535,4 @@ def create_species_grids():
 
 
 if __name__ == "__main__":
-    # get_base_grid_config()
-    # create_grid_config()
-    # create_display_grid_config()
     create_species_grids()

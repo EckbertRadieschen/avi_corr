@@ -26,6 +26,10 @@ def apply_markdown():
                 padding: 0 10px
             }
 
+            [data-testid="stSidebarContent"] [data-testid="stRadioGroup"] p {
+                color: #ffffff
+            }
+
             .st-key-sidebar_navigation {
                 display: flex;
                 margin-bottom: 1rem
@@ -165,7 +169,7 @@ def apply_markdown():
             }
 
             .st-key-selected_variable_header {
-                width: 30%
+                width: 45%
             }
 
             

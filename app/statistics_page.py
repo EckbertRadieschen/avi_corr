@@ -69,7 +69,6 @@ def get_statistics_content ():
 
         with st.container(key="header_slicer", width="content"):   
             climate_stat_config = st.session_state["climate_stat_config"]
-            landcover_stat_config = st.session_state["landcover_stat_config"]
 
             statistics_categories = ["Climate", "Landcover"]
             selected_stats_category = st.radio(
@@ -82,7 +81,7 @@ def get_statistics_content ():
             if selected_stats_category == "Climate":
 
                 variable_list = [
-                    (variable, variable.replace("_", " ").capitalize())
+                    (variable, variable.replace("_", " ").title())
                     for variable in INDICATORS.keys()
                 ]   
                 st.selectbox("Variable", variable_list, format_func= lambda x: x[1], key="selected_variable_header")
@@ -96,7 +95,7 @@ def get_statistics_content ():
                 min_value = meta_data["min"]
                 max_value = meta_data["max"]
                 slider_step = meta_data["slider_step"]
-                unit = meta_data["unit"]
+                unit = meta_data["unit"] if not selected_variable == "vegetation_coeff" else ""
                 rounding_decimals = meta_data["rounding_decimals"]
                         
                 min_chart, max_chart = st.slider(
@@ -132,7 +131,7 @@ def get_statistics_content ():
 
                     with st.container(key="main_chart_header"):
                         st.subheader(
-                            f"{header_prefix_main} by Preference {selected_variable.replace('_', ' ').capitalize()}", 
+                            f"{header_prefix_main} by Preference {selected_variable.replace('_', ' ').title()}", 
                             width="stretch"
                         )
 
@@ -160,7 +159,7 @@ def get_statistics_content ():
 
                     with st.container(key="width_chart_header"):
                         st.subheader(
-                            f"{header_prefix_width} Preference Ranges by {selected_variable.replace('_', ' ').capitalize()}", 
+                            f"{header_prefix_width} Preference Ranges by {selected_variable.replace('_', ' ').title()}", 
                             width="stretch"
                         )
 

@@ -8,9 +8,14 @@ from sqlalchemy import create_engine
 from bs4 import BeautifulSoup
 
 import pandas as pd
+import numpy as np
 import time
 import re
 from zipfile import ZipFile
+
+from src.helpers import extract_bin_caps_from_label, get_landcover_variable_range
+from src.analysis.variable_preparations import get_landcover_high_count_distribution, get_preference_dictionary
+
 
 load_dotenv()
 
@@ -44,6 +49,17 @@ BIRD_QUERY = """
     ORDER BY species_id;
 """
 
+full_observation_query = """
+    SELECT
+        state_num * 1000 + CAST(route AS UNSIGNED) AS route_id,
+        aou AS species_id,
+        `year`,
+        species_total
+    FROM bird_observations
+    WHERE rpid = 101
+    ORDER BY route_id, `year`, species_id;
+"""
+
 WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php"
 HEADERS = {
     "User-Agent": "AviCorr/1.0 (Wikipedia species information project)"
@@ -54,6 +70,26 @@ AUDUBON_GUIDE_URL = "https://www.audubon.org/bird-guide"
 
 SPECIES_CONFIG_PATH = "src/config/species_config.json"
 SPECIES_ZIP_PATH = "data/processed/species_csv_files.zip"
+
+ROUTE_CONFIG_PATH = "src/config/route_config.json"
+CLIMATE_CONFIG_PATH = "src/config/climate_config.json"
+LANDCOVER_CONFIG_PATH = "src/config/landcover_config.json"
+
+LANDCOVER_INDICATORS = [
+    "water", "developed", "barren", "forest", "shrubland",
+    "grassland", "pasture", "cropland", "wetland"
+]
+
+CLIMATE_INDICATORS = {
+    "temperature": ["mean", "min", "max", "std"],
+    "precipitation": ["sum"],
+    "wind_magnitude": ["mean"],
+    "relative_humidity": ["mean", "min", "max", "std"],
+    "soil_moisture": ["mean", "min", "max", "std"],
+    "solar_flux_density": ["mean"],
+    "vegetation_coeff": ["mean"]
+}
+
 
 def build_bird_config ():
     species_df = pd.read_sql(BIRD_QUERY, ENGINE)
@@ -481,6 +517,7 @@ def analyse_species_size_descriptions():
     print()
     print(missing_species)
 
+
 def clean_audubon_photo_author ():
     with open(SPECIES_CONFIG_PATH, "r") as file:
         species_config = json.load(file)
@@ -505,13 +542,429 @@ def clean_audubon_photo_author ():
     with open(SPECIES_CONFIG_PATH, "w") as file:
         json.dump(species_config, file, ensure_ascii=True, indent=4)
 
+
+def extract_species_list ():
+    xs_count = 0
+    s_count = 0
+    m_count = 0
+    l_count = 0
+    xl_count = 0
+
+    bird_species_list = []
+
+    with ZipFile(SPECIES_ZIP_PATH, "r") as zip_file:
+        for filename in zip_file.namelist():
+            with zip_file.open(filename) as file:
+                species_df = pd.read_csv(file, encoding="utf-8")
+
+                species_id = filename.replace('.csv', '')
+                bird_species_list.append(species_id)
+
+                df_size = species_df.shape[0]
+                print(
+                    f"\n{species_id} | "
+                    f"Anzahl Records: {df_size}"
+                )
+
+                if df_size < 150:
+                    xs_count += 1
+                elif df_size < 200:
+                    s_count += 1
+                elif df_size < 500:
+                    m_count += 1
+                elif df_size < 2000:
+                    l_count +=1
+                else:
+                    xl_count +=1
+
+    print("=" * 60)
+    print(f"\nSehr kleine Dateien: {xs_count}")
+    print(f"Kleine Dateien:      {s_count}")
+    print(f"Mittelgroße Dateien: {m_count}")
+    print(f"Große Dateien:       {l_count}")
+    print(f"Sehr große Dateien:  {xl_count}\n")
+
+
+    print("=" * 60)
+    print(species_id)
+
+
+def add_bird_observation_count_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_id, species_dict in species_config.items():
+        filename = f"{species_id}.csv"
+
+        with ZipFile(SPECIES_ZIP_PATH, "r") as zip:
+            with zip.open(filename) as file:
+                species_df = pd.read_csv(file, encoding="utf-8")
+
+        species_dict["meta_data"] = {
+            "total_observations": species_df.shape[0]
+        }
+            
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_high_count_cap_to_config():
+    observation_df = pd.read_sql(full_observation_query, ENGINE)
+
+    route_quantiles = (
+        observation_df
+        .groupby(["species_id", "route_id"])["species_total"]
+        .quantile(0.8)
+    )
+
+    species_caps = route_quantiles.groupby(level="species_id").quantile(0.8)
+
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_id, config in species_config.items():
+        config["meta_data"]["high_count_cap"] = round(species_caps.loc[species_id])
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_route_list_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    with open(ROUTE_CONFIG_PATH, "r") as file:
+        route_config = json.load(file)
+
+    for species_id, species_dict in species_config.items():
+        print(f"Working on species {species_id}")
+        
+        route_list = []
+
+        for route_id, route_dict in route_config.items():
+            if route_dict["country"] == "Canada" or route_dict["state"] == "Alaska":
+                continue
+
+            high_count_dict = route_dict["high_count_ratios"]
+
+            if species_id in high_count_dict:
+                route_list.append(route_id)
+
+        species_dict["meta_data"]["route_list"] = route_list
+
+        with open(SPECIES_CONFIG_PATH, "w") as file:
+            json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+def add_urbanization_type_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        developed_dict = landcover_preferences["developed"]
+        developed_range_type = developed_dict["range_type"]
+        developed_optimum = developed_dict["preference_mean"]
+
+        developed_dict["urbanization_type"] = (
+            "high" if developed_optimum > 10
+            else "mid" if developed_optimum > 3
+            else "low"
+        )
+
+        developed_dict["urbanization_range"] = "adaptive" if developed_range_type == "wide" else "rigid"
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def get_species_landcover_preferences():
+    print("Start Preference Generator")
+
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    total_species = len(species_config)
+    species_counter = 0
+
+    for species_id, species_dict in species_config.items():
+        species_counter += 1
+        print(f"{species_counter}/{total_species} - {species_id}")
+
+        if len(species_dict.get("landcover_preferences", {})) == 8:
+            continue 
+
+        filename = f"{species_id}.csv"
+
+        preferences = species_dict["landcover_preferences"] = {}
+
+        with ZipFile(SPECIES_ZIP_PATH, "r") as zip:
+            with zip.open(filename) as file:
+                species_df = pd.read_csv(file, encoding="utf-8")
+
+        for variable_column in LANDCOVER_INDICATORS:
+            print(f"    {variable_column}")
+
+            variable_dict = preferences[variable_column] = {}
+
+            raw_distribution, extended_distribution = get_landcover_high_count_distribution(species_df, variable_column)
+
+            analysis_df = raw_distribution.copy()
+
+            max_filter = analysis_df["proportion"] == analysis_df["proportion"].max()
+
+            top_list = analysis_df.index[max_filter].to_list()
+
+            top_group_cap = analysis_df.loc[top_list[0], "proportion"] * 0.8
+
+            top_bin_filter = analysis_df["proportion"] >= top_group_cap
+
+            top_bins = analysis_df.index[top_bin_filter].to_list()
+
+            base_bins = []
+
+            max_range, max_range_lowest_cap, _ = get_landcover_variable_range(raw_distribution.index.to_list())
+            max_bins = raw_distribution.shape[0]
+
+            for bin in top_bins:
+                if ">" in bin or "<" in bin:
+                    analysis_df = extended_distribution.copy()
+                    max_range, max_range_lowest_cap, _ = get_landcover_variable_range(extended_distribution.index.to_list())
+                    max_bins = extended_distribution.shape[0]
+                else:
+                    base_bins.append(bin)
+
+
+            low_extension_filter = (analysis_df["origin"] == "lower") & (analysis_df["proportion"] >= 0.05)
+            low_extension_bins = analysis_df.index[low_extension_filter].to_list()
+            
+            high_extension_filter = (analysis_df["origin"] == "higher") & (analysis_df["proportion"] >= 0.05)
+            high_extension_bins = analysis_df.index[high_extension_filter].to_list()
+
+            analysis_bins = low_extension_bins + base_bins + high_extension_bins
+
+            high_bins_df = analysis_df.copy().loc[analysis_bins]
+            high_bins_df = high_bins_df.reset_index(names="label")
+
+            high_bins_df["caps"] = high_bins_df["label"].apply(extract_bin_caps_from_label)
+            high_bins_df["bin_mean"] = high_bins_df["caps"].apply(np.mean)
+
+            preference_range, pref_range_low, pref_range_high = get_landcover_variable_range(list(high_bins_df["label"].values))
+            variable_dict["preference_range"] = preference_range
+            variable_dict["preference_lower_cap"] = pref_range_low
+            variable_dict["preference_upper_cap"] = pref_range_high
+                  
+            pref_mean = variable_dict["preference_mean"] = (
+                (high_bins_df["bin_mean"] * high_bins_df["proportion"]).sum() 
+                / 
+                high_bins_df["proportion"].sum()
+            )
+
+            left_type_cap = max_range_lowest_cap + max_range / 3
+            right_type_cap = max_range_lowest_cap + max_range / 3
+
+            if pref_mean < left_type_cap:
+                preference_type = "low"
+            elif pref_mean > right_type_cap:
+                preference_type = "high"
+            else:
+                preference_type = "middle"
+
+            variable_dict["preference_type"] = preference_type
+            
+
+            variable_dict["is_real_optimum"] = len(analysis_bins) / max_bins < 1/3
+
+            relevant_filter = analysis_df["proportion"] >= 0.05
+            relevant_bins_df = analysis_df.copy()[relevant_filter]
+            relevant_bins_df = relevant_bins_df.reset_index(names="label")
+
+            relevant_range, rel_range_low, rel_range_high = get_landcover_variable_range(list(relevant_bins_df["label"].values))
+            variable_dict["range"] = relevant_range
+            variable_dict["range_lower_cap"] = rel_range_low
+            variable_dict["range_upper_cap"] = rel_range_high
+            variable_dict["range_type"] = "wide" if relevant_range / max_range >= 0.5 else "narrow"
+
+        with open(SPECIES_CONFIG_PATH, "w") as file:
+            json.dump(species_config, file, ensure_ascii=False, indent=4)
+            
+
+def delete_landcover_preferences():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for  species_dict in species_config.values():
+        if "landcover_preferences" in species_dict:
+            del species_dict["landcover_preferences"]
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_water_need_to_config():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    value_list = []
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        water_dict = landcover_preferences["water"]
+
+        value_list.append(water_dict["preference_mean"])
+
+    water_min = min(value_list)
+    water_max = max(value_list)
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+        water_dict = landcover_preferences["water"]
+        water_optimum = water_dict["preference_mean"]
+        water_optimum_normed = (water_optimum - water_min) / (water_max - water_min)
+
+        water_dict["water_need"] = water_optimum_normed
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
+def add_habitat_type():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    for species_dict in species_config.values():
+        landcover_preferences = species_dict["landcover_preferences"]
+
+        landcover_means = []
+        
+        for variable, variable_dict in landcover_preferences.items():
+            if not variable in ["water", "developed"]:
+                landcover_means.append((variable, variable_dict["preference_mean"]))
+
+        total_means = sum(mean for _, mean in landcover_means)
+
+        preferred_landcover_list = [variable for variable, mean in landcover_means if mean / total_means >= 1/3]
+
+        species_dict["preferred_landcover_list"] = sorted(preferred_landcover_list)
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=True, indent=4)
+
+
+def calculate_climate_correlations():
+    with open(CLIMATE_CONFIG_PATH, "r") as file:
+        climate_config = json.load(file)
+
+    all_variable_config = climate_config["variables"]
+
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+
+    species_count = len(species_config)
+    counter = 0
+    
+    for species_id, species_dict in species_config.items():
+        counter += 1
+
+        print("=" * 60)
+        print(f"{counter}/{species_count} - Verarbeite: {species_dict['common_name']}")
+
+        if "climate_preferences" in species_dict:
+            continue
+
+        filename = f"{species_id}.csv"
+
+        with ZipFile(SPECIES_ZIP_PATH, "r") as zip:
+            with zip.open(filename) as file:
+                species_df = pd.read_csv(file, encoding="utf-8")
+
+        climate_preferences = species_dict["climate_preferences"] = {}
+
+        for variable_group, indicator_prefix_list in CLIMATE_INDICATORS.items():
+            print(variable_group)
+
+            variable_config = all_variable_config[variable_group]
+
+            variable_group_dict = climate_preferences[variable_group] = {}
+
+            for indicator_prefix in indicator_prefix_list:
+                prefix_dict = variable_group_dict[indicator_prefix] = {
+                    "main": {},
+                    "secondary": {}
+                }
+
+                main_indicator = f"{variable_group}_{indicator_prefix}_year"
+                secondary_indicators = [
+                    f"{variable_group}_{indicator_prefix}_{season}" 
+                    for season in ["spring", "summer", "fall"]
+                ]
+
+                main_max_range = variable_config[main_indicator]["max"] - variable_config[main_indicator]["min"]
+
+                low_value_cap = variable_config[main_indicator]["low_value_cap"]
+                high_value_cap = variable_config[main_indicator]["high_value_cap"]
+
+                main_preference_dict = get_preference_dictionary(
+                    species_df, 
+                    main_indicator, 
+                    main_max_range, 
+                    low_value_cap, 
+                    high_value_cap
+                )
+
+                if not main_preference_dict:
+                    continue
+
+                prefix_dict["main"][main_indicator] = main_preference_dict
+
+                main_range_type = main_preference_dict["range_type"]
+
+                if main_range_type == "narrow":
+                    continue
+
+                for indicator in secondary_indicators:
+                    max_range = variable_config[indicator]["range"]
+                    low_value_cap = variable_config[main_indicator]["low_value_cap"]
+                    high_value_cap = variable_config[main_indicator]["high_value_cap"]
+                    
+                    preference_dict = get_preference_dictionary(species_df, indicator, max_range, low_value_cap, high_value_cap)
+    
+                    if not preference_dict or preference_dict["range_type"] == "wide":
+                        continue
+
+                    prefix_dict["secondary"][indicator] = preference_dict
+
+        with open(SPECIES_CONFIG_PATH, "w") as file:
+            json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+def delete_climate_preferences():
+    with open(SPECIES_CONFIG_PATH, "r") as file:
+        species_config = json.load(file)
+    
+    for species_dict in species_config.values():
+        del species_dict["climate_preferences"]
+
+    with open(SPECIES_CONFIG_PATH, "w") as file:
+        json.dump(species_config, file, ensure_ascii=False, indent=4)
+
+
 if __name__ == "__main__":
     # build_bird_config()
     # check_config_for_missing_urls()
     # get_audubon_urls()
     # requester("audubon")
     # analyse_species_size_descriptions()
-    clean_audubon_photo_author()
+    # clean_audubon_photo_author()
+    # extract_species_list()
+    # add_bird_observation_count_to_config()
+    # add_high_count_cap_to_config()
+    # add_route_list_to_config()
+    # add_urbanization_type_to_config()
+    # add_water_need_to_config()
+    # add_habitat_type()
+    # get_species_landcover_preferences()
+    # delete_landcover_preferences()
+    # calculate_climate_correlations()
+    # delete_climate_preferences()
 
     # problematic_species = [
     #     '01440', '01460', '01960', '02010', '02140', '02210', '02890', '03091', '03131', '03250', 
@@ -528,3 +981,5 @@ if __name__ == "__main__":
     #     species_dict = species_json[species_id]
 
     #     print(f"{species_id}: {species_dict['audubon_info']['common_name']}")
+
+    pass
