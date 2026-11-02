@@ -18,6 +18,9 @@ def create_landcover_stats_config ():
     urbanization_tolerance = landcover_stats_config["urbanization_tolerance"] 
 
     for species_id, species_dict in species_config.items():
+        if species_dict["meta_data"]["total_observations"] < 250:
+            continue
+
         common_name = species_dict["audubon_info"]["common_name"]
         preferred_landcover_list = species_dict["preferred_landcover_list"]
         species_water_need = species_dict["landcover_preferences"]["water"]["preference_mean"]
@@ -25,6 +28,8 @@ def create_landcover_stats_config ():
         
         if len(preferred_landcover_list) == 0:
             continue
+
+        preferred_landcover_list = list(map(lambda x: x.capitalize(), preferred_landcover_list))
 
         landcover_string = "-".join(preferred_landcover_list)
 

@@ -43,6 +43,9 @@ for variable, list in INDICATORS.items():
     missing_optima_list = []
 
     for species_id, species_dict in species_config.items():
+        if species_dict["meta_data"]["total_observations"] < 250:
+            continue
+
         climate_preferences = species_dict["climate_preferences"]
 
         if (
@@ -93,6 +96,9 @@ for variable, list in INDICATORS.items():
     species_values = variable_dict["species_values"]
 
     for species_id, species_dict in species_config.items():
+        if species_dict["meta_data"]["total_observations"] < 250:
+            continue
+
         common_name = species_dict["audubon_info"]["common_name"]
         climate_preferences = species_dict["climate_preferences"]
 

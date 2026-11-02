@@ -96,7 +96,7 @@ def urbanization_boxplot (data: list):
             line_dash="dash",
             line_color="#73361C",
             line_width=0.5,
-            annotation_text=f"{label}: {value:.1f}",
+            annotation_text=f"{label}: {value:.1f}%",
             annotation_position="top"
         )
 

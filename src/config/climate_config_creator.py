@@ -95,14 +95,14 @@ def create_climate_config ():
         files_count = len(filenames)
         counter = 0
 
-        for filename in filenames:
+        for species_id in filenames:
             counter += 1
-            print(f"{counter}/{files_count} - Verarbeite: {filename}")
+            print(f"{counter}/{files_count} - Verarbeite: {species_id}")
 
-            if filename in checked_files_list:
+            if species_id in checked_files_list:
                 continue
 
-            with zip.open(filename) as file:
+            with zip.open(species_id) as file:
                 species_df = pd.read_csv(file, encoding="utf-8")
 
             for variable, indicator_list in climate_variables.items():
@@ -138,7 +138,7 @@ def create_climate_config ():
                             float(maximum)
                         )
 
-            checked_files_list.append(filename)
+            checked_files_list.append(species_id)
             config["meta_data"]["checked_files_list"] = checked_files_list
 
             with open(CLIMATE_CONFIG_PATH, "w") as file:

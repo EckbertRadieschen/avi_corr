@@ -77,7 +77,12 @@ def create_categorybased_visual (category: str, df: pd.DataFrame, col: str, unit
                     text="High Species Count Proportion [%]",
                     font=dict(color="#222222")
                 ),
-                tickfont=dict(color="#222222")
+                tickfont=dict(color="#222222"),
+                autorange=True,
+                autorangeoptions=dict(
+                    minallowed=-0.2
+                ),
+                zeroline=False
             )
         ) 
 

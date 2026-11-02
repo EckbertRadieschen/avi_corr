@@ -1,6 +1,6 @@
 {
     "landcover_types": {
-        "cropland": {
+        "Cropland": {
             "species_list": [
                 "00040",
                 "00060",
@@ -59,7 +59,7 @@
             ],
             "species_count": 54
         },
-        "forest-wetland": {
+        "Forest-Wetland": {
             "species_list": [
                 "00070",
                 "03000",
@@ -85,7 +85,7 @@
             ],
             "species_count": 21
         },
-        "grassland": {
+        "Grassland": {
             "species_list": [
                 "01250",
                 "01370",
@@ -117,7 +117,7 @@
             ],
             "species_count": 27
         },
-        "cropland-grassland": {
+        "Cropland-Grassland": {
             "species_list": [
                 "01490",
                 "02490",
@@ -126,7 +126,7 @@
             ],
             "species_count": 4
         },
-        "wetland": {
+        "Wetland": {
             "species_list": [
                 "01960",
                 "03880",
@@ -139,7 +139,7 @@
             ],
             "species_count": 8
         },
-        "forest-pasture": {
+        "Forest-Pasture": {
             "species_list": [
                 "02001",
                 "03680",
@@ -155,7 +155,7 @@
             ],
             "species_count": 11
         },
-        "pasture": {
+        "Pasture": {
             "species_list": [
                 "02010",
                 "02890",
@@ -172,14 +172,14 @@
             ],
             "species_count": 12
         },
-        "cropland-wetland": {
+        "Cropland-Wetland": {
             "species_list": [
                 "02060",
                 "06370"
             ],
             "species_count": 2
         },
-        "shrubland": {
+        "Shrubland": {
             "species_list": [
                 "02300",
                 "02630",
@@ -195,7 +195,7 @@
             ],
             "species_count": 11
         },
-        "forest": {
+        "Forest": {
             "species_list": [
                 "03260",
                 "03390",
@@ -268,7 +268,7 @@
             ],
             "species_count": 68
         },
-        "grassland-shrubland": {
+        "Grassland-Shrubland": {
             "species_list": [
                 "03490",
                 "04620",
@@ -280,20 +280,20 @@
             ],
             "species_count": 7
         },
-        "forest-grassland": {
+        "Forest-Grassland": {
             "species_list": [
                 "04780",
                 "06292"
             ],
             "species_count": 2
         },
-        "shrubland-wetland": {
+        "Shrubland-Wetland": {
             "species_list": [
                 "04860"
             ],
             "species_count": 1
         },
-        "forest-shrubland": {
+        "Forest-Shrubland": {
             "species_list": [
                 "04910",
                 "05540",
@@ -301,13 +301,13 @@
             ],
             "species_count": 3
         },
-        "grassland-pasture": {
+        "Grassland-Pasture": {
             "species_list": [
                 "06330"
             ],
             "species_count": 1
         },
-        "cropland-forest": {
+        "Cropland-Forest": {
             "species_list": [
                 "07040"
             ],

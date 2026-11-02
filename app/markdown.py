@@ -143,7 +143,10 @@ def apply_markdown():
                 justify-content: space-between;
                 background-color: #f2dcb8;
                 padding: 10px 10px;
-                align-items: center
+                align-items: center;
+                margin-bottom: 20px;
+                border-bottom: 1px solid #882200;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
             }
 
             .st-key-header_navigation{
@@ -212,7 +215,7 @@ def apply_markdown():
 
             .st-key-map_container_holder img {
                 width: 400px;
-                height: 270px;
+                height: 240px;
                 margin-top: 10px
             }
 
@@ -227,6 +230,27 @@ def apply_markdown():
 
             .st-key-map_container_holder [data-testid="stElementToolbar"] {
                 display: none
+            }
+
+            .st-key-map_info, .st-key-population_info, .st-key-iucn_status {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center
+            }
+
+            .st-key-map_info {
+                padding: 0 70px;
+                margin-top: 10px
+            }
+
+            .st-key-map_info p {
+                font-size: 12px
+            }
+
+            .st-key-population_info .stElementContainer:first-child p,
+            .st-key-iucn_status .stElementContainer:first-child p {
+                font-weight: bold;
             }
 
             .st-key-bars_container {

@@ -5,7 +5,9 @@
             "The USA was divided into grid cells.", 
             "Each cell contains an interpolated proportion", 
             "of high counts in bird observations,", 
-            "based on the routes relevant to that cell."
+            "based on the routes relevant to that cell.",
+            "--------------------------------------------------------------",
+            "The population count is global."
         ]
     },
     "climate_preferences": {

@@ -160,6 +160,8 @@ def get_lexicon_content():
 
     species_dict = species_config[selected_species]
     audubon_info = species_dict["audubon_info"]
+    population_estimated = audubon_info["Population"]
+    iucn_status = audubon_info["IUCN Status"]
 
     common_name = audubon_info["common_name"]
     scientiftic_name = species_dict["scientific_name"]
@@ -192,6 +194,14 @@ def get_lexicon_content():
                 )
 
                 st.image(species_map_file_path)
+
+                with st.container(key="map_info"):
+                    with st.container(key="population_info"):
+                        st.write(f"Population:")
+                        st.write(population_estimated)
+                    with st.container(key="iucn_status"):
+                        st.write(f"IUCN Status:")
+                        st.write(iucn_status)
             
             with st.container(key="bars_container", gap=5):
                 st.subheader("Climate Preferences", text_alignment="center")

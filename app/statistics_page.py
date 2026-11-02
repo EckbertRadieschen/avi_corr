@@ -217,7 +217,7 @@ def get_statistics_content ():
 
                     with st.container(key="water_stats_chart_header"):
                         st.subheader(
-                            f"{header_prefix_water} by Water Access in habitat", 
+                            f"{header_prefix_water} by Water Access in Habitat", 
                             width="stretch"
                         )
 

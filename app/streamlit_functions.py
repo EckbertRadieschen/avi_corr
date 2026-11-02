@@ -2,7 +2,10 @@ import streamlit as st
 
 def explorer_button ():
     st.session_state["page"] = "explorer"
-    species_index = st.session_state["species_options"].index(st.session_state["selected_species"])
+    species_index = st.session_state["species_options"].index(st.session_state.get(
+        "selected_species", 
+        ('04650', 'Acadian Flycatcher', 'Empidonax virescens', 'Passeriformes', 'Tyrannidae')
+    ))
     
     st.session_state["selected_species"] = st.session_state["species_options"][species_index]
 
